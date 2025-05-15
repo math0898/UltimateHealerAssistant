@@ -33,13 +33,16 @@ public class Main {
             if (inputStream == null) return;
             Scanner s = new Scanner(inputStream);
             StringBuilder builder = new StringBuilder();
+            boolean encounter_start = false;
             while (s.hasNextLine()) {
                 String line = s.nextLine();
                 if (line.contains("ENCOUNTER_END")) {
                     encounters.add(new Encounter(builder.toString()));
+                    encounter_start = false;
                     builder = new StringBuilder();
-                }
-                builder.append("\n").append(line);
+                } else if (line.contains("ENCOUNTER_START"))
+                    encounter_start = true;
+                if (encounter_start) builder.append("\n").append(line);
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());

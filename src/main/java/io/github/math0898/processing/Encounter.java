@@ -1,7 +1,9 @@
 package io.github.math0898.processing;
 
+import io.github.math0898.processing.logentries.HealEntry;
 import io.github.math0898.processing.logentries.LogEntry;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -38,8 +40,8 @@ public class Encounter {
         Scanner s = new Scanner(data);
         while (s.hasNextLine()) {
             String line = s.nextLine();
-            if (line.contains("SPELL_HEAL")) entries.add(new LogEntry(line));
-            else if (line.contains("SPELL_PERIODIC_HEAL")) entries.add(new LogEntry(line));
+            if (line.contains("SPELL_HEAL")) entries.add(new HealEntry(line));
+            else if (line.contains("SPELL_PERIODIC_HEAL")) entries.add(new HealEntry(line)); // todo: Almost identical data but distinction would be nice.
         }
     }
 
@@ -47,6 +49,20 @@ public class Encounter {
      * Prints a summary of this Encounter to System.out.
      */
     public void summarize () {
+        System.out.println(" ==== Encounter Summary ==== ");
         System.out.println("Entries: " + entries.size());
+        long healing = 0;
+        long overhealing = 0;
+        for (LogEntry e : entries) {
+            if (e.getType().equals(EntryType.HEALING))
+                if (e instanceof HealEntry heal) {
+                    healing += heal.getHeal();
+                    overhealing += heal.getOverheal();
+                }
+        }
+        System.out.println("Healing: " + NumberFormat.getInstance().format(healing));
+        System.out.println("Overheal: " + NumberFormat.getInstance().format(overhealing));
+        System.out.println("Total Healing: " + NumberFormat.getInstance().format(healing + overhealing));
+        System.out.println(" ==== End Summary ==== ");
     }
 }

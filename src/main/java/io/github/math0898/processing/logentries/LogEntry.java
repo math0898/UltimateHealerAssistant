@@ -7,7 +7,7 @@ import io.github.math0898.processing.EntryType;
  *
  * @author Sugaku
  */
-public class LogEntry { // todo: Make abstract.
+public abstract class LogEntry {
 
     /**
      * The data contained in this LogEntry.
@@ -24,11 +24,11 @@ public class LogEntry { // todo: Make abstract.
     }
 
     /**
+     * Returns the type of LogEntry this class represents.
      *
+     * @return The entry type represented by this class.
      */
-    public EntryType getType () {
-        return null; // todo
-    }
+    public abstract EntryType getType ();
 
     /**
      * Accessor method for the raw data contained within this LogEntry.
