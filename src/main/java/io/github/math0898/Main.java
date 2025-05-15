@@ -19,8 +19,11 @@ public class Main {
         processFile(TEST_FILE);
         long endTime = System.currentTimeMillis();
         System.out.println("Found " + encounters.size() + " encounters. Took: " + NumberFormat.getInstance().format((endTime - startTime)) + "ms");
-        encounters.get(3).process();
-        encounters.get(3).summarize();
+        for (int i = 0; i < encounters.size(); i++) {
+            encounters.get(i).process();
+            encounters.get(i).summarize();
+            System.out.println("Wipe " + i);
+        }
     }
 
     /**
@@ -32,7 +35,7 @@ public class Main {
         try (InputStream inputStream = Main.class.getResourceAsStream(logFile)) { // todo: Consider non-class resources.
             if (inputStream == null) return;
             Scanner s = new Scanner(inputStream);
-            StringBuilder builder = new StringBuilder();
+            StringBuilder builder = new StringBuilder(); // todo: First encounter over counts healing.
             boolean encounter_start = false;
             while (s.hasNextLine()) {
                 String line = s.nextLine();

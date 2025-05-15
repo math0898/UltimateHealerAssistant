@@ -40,8 +40,8 @@ public class Encounter {
         Scanner s = new Scanner(data);
         while (s.hasNextLine()) {
             String line = s.nextLine();
-            if (line.contains("SPELL_HEAL")) entries.add(new HealEntry(line));
-            else if (line.contains("SPELL_PERIODIC_HEAL")) entries.add(new HealEntry(line)); // todo: Almost identical data but distinction would be nice.
+            if (line.contains(" SPELL_HEAL,")) entries.add(new HealEntry(line));
+            else if (line.contains(" SPELL_PERIODIC_HEAL,")) entries.add(new HealEntry(line)); // todo: Almost identical data but distinction would be nice.
         }
     }
 
