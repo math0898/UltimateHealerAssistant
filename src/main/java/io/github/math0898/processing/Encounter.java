@@ -48,6 +48,15 @@ public class Encounter {
     }
 
     /**
+     * An accessor method for the number of events contained in this encounter.
+     *
+     * @return The number of entries listed in this encounter.
+     */
+    public int eventCount () {
+        return entries.size();
+    }
+
+    /**
      * Prints a summary of this Encounter to System.out.
      */
     public void summarize () {
@@ -72,6 +81,7 @@ public class Encounter {
         System.out.println("Healing: " + NumberFormat.getInstance().format(healing));
         System.out.println("Overheal: " + NumberFormat.getInstance().format(overhealing));
         System.out.println("Total Healing: " + NumberFormat.getInstance().format(total));
+        System.out.println("Duration: " + (entries.getLast().getTime() - entries.getFirst().getTime()) / 1000 + "s");
         System.out.println(" ==== End Summary ==== ");
     }
 }

@@ -21,6 +21,7 @@ public class Main {
         System.out.println("Found " + encounters.size() + " encounters. Took: " + NumberFormat.getInstance().format((endTime - startTime)) + "ms");
         for (int i = 0; i < encounters.size(); i++) {
             encounters.get(i).process();
+            if (encounters.get(i).eventCount() < 50) continue;
             encounters.get(i).summarize();
             System.out.println("Wipe " + i);
         }

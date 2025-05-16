@@ -36,7 +36,7 @@ public abstract class LogEntry {
         String date = s.next() + " " + s.next().replaceAll("-\\d", "");
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/dd/yyyy HH:mm:ss.SSS"); // todo: 2 digit dates?
         LocalDateTime dateTime = LocalDateTime.parse(date, formatter);
-        time = dateTime.toEpochSecond(ZoneOffset.UTC);
+        time = dateTime.toInstant(ZoneOffset.UTC).toEpochMilli();
     }
 
     /**
@@ -53,5 +53,14 @@ public abstract class LogEntry {
      */
     public String rawData () {
         return data;
+    }
+
+    /**
+     * Accessor method for the time this log entry occurred at.
+     *
+     * @return The time in millis since epoch this event occurred.
+     */
+    public long getTime () {
+        return time;
     }
 }
