@@ -84,4 +84,22 @@ public class Encounter {
         System.out.println("Duration: " + (entries.getLast().getTime() - entries.getFirst().getTime()) / 1000 + "s");
         System.out.println(" ==== End Summary ==== ");
     }
+
+    /**
+     * Prints a sideways graph of this Encounter to System.out.
+     */
+    public void graph () {
+        for (int i = 0; i < entries.size(); i++) {
+            long windowStart = entries.get(i).getTime();
+            long windowHealing = ((HealEntry) entries.get(i)).getTotalHeal();
+            i++;
+            while (i < entries.size() && entries.get(i).getTime() < windowStart + 1000) {
+                windowHealing += ((HealEntry) entries.get(i)).getTotalHeal();
+                i++;
+            }
+            for (int j = 0; j < windowHealing / 1000000; j++) // todo: Matrix and turn sideways
+                System.out.print("=");
+            System.out.print("\n");
+        }
+    }
 }

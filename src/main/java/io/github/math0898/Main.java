@@ -19,12 +19,16 @@ public class Main {
         processFile(TEST_FILE);
         long endTime = System.currentTimeMillis();
         System.out.println("Found " + encounters.size() + " encounters. Took: " + NumberFormat.getInstance().format((endTime - startTime)) + "ms");
-        for (int i = 0; i < encounters.size(); i++) {
-            encounters.get(i).process();
-            if (encounters.get(i).eventCount() < 50) continue;
-            encounters.get(i).summarize();
-            System.out.println("Wipe " + i);
-        }
+//        for (int i = 0; i < encounters.size(); i++) {
+//            encounters.get(i).process();
+//            if (encounters.get(i).eventCount() < 50) continue;
+//            encounters.get(i).summarize();
+//            System.out.println("Wipe " + i);
+//        }
+        int testIndex = 3;
+        encounters.get(testIndex).process();
+        encounters.get(testIndex).graph();
+        encounters.get(testIndex).summarize();
     }
 
     /**
