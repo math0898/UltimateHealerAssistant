@@ -1,5 +1,6 @@
 package io.github.math0898.processing;
 
+import io.github.math0898.processing.logentries.HealAbsorbEntry;
 import io.github.math0898.processing.logentries.HealEntry;
 import io.github.math0898.processing.logentries.LogEntry;
 
@@ -40,7 +41,8 @@ public class Encounter {
         Scanner s = new Scanner(data);
         while (s.hasNextLine()) {
             String line = s.nextLine();
-            if (line.contains(" SPELL_HEAL,")) entries.add(new HealEntry(line));
+            if (line.contains(" SPELL_HEAL_ABSORBED,")) entries.add(new HealAbsorbEntry(line));
+            else if (line.contains(" SPELL_HEAL,")) entries.add(new HealEntry(line));
             else if (line.contains(" SPELL_PERIODIC_HEAL,")) entries.add(new HealEntry(line)); // todo: Almost identical data but distinction would be nice.
         }
     }
@@ -53,16 +55,23 @@ public class Encounter {
         System.out.println("Entries: " + entries.size());
         long healing = 0;
         long overhealing = 0;
+        long total = 0;
         for (LogEntry e : entries) {
-            if (e.getType().equals(EntryType.HEALING))
-                if (e instanceof HealEntry heal) {
+            if (e.getType().equals(EntryType.HEALING)) {
+                if (e instanceof HealAbsorbEntry heal) {
+                    total += heal.getTotalHeal();
                     healing += heal.getHeal();
                     overhealing += heal.getOverheal();
+                } else if (e instanceof HealEntry heal) {
+                    healing += heal.getHeal();
+                    overhealing += heal.getOverheal();
+                    total += heal.getTotalHeal();
                 }
+            }
         }
         System.out.println("Healing: " + NumberFormat.getInstance().format(healing));
         System.out.println("Overheal: " + NumberFormat.getInstance().format(overhealing));
-        System.out.println("Total Healing: " + NumberFormat.getInstance().format(healing + overhealing));
+        System.out.println("Total Healing: " + NumberFormat.getInstance().format(total));
         System.out.println(" ==== End Summary ==== ");
     }
 }

@@ -12,7 +12,7 @@ public abstract class LogEntry {
     /**
      * The data contained in this LogEntry.
      */
-    private final String data;
+    protected final String data;
 
     /**
      * Creates this LogEntry from the given data.

@@ -12,12 +12,12 @@ public class HealEntry extends LogEntry {
     /**
      * The amount of healing in this entry.
      */
-    private long heal;
+    protected long heal;
 
     /**
      * The amount of overhealing in this entry.
      */
-    private long overheal;
+    protected long overheal;
 
     /**
      * Creates this HealEntry from the given data.
@@ -26,6 +26,13 @@ public class HealEntry extends LogEntry {
      */
     public HealEntry (String data) {
         super(data);
+        init();
+    }
+
+    /**
+     * Initializes the data contained within this entry.
+     */
+    protected void init () {
         Scanner s = new Scanner(data);
         s.useDelimiter(",");
         for (int i = 0; i < 31; i++) // Next should be heal, and then overheal
@@ -69,5 +76,14 @@ public class HealEntry extends LogEntry {
      */
     public long getOverheal () {
         return overheal;
+    }
+
+    /**
+     * Accessor method to the total amount of healing contained in this entry.
+     *
+     * @return The total amount of healing.
+     */
+    public long getTotalHeal () {
+        return heal + overheal;
     }
 }
