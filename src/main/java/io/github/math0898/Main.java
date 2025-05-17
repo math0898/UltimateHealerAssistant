@@ -27,7 +27,7 @@ public class Main {
 //        }
         int testIndex = 3;
         encounters.get(testIndex).process();
-        encounters.get(testIndex).graph();
+        encounters.get(testIndex).graph().print();
         encounters.get(testIndex).summarize();
     }
 

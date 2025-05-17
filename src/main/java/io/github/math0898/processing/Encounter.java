@@ -86,20 +86,32 @@ public class Encounter {
     }
 
     /**
-     * Prints a sideways graph of this Encounter to System.out.
+     * Generates a healing graph using the data contained in this encounter.
+     *
+     * @return A graph object that represents this encounter's healing.
      */
-    public void graph () {
+    public Graph graph () {
+        return graph(1000);
+    }
+
+    /**
+     * Generates a healing graph using the data contained in this encounter.
+     *
+     * @param timeStep The amount of time in millis to consider for each 'bar.'
+     * @return A graph object that represents this encounter's healing.
+     */
+    public Graph graph (long timeStep) {
+        Graph toReturn = new Graph();
         for (int i = 0; i < entries.size(); i++) {
             long windowStart = entries.get(i).getTime();
             long windowHealing = ((HealEntry) entries.get(i)).getTotalHeal();
             i++;
-            while (i < entries.size() && entries.get(i).getTime() < windowStart + 1000) {
+            while (i < entries.size() && entries.get(i).getTime() < windowStart + timeStep) {
                 windowHealing += ((HealEntry) entries.get(i)).getTotalHeal();
                 i++;
             }
-            for (int j = 0; j < windowHealing / 1000000; j++) // todo: Matrix and turn sideways
-                System.out.print("=");
-            System.out.print("\n");
+            toReturn.addColumn(windowHealing / (1000000 * 3));
         }
+        return toReturn;
     }
 }
