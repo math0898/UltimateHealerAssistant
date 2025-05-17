@@ -35,6 +35,7 @@ public class Main {
         int testIndex = 39;
         encounters.get(testIndex).process();
         encounters.get(testIndex).summarize();
+        gui();
     }
 
     /**

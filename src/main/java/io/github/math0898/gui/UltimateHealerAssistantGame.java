@@ -28,11 +28,16 @@ public class UltimateHealerAssistantGame extends BasicGame {
                     Graph graph = encounter.graph(encounter.encounterLengthMillis() / timeStepCount, 1000000); // todo: This can be hard to dynamically calculate.
                     graph.smooth(1);
                     for (long i = graph.max; i >= 0; i--)
-                        for (int j = 0; j < graph.overheal.size(); j++)
+                        for (int j = 0; j < graph.overheal.size(); j++) {
                             if (graph.overheal.get(j) >= i) {
-                                if (graph.heal.get(j) >= i) panel.setBigPixel(startX + (j * 10), startY - ((int) i * 10), 9, new Color(22, 237, 64));
-                                else panel.setBigPixel(startX + (j * 10), startY - ((int) i * 10), 9, new Color(39, 150, 60));
+                                if (graph.heal.get(j) >= i)
+                                    panel.setBigPixel(startX + (j * 10), startY - ((int) i * 10), 9, new Color(22, 237, 64));
+                                else
+                                    panel.setBigPixel(startX + (j * 10), startY - ((int) i * 10), 9, new Color(39, 150, 60));
                             }
+                            if (graph.damage.get(j) == i)
+                                panel.setRectangle(startX + (j * 10) - 3, startY - ((int) i * 10) - 1, 7, 3, new Color(230, 41, 28));
+                        }
                 }
             });
         }

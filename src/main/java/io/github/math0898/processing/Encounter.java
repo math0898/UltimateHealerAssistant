@@ -1,5 +1,6 @@
 package io.github.math0898.processing;
 
+import io.github.math0898.processing.logentries.DamageTakenEntry;
 import io.github.math0898.processing.logentries.HealAbsorbEntry;
 import io.github.math0898.processing.logentries.HealEntry;
 import io.github.math0898.processing.logentries.LogEntry;
@@ -48,6 +49,8 @@ public class Encounter {
             if (line.contains(" SPELL_HEAL_ABSORBED,")) entries.add(new HealAbsorbEntry(line));
             else if (line.contains(" SPELL_HEAL,")) entries.add(new HealEntry(line));
             else if (line.contains(" SPELL_PERIODIC_HEAL,")) entries.add(new HealEntry(line)); // todo: Almost identical data but distinction would be nice.
+            else if (line.contains("  SPELL_PERIODIC_DAMAGE,")) entries.add(new DamageTakenEntry(line));
+            else if (line.contains("  SPELL_DAMAGE,")) entries.add(new DamageTakenEntry(line));
         }
     }
 
@@ -69,22 +72,24 @@ public class Encounter {
         long healing = 0;
         long overhealing = 0;
         long total = 0;
+        long damageTaken = 0;
         for (LogEntry e : entries) {
-            if (e.getType().equals(EntryType.HEALING)) {
-                if (e instanceof HealAbsorbEntry heal) {
-                    total += heal.getTotalHeal();
-                    healing += heal.getHeal();
-                    overhealing += heal.getOverheal();
-                } else if (e instanceof HealEntry heal) {
-                    healing += heal.getHeal();
-                    overhealing += heal.getOverheal();
-                    total += heal.getTotalHeal();
-                }
+            if (e instanceof HealAbsorbEntry heal) {
+                total += heal.getTotalHeal();
+                healing += heal.getHeal();
+                overhealing += heal.getOverheal();
+            } else if (e instanceof HealEntry heal) {
+                healing += heal.getHeal();
+                overhealing += heal.getOverheal();
+                total += heal.getTotalHeal();
+            } else if (e instanceof DamageTakenEntry damage) {
+                damageTaken += damage.damageTaken();
             }
         }
         System.out.println("Healing: " + NumberFormat.getInstance().format(healing));
         System.out.println("Overheal: " + NumberFormat.getInstance().format(overhealing));
         System.out.println("Total Healing: " + NumberFormat.getInstance().format(total));
+        System.out.println("Damage Taken: " + NumberFormat.getInstance().format(damageTaken));
         System.out.println("Duration: " + (entries.getLast().getTime() - entries.getFirst().getTime()) / 1000 + "s");
         System.out.println(" ==== End Summary ==== ");
     }
@@ -118,16 +123,21 @@ public class Encounter {
     public Graph graph (long timeStep, long scale) {
         Graph toReturn = new Graph();
         for (int i = 0; i < entries.size(); i++) {
-            long windowStart = entries.get(i).getTime();
-            long windowTotalHealing = ((HealEntry) entries.get(i)).getTotalHeal();
-            long windowHealing = ((HealEntry) entries.get(i)).getHeal();
-            i++;
+            LogEntry entry = entries.get(i);
+            long windowStart = entry.getTime();
+            long windowTotalHealing = 0;
+            long windowHealing = 0;
+            long windowDamage = 0;
             while (i < entries.size() && entries.get(i).getTime() < windowStart + timeStep) {
-                windowTotalHealing += ((HealEntry) entries.get(i)).getTotalHeal();
-                windowHealing += ((HealEntry) entries.get(i)).getHeal();
+                if (entries.get(i) instanceof DamageTakenEntry damage)
+                    windowDamage += damage.damageTaken();
+                else {
+                    windowTotalHealing += ((HealEntry) entries.get(i)).getTotalHeal();
+                    windowHealing += ((HealEntry) entries.get(i)).getHeal();
+                }
                 i++;
             }
-            toReturn.addColumn(windowTotalHealing / scale, windowHealing / scale);
+            toReturn.addColumn(windowTotalHealing / scale, windowHealing / scale, windowDamage / scale);
         }
         return toReturn;
     }

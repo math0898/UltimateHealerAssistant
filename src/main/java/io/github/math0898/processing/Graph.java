@@ -26,6 +26,11 @@ public class Graph {
     public List<Long> heal = new ArrayList<>();
 
     /**
+     * Values for each of the columns in this graph for damage amount.
+     */
+    public List<Long> damage = new ArrayList<>();
+
+    /**
      * Smooths the graph by looking ahead and behind to average the current note.
      *
      * @param factor This is the number of columns ahead and behind to look in order to average values.
@@ -33,8 +38,10 @@ public class Graph {
     public void smooth (int factor) {
         List<Long> oldOverheal = overheal;
         List<Long> oldHeal = heal;
+        List<Long> oldDamage = damage;
         overheal = new ArrayList<>();
         heal = new ArrayList<>(); // todo: Consider factor neq 1
+        damage = new ArrayList<>();
         for (int i = 0; i < oldOverheal.size(); i++) {
             long sum = oldOverheal.get(Math.max(i - 1, 0)) + oldOverheal.get(i) + oldOverheal.get(Math.min(i + 1, oldOverheal.size() - 1));
             overheal.add(sum / 3);
@@ -42,6 +49,10 @@ public class Graph {
         for (int i = 0; i < oldHeal.size(); i++) {
             long sum = oldHeal.get(Math.max(i - 1, 0)) + oldHeal.get(i) + oldHeal.get(Math.min(i + 1, oldHeal.size() - 1));
             heal.add(sum / 3);
+        }
+        for (int i = 0; i < oldDamage.size(); i++) {
+            long sum = oldDamage.get(Math.max(i - 1, 0)) + oldDamage.get(i) + oldDamage.get(Math.min(i + 1, oldDamage.size() - 1));
+            damage.add(sum / 3);
         }
     }
 
@@ -64,6 +75,20 @@ public class Graph {
         if (max < overheal) max = overheal;
         this.overheal.add(overheal);
         this.heal.add(heal);
+    }
+
+    /**
+     * Adds a column entry on the graph at the next available point.
+     *
+     * @param overheal The value to add.
+     * @param heal The heal value to add.
+     * @param damage The damage value to add.
+     */
+    public void addColumn (long overheal, long heal, long damage) {
+        if (max < overheal) max = overheal;
+        this.overheal.add(overheal);
+        this.heal.add(heal);
+        this.damage.add(damage);
     }
 
     /**
