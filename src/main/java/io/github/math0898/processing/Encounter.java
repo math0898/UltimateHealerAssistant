@@ -25,6 +25,8 @@ public class Encounter {
      */
     private List<LogEntry> entries = new ArrayList<>();
 
+    boolean processed = false;
+
     /**
      * Creates a new Encounter with the given data.
      *
@@ -38,6 +40,8 @@ public class Encounter {
      * Processes the data contained within this Encounter.
      */
     public void process () {
+        if (processed) return;
+        processed = true;
         Scanner s = new Scanner(data);
         while (s.hasNextLine()) {
             String line = s.nextLine();
@@ -101,17 +105,39 @@ public class Encounter {
      * @return A graph object that represents this encounter's healing.
      */
     public Graph graph (long timeStep) {
+        return graph(timeStep, (1000000 * 3));
+    }
+
+    /**
+     * Generates a healing graph using the data contained in this encounter.
+     *
+     * @param timeStep The amount of time in millis to consider for each 'bar.'
+     * @param scale The amount of healing that goes into a single block.
+     * @return A graph object that represents this encounter's healing.
+     */
+    public Graph graph (long timeStep, long scale) {
         Graph toReturn = new Graph();
         for (int i = 0; i < entries.size(); i++) {
             long windowStart = entries.get(i).getTime();
-            long windowHealing = ((HealEntry) entries.get(i)).getTotalHeal();
+            long windowTotalHealing = ((HealEntry) entries.get(i)).getTotalHeal();
+            long windowHealing = ((HealEntry) entries.get(i)).getHeal();
             i++;
             while (i < entries.size() && entries.get(i).getTime() < windowStart + timeStep) {
-                windowHealing += ((HealEntry) entries.get(i)).getTotalHeal();
+                windowTotalHealing += ((HealEntry) entries.get(i)).getTotalHeal();
+                windowHealing += ((HealEntry) entries.get(i)).getHeal();
                 i++;
             }
-            toReturn.addColumn(windowHealing / (1000000 * 3));
+            toReturn.addColumn(windowTotalHealing / scale, windowHealing / scale);
         }
         return toReturn;
+    }
+
+    /**
+     * The amount of time this encounter takes in milliseconds.
+     *
+     * @return The number of milliseconds that transpire in this encounter.
+     */
+    public long encounterLengthMillis () {
+        return entries.getLast().getTime() - entries.getFirst().getTime();
     }
 }

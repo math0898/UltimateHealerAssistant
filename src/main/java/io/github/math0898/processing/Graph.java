@@ -13,12 +13,37 @@ public class Graph {
     /**
      * The maximum height achieved by this graph.
      */
-    private long max = 0;
+    public long max = 0;
 
     /**
      * Values for each of the columns in this graph.
      */
-    private List<Long> columns = new ArrayList<>();
+    public List<Long> overheal = new ArrayList<>();
+
+    /**
+     * Values for each of the columns in this graph for heal amount.
+     */
+    public List<Long> heal = new ArrayList<>();
+
+    /**
+     * Smooths the graph by looking ahead and behind to average the current note.
+     *
+     * @param factor This is the number of columns ahead and behind to look in order to average values.
+     */
+    public void smooth (int factor) {
+        List<Long> oldOverheal = overheal;
+        List<Long> oldHeal = heal;
+        overheal = new ArrayList<>();
+        heal = new ArrayList<>(); // todo: Consider factor neq 1
+        for (int i = 0; i < oldOverheal.size(); i++) {
+            long sum = oldOverheal.get(Math.max(i - 1, 0)) + oldOverheal.get(i) + oldOverheal.get(Math.min(i + 1, oldOverheal.size() - 1));
+            overheal.add(sum / 3);
+        }
+        for (int i = 0; i < oldHeal.size(); i++) {
+            long sum = oldHeal.get(Math.max(i - 1, 0)) + oldHeal.get(i) + oldHeal.get(Math.min(i + 1, oldHeal.size() - 1));
+            heal.add(sum / 3);
+        }
+    }
 
     /**
      * Adds a column entry on the graph at the next available point.
@@ -26,8 +51,19 @@ public class Graph {
      * @param value The value to add.
      */
     public void addColumn (long value) {
-        if (max < value) max = value;
-        columns.add(value);
+        addColumn(value, -1);
+    }
+
+    /**
+     * Adds a column entry on the graph at the next available point.
+     *
+     * @param overheal The value to add.
+     * @param heal The heal value to add.
+     */
+    public void addColumn (long overheal, long heal) {
+        if (max < overheal) max = overheal;
+        this.overheal.add(overheal);
+        this.heal.add(heal);
     }
 
     /**
@@ -35,8 +71,8 @@ public class Graph {
      */
     public void print () {
         for (long i = max; i >= 0; i--) {
-            for (int j = 0; j < columns.size(); j++) {
-                if (columns.get(j) >= i) System.out.print("|");
+            for (int j = 0; j < overheal.size(); j++) {
+                if (overheal.get(j) >= i) System.out.print("|");
                 else System.out.print(" ");
             }
             System.out.print("\n");

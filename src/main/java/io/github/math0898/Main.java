@@ -1,7 +1,14 @@
 package io.github.math0898;
 
+import io.github.math0898.gui.GraphicsPanel;
 import io.github.math0898.processing.Encounter;
+import suga.engine.GameEngine;
+import suga.engine.game.BasicGame;
+import io.github.math0898.gui.*;
+import suga.engine.input.keyboard.GameKeyListener;
+import suga.engine.input.mouse.BasicMouseListener;
 
+import java.awt.*;
 import java.io.InputStream;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -10,9 +17,9 @@ import java.util.Scanner;
 
 public class Main {
 
-    private final static String TEST_FILE = "/WoWCombatLog-051425_164349.txt";
+    private final static String TEST_FILE = "/Archive-WoWCombatLog-051525_185636.txt";
 
-    private final static List<Encounter> encounters = new ArrayList<>();
+    public final static List<Encounter> encounters = new ArrayList<>();
 
     public static void main(String[] args) {
         long startTime = System.currentTimeMillis();
@@ -25,10 +32,22 @@ public class Main {
 //            encounters.get(i).summarize();
 //            System.out.println("Wipe " + i);
 //        }
-        int testIndex = 3;
+        int testIndex = 39;
         encounters.get(testIndex).process();
-        encounters.get(testIndex).graph().print();
         encounters.get(testIndex).summarize();
+    }
+
+    /**
+     * Opens the graphical interface.
+     */
+    public static void gui () {
+        GraphicsPanel graphicsPanel = new GraphicsPanel();
+        GameKeyListener gameKeyListener = new UltimateHealerAssistantGameKeyListener();
+        BasicGame game = new UltimateHealerAssistantGame(graphicsPanel, gameKeyListener, new BasicMouseListener());
+        game.setPanel(graphicsPanel);
+        GameEngine.launchGameWindow(960, 540, "Ultimate Healer Assistant", true, graphicsPanel,
+                Color.getHSBColor(0, 0, 0.05f), 30, 30, gameKeyListener, new BasicMouseListener(), game);
+        game.loadScene("main");
     }
 
     /**
@@ -45,7 +64,10 @@ public class Main {
             while (s.hasNextLine()) {
                 String line = s.nextLine();
                 if (line.contains("ENCOUNTER_END")) {
-                    encounters.add(new Encounter(builder.toString()));
+                    Encounter encounter = new Encounter(builder.toString());
+                    encounter.process();
+                    if (encounter.eventCount() > 50 && encounter.encounterLengthMillis() > 3000)
+                        encounters.add(encounter);
                     encounter_start = false;
                     builder = new StringBuilder();
                 } else if (line.contains("ENCOUNTER_START"))

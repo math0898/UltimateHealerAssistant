@@ -5,13 +5,25 @@ plugins {
 group = 'io.github.math0898'
 version = '1.0-SNAPSHOT'
 
+def secrets = new Properties()
+file("secrets.properties").withInputStream { secrets.load(it) }
+
 repositories {
     mavenCentral()
+    maven {
+        name = "GitHubPackages"
+        url = uri("https://maven.pkg.github.com/math0898/SugaEngine")
+        credentials {
+            username = project.findProperty("gpr.user") ?: secrets.getProperty("USERNAME")
+            password = project.findProperty("gpr.key") ?: secrets.getProperty("TOKEN")
+        }
+    }
 }
 
 dependencies {
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
+    implementation "io.github.math0898:suga-engine:2.5.1"
 }
 
 test {
