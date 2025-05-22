@@ -35,7 +35,7 @@ public class Main {
         int testIndex = 5;
         encounters.get(testIndex).process();
         encounters.get(testIndex).summarize();
-        System.out.println(encounters.get(testIndex).queryHealing("Halo", 0, 1000000000));
+        encounters.get(testIndex).queryHealing("Halo", 0, 1000000000);
         gui();
     }
 

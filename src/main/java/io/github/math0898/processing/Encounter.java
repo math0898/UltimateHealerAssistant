@@ -6,9 +6,7 @@ import io.github.math0898.processing.logentries.HealEntry;
 import io.github.math0898.processing.logentries.LogEntry;
 
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * An encounter represents all the data contained in a single encounter. This includes sums and results of multiple
@@ -150,14 +148,25 @@ public class Encounter {
      * @param length    The amount of time to look after the start time.
      */
     public long queryHealing (String spellName, long startTime, long length) {
+        return queryHealing(Collections.singleton(spellName), startTime, length);
+    }
+
+    /**
+     * Calculates the healing from a specific spells within the given time window.
+     *
+     * @param spellNames The name of the spell to query for.
+     * @param startTime  The time to start at.
+     * @param length     The amount of time to look after the start time.
+     */
+    public long queryHealing (Collection<String> spellNames, long startTime, long length) {
         long total = 0;
         for (LogEntry log : entries) {
             if (log.getTime() < (startTime + entries.getFirst().getTime())
                     || log.getTime() > (startTime + entries.getFirst().getTime()) + length)
                 continue;
             if (log instanceof HealEntry heal)
-                if (heal.getSpellName().equalsIgnoreCase(spellName))
-                    total += heal.getTotalHeal();
+                if (spellNames.contains(heal.getSpellName()))
+                    total += heal.getHeal() + heal.getOverheal();
         }
         return total;
     }
