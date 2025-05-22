@@ -80,6 +80,15 @@ public class HealEntry extends LogEntry {
     }
 
     /**
+     * Returns the caster responsible for this heal event.
+     *
+     * @return The caster that created this heal event.
+     */
+    public String getCaster () {
+        return caster;
+    }
+
+    /**
      * Prints a summary of this entry to System.out.
      */
     public void summarize () {

@@ -141,14 +141,34 @@ public class Encounter {
     }
 
     /**
+     * Calculates the healing from a specific caster within the given time window.
+     *
+     * @param casterName The name of the caster to query for.
+     * @param startTime  The time to start at.
+     * @param length     The amount of time to look after the start time.
+     */
+    public long queryHealingByCaster (String casterName, long startTime, long length) {
+        long total = 0;
+        for (LogEntry log : entries) {
+            if (log.getTime() < (startTime + entries.getFirst().getTime())
+                    || log.getTime() > (startTime + entries.getFirst().getTime()) + length)
+                continue;
+            if (log instanceof HealEntry heal)
+                if (heal.getCaster().contains(casterName))
+                    total += heal.getHeal() + heal.getOverheal();
+        }
+        return total;
+    }
+
+    /**
      * Calculates the healing from a specific spell within the given time window.
      *
      * @param spellName The name of the spell to query for.
      * @param startTime The time to start at.
      * @param length    The amount of time to look after the start time.
      */
-    public long queryHealing (String spellName, long startTime, long length) {
-        return queryHealing(Collections.singleton(spellName), startTime, length);
+    public long queryHealingBySpell (String spellName, long startTime, long length) {
+        return queryHealingBySpell(Collections.singleton(spellName), startTime, length);
     }
 
     /**
@@ -158,7 +178,7 @@ public class Encounter {
      * @param startTime  The time to start at.
      * @param length     The amount of time to look after the start time.
      */
-    public long queryHealing (Collection<String> spellNames, long startTime, long length) {
+    public long queryHealingBySpell (Collection<String> spellNames, long startTime, long length) {
         long total = 0;
         for (LogEntry log : entries) {
             if (log.getTime() < (startTime + entries.getFirst().getTime())

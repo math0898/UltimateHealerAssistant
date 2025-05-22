@@ -35,7 +35,7 @@ public class Main {
         int testIndex = 5;
         encounters.get(testIndex).process();
         encounters.get(testIndex).summarize();
-        encounters.get(testIndex).queryHealing("Halo", 0, 1000000000);
+        encounters.get(testIndex).queryHealingBySpell("Halo", 0, 1000000000);
         gui();
     }
 
@@ -47,7 +47,7 @@ public class Main {
         GameKeyListener gameKeyListener = new UltimateHealerAssistantGameKeyListener();
         BasicGame game = new UltimateHealerAssistantGame(graphicsPanel, gameKeyListener, new BasicMouseListener());
         game.setPanel(graphicsPanel);
-        GameEngine.launchGameWindow(960, 540, "Ultimate Healer Assistant", true, graphicsPanel,
+        GameEngine.launchGameWindow(1920, 1000, "Ultimate Healer Assistant", true, graphicsPanel,
                 Color.getHSBColor(0, 0, 0.05f), 30, 30, gameKeyListener, new BasicMouseListener(), game);
         game.loadScene("main");
     }
