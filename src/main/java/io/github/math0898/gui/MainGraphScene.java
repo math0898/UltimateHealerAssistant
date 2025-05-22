@@ -1,12 +1,7 @@
 package io.github.math0898.gui;
 
-import io.github.math0898.Main;
-import io.github.math0898.processing.Encounter;
-import io.github.math0898.processing.Graph;
 import suga.engine.game.BasicScene;
 import suga.engine.game.Game;
-import suga.engine.graphics.DrawListener;
-import suga.engine.graphics.GraphicsPanel;
 import suga.engine.input.keyboard.KeyValue;
 
 import java.awt.*;
@@ -20,8 +15,8 @@ public class MainGraphScene extends BasicScene {
      * @return True if loading was successful. Otherwise, false.
      */
     @Override
-    public boolean load(Game game) {
-        game.addDrawingListener(new GraphDrawListener());
+    public boolean load (Game game) {
+        game.addGameObject("Main Graph", new GraphGameObject());
         return true;
     }
 
