@@ -29,11 +29,17 @@ public class HealAbsorbEntry extends HealEntry {
     protected void init () {
         Scanner s = new Scanner(data);
         s.useDelimiter(",");
-        for (int i = 0; i < 19; i++) // Next should be total, and then amount absorbed or vice-versa
-            s.next();
-        absorbed = s.nextInt(); // ?
-        int total_heal = s.nextInt(); // ?
-        overheal = 0;
+        int total_heal = 0;
+        for (int i = 0; s.hasNext(); i++) {
+            switch (i) {
+                case 13 -> caster = s.next().replace("\"", "");
+                case 17 -> spellName = s.next().replace("\"", "");
+                case 19 -> absorbed = s.nextInt();
+                case 20 -> total_heal = s.nextInt();
+                case 21 -> overheal = s.nextInt();
+                default -> s.next();
+            }
+        }
         heal = total_heal - overheal - absorbed;
     }
 
@@ -41,7 +47,7 @@ public class HealAbsorbEntry extends HealEntry {
      * Prints a summary of this entry to System.out.
      */
     public void summarize () {
-        System.out.println("Heal: " + heal + ". Overheal " + overheal + ". Absorb: " + absorbed + ".");
+        System.out.println(caster + " -> " + spellName + ": " + heal + " | Overheal " + overheal + " | Absorb: " + absorbed);
     }
 
     /**

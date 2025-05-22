@@ -20,6 +20,17 @@ public class HealEntry extends LogEntry {
     protected long overheal;
 
     /**
+     * The name of the spell that did the healing.
+     */
+    protected String spellName;
+
+    /**
+     * The name of the creature/player who cast this spell.
+     */
+    protected String caster;
+
+
+    /**
      * Creates this HealEntry from the given data.
      *
      * @param data The raw data to create this HealEntry from.
@@ -34,12 +45,18 @@ public class HealEntry extends LogEntry {
      */
     protected void init () {
         Scanner s = new Scanner(data);
+        int total_heal = 0;
         s.useDelimiter(",");
-        for (int i = 0; i < 31; i++) // Next should be heal, and then overheal
-            s.next();
-        int total_heal = s.nextInt(); // todo: So far everything has been RAW_HEAL_AMOUNT, RAW_HEAL_AMOUNT. Is there heal absorb in here?
-        int unknown = s.nextInt();
-        overheal = s.nextInt();
+        for (int i = 0; s.hasNext(); i++) {
+            switch (i) {
+                case 2 -> caster = s.next().replace("\"", "");
+                case 10 -> spellName = s.next().replace("\"", "");
+                case 31 -> total_heal = s.nextInt();
+                case 33 -> overheal = s.nextInt(); // todo: So far everything has been RAW_HEAL_AMOUNT, RAW_HEAL_AMOUNT. Is there heal absorb in here?
+                // default -> System.out.println(i + ": " + s.next());
+                default -> s.next();
+            }
+        }
         heal = total_heal - overheal;
     }
 
@@ -51,6 +68,15 @@ public class HealEntry extends LogEntry {
     @Override
     public EntryType getType() {
         return EntryType.HEALING;
+    }
+
+    /**
+     * Returns the spell name responsible for this heal event.
+     *
+     * @return The spell name for this heal event.
+     */
+    public String getSpellName () {
+        return spellName;
     }
 
     /**

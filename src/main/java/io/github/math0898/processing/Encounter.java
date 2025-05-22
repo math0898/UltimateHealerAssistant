@@ -24,7 +24,7 @@ public class Encounter {
     /**
      * An entire list of all the entries contained within this Encounter.
      */
-    private List<LogEntry> entries = new ArrayList<>();
+    private final List<LogEntry> entries = new ArrayList<>();
 
     boolean processed = false;
 
@@ -140,6 +140,26 @@ public class Encounter {
             toReturn.addColumn(windowTotalHealing / scale, windowHealing / scale, windowDamage / scale);
         }
         return toReturn;
+    }
+
+    /**
+     * Calculates the healing from a specific spell within the given time window.
+     *
+     * @param spellName The name of the spell to query for.
+     * @param startTime The time to start at.
+     * @param length    The amount of time to look after the start time.
+     */
+    public long queryHealing (String spellName, long startTime, long length) {
+        long total = 0;
+        for (LogEntry log : entries) {
+            if (log.getTime() < (startTime + entries.getFirst().getTime())
+                    || log.getTime() > (startTime + entries.getFirst().getTime()) + length)
+                continue;
+            if (log instanceof HealEntry heal)
+                if (heal.getSpellName().equalsIgnoreCase(spellName))
+                    total += heal.getTotalHeal();
+        }
+        return total;
     }
 
     /**

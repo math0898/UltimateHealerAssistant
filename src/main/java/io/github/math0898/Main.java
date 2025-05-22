@@ -32,9 +32,10 @@ public class Main {
 //            encounters.get(i).summarize();
 //            System.out.println("Wipe " + i);
 //        }
-        int testIndex = 39;
+        int testIndex = 5;
         encounters.get(testIndex).process();
         encounters.get(testIndex).summarize();
+        System.out.println(encounters.get(testIndex).queryHealing("Halo", 0, 1000000000));
         gui();
     }
 
