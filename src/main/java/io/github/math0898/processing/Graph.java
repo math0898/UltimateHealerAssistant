@@ -61,7 +61,16 @@ public class Graph {
             long sum = oldDamage.get(Math.max(i - 1, 0)) + oldDamage.get(i) + oldDamage.get(Math.min(i + 1, oldDamage.size() - 1));
             damage.add(sum / 3);
         }
-        // todo: Smooth Ascents.
+        for (AscentBar bar : ascentBars) {
+            List<Long> list = bar.getValues();
+            List<Long> swap = new ArrayList<>();
+            for (int i = 0; i < list.size(); i++) {
+                long sum = list.get(Math.max(i - 1, 0)) + list.get(i) + list.get(Math.min(i + 1, list.size() - 1));
+                swap.add(sum / 3);
+            }
+            list.clear();
+            list.addAll(swap);
+        }
     }
 
     /**

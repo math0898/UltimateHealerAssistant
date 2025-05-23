@@ -10,6 +10,7 @@ import suga.engine.physics.collidables.Collidable;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * The Graph is considered a GameObject so that we have access to {@link #runLogic()}. This runs on a separate thread
@@ -33,7 +34,7 @@ public class GraphGameObject implements GameObject, DrawListener {
     /**
      * Whether to stack ascent bars or not.
      */
-    private static final boolean STACKED = false;
+    private static final boolean STACKED = true;
 
     /**
      * This is the width at which the graph should be calculated at. It may lag behind a cycle or two since it needs
@@ -84,18 +85,17 @@ public class GraphGameObject implements GameObject, DrawListener {
                     if (!STACKED) {
                         if (value >= i && value > 0)
                             panel.setBigPixel(startX + (j * 10), startY - ((int) i * 10), 9, bar.getColor());
-                    } else if (STACKED) { // todo: Latest graph in the daisy chain is overwriting earlier ones. Need to also have an option to color if within it's realm.
-                        if (value >= i && value > 0)
-                            panel.setBigPixel(startX + (j * 10), startY - ((int) i * 10), 9, bar.getColor());
-                        else {
-                            for (int l = 0; l < k; l++) {
-                                value += graph.ascentBars.get(l).getValues().get(j);
-                                if (value >= i && value > 0) {
-                                    panel.setBigPixel(startX + (j * 10), startY - ((int) i * 10), 9, bar.getColor());
-                                    break;
-                                }
-                            }
-                        }
+                    }
+                }
+                if (STACKED) { // todo: Latest graph in the daisy chain is overwriting earlier ones. Need to also have an option to color if within it's realm.
+                    long lastSum = 0;
+                    long currentSum = 0;
+                    for (int k = 0; k < graph.ascentBars.size(); k++) {
+                        long mod = graph.ascentBars.get(k).getValues().get(j);
+                        currentSum += mod;
+                        if (i >= lastSum && i <= currentSum && mod != 0)
+                            panel.setBigPixel(startX + (j * 10), startY - ((int) i * 10), 9, graph.ascentBars.get(k).getColor());
+                        lastSum = currentSum;
                     }
                 }
                 if (graph.damage.get(j) == i)
@@ -114,8 +114,12 @@ public class GraphGameObject implements GameObject, DrawListener {
             Graph graph = ENCOUNTER.graph(ENCOUNTER.encounterLengthMillis() / timeStepCount, SCALE);
             ArrayList<Long> consumeFlameList = new ArrayList<>();
             ArrayList<Long> rewindList = new ArrayList<>();
+            ArrayList<Long> sunflower = new ArrayList<>();
+            ArrayList<Long> syudou = new ArrayList<>();
+            ArrayList<Long> mylove = new ArrayList<>();
+            ArrayList<Long> consumes = new ArrayList<>();
             for (int j = 0; j < timeStepCount; j++) {
-                long consumeFlame = ENCOUNTER.queryHealingBySpell("Lifebind",
+                long consumeFlame = ENCOUNTER.queryHealingByCaster("Nillath",
                         (ENCOUNTER.encounterLengthMillis() / timeStepCount) * j,
                         (ENCOUNTER.encounterLengthMillis() / timeStepCount)) / SCALE;
 //                                long rewind = encounter.queryHealingBySpell(Arrays.asList("Atonement", "Premonition of Piety", "Dark Reprimand", "Penance", "Divine Aegis"),
@@ -126,9 +130,29 @@ public class GraphGameObject implements GameObject, DrawListener {
                         (ENCOUNTER.encounterLengthMillis() / timeStepCount) * j,
                         (ENCOUNTER.encounterLengthMillis() / timeStepCount)) / SCALE;
                 rewindList.add(rewind);
+                long sunflowerItem = ENCOUNTER.queryHealingByCaster("Sunfl",
+                        (ENCOUNTER.encounterLengthMillis() / timeStepCount) * j,
+                        (ENCOUNTER.encounterLengthMillis() / timeStepCount)) / SCALE;
+                sunflower.add(sunflowerItem);
+                long syudouItem = ENCOUNTER.queryHealingByCaster("Taryn",
+                        (ENCOUNTER.encounterLengthMillis() / timeStepCount) * j,
+                        (ENCOUNTER.encounterLengthMillis() / timeStepCount)) / SCALE;
+                syudou.add(syudouItem);
+                long myloveItem = ENCOUNTER.queryHealingByCaster("Mylov",
+                        (ENCOUNTER.encounterLengthMillis() / timeStepCount) * j,
+                        (ENCOUNTER.encounterLengthMillis() / timeStepCount)) / SCALE;
+                mylove.add(myloveItem);
+                long healingPotion = ENCOUNTER.queryHealingBySpell(Arrays.asList("Algari Healing Potion", "Healthstone"),
+                        (ENCOUNTER.encounterLengthMillis() / timeStepCount) * j,
+                        (ENCOUNTER.encounterLengthMillis() / timeStepCount)) / SCALE;
+                consumes.add(healingPotion);
             }
-            graph.addAscent(new AscentBar(consumeFlameList, new Color(215, 55, 35)));
-            graph.addAscent(new AscentBar(rewindList, new Color(210, 204, 35)));
+            graph.addAscent(new AscentBar(consumeFlameList, new Color(51, 147, 127))); // Uravaal
+//            graph.addAscent(new AscentBar(rewindList, new Color(210, 204, 35))); // Skullz
+//            graph.addAscent(new AscentBar(sunflower, new Color(215, 215, 230)));
+//            graph.addAscent(new AscentBar(syudou, new Color(85, 95, 230)));
+//            graph.addAscent(new AscentBar(mylove, new Color(163, 48, 201)));
+//            graph.addAscent(new AscentBar(consumes, new Color(213, 76, 76)));
             graph.smooth(1);
             recompute = false;
             this.graph = graph;
