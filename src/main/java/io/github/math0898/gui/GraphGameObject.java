@@ -24,7 +24,7 @@ public class GraphGameObject implements GameObject, DrawListener {
     /**
      * The encounter to graph.
      */
-    private static final Encounter ENCOUNTER = Main.encounters.get(39);
+    private Encounter encounter = Main.encounters.get(39);
 
     /**
      * The vertical scale component of the healing graph.
@@ -73,8 +73,8 @@ public class GraphGameObject implements GameObject, DrawListener {
         final int startY = (panel.getHeight() * 7) / 8;
         for (long i = graph.max; i >= 0; i--)
             for (int j = 0; j < graph.overheal.size(); j++) {
-                if (graph.overheal.get(j) >= i) { // todo: Refactor so queries don't need to be ran during the graphics thread. Perhaps an "accents" list of arrays.
-                    if (graph.heal.get(j) >= i) // todo: Make all of these ascent bars.
+                if (graph.overheal.get(j) >= i && graph.overheal.get(j) != 0) { // todo: Refactor so queries don't need to be ran during the graphics thread. Perhaps an "accents" list of arrays.
+                    if (graph.heal.get(j) >= i && graph.heal.get(j) != 0) // todo: Make all of these ascent bars.
                         panel.setBigPixel(startX + (j * 10), startY - ((int) i * 10), 9, new Color(22, 237, 64));
                     else
                         panel.setBigPixel(startX + (j * 10), startY - ((int) i * 10), 9, new Color(39, 150, 60));
@@ -98,7 +98,7 @@ public class GraphGameObject implements GameObject, DrawListener {
                         lastSum = currentSum;
                     }
                 }
-                if (graph.damage.get(j) == i)
+                if (graph.damage.get(j) == i && graph.damage.get(j) != 0)
                     panel.setRectangle(startX + (j * 10) - 3, startY - ((int) i * 10) - 1, 7, 3, new Color(230, 41, 28));
             }
     }
@@ -111,7 +111,8 @@ public class GraphGameObject implements GameObject, DrawListener {
         if (recompute) {
             final int timeStepCount = ((targetWidth * 3) / 4) / 10;
             if (timeStepCount == 0) return;
-            Graph graph = ENCOUNTER.graph(ENCOUNTER.encounterLengthMillis() / timeStepCount, SCALE);
+            if (encounter == null) return;
+            Graph graph = encounter.graph(encounter.encounterLengthMillis() / timeStepCount, SCALE);
             ArrayList<Long> consumeFlameList = new ArrayList<>();
             ArrayList<Long> rewindList = new ArrayList<>();
             ArrayList<Long> sunflower = new ArrayList<>();
@@ -119,32 +120,32 @@ public class GraphGameObject implements GameObject, DrawListener {
             ArrayList<Long> mylove = new ArrayList<>();
             ArrayList<Long> consumes = new ArrayList<>();
             for (int j = 0; j < timeStepCount; j++) {
-                long consumeFlame = ENCOUNTER.queryHealingByCaster("Nillath",
-                        (ENCOUNTER.encounterLengthMillis() / timeStepCount) * j,
-                        (ENCOUNTER.encounterLengthMillis() / timeStepCount)) / SCALE;
+                long consumeFlame = encounter.queryHealingByCaster("Nillath",
+                        (encounter.encounterLengthMillis() / timeStepCount) * j,
+                        (encounter.encounterLengthMillis() / timeStepCount)) / SCALE;
 //                                long rewind = encounter.queryHealingBySpell(Arrays.asList("Atonement", "Premonition of Piety", "Dark Reprimand", "Penance", "Divine Aegis"),
 //                                (encounter.encounterLengthMillis() / timeStepCount) * j,
 //                                        (encounter.encounterLengthMillis() / timeStepCount)) / scale;
                 consumeFlameList.add(consumeFlame);
-                long rewind = ENCOUNTER.queryHealingByCaster("Skullz",
-                        (ENCOUNTER.encounterLengthMillis() / timeStepCount) * j,
-                        (ENCOUNTER.encounterLengthMillis() / timeStepCount)) / SCALE;
+                long rewind = encounter.queryHealingByCaster("Skullz",
+                        (encounter.encounterLengthMillis() / timeStepCount) * j,
+                        (encounter.encounterLengthMillis() / timeStepCount)) / SCALE;
                 rewindList.add(rewind);
-                long sunflowerItem = ENCOUNTER.queryHealingByCaster("Sunfl",
-                        (ENCOUNTER.encounterLengthMillis() / timeStepCount) * j,
-                        (ENCOUNTER.encounterLengthMillis() / timeStepCount)) / SCALE;
+                long sunflowerItem = encounter.queryHealingByCaster("Sunfl",
+                        (encounter.encounterLengthMillis() / timeStepCount) * j,
+                        (encounter.encounterLengthMillis() / timeStepCount)) / SCALE;
                 sunflower.add(sunflowerItem);
-                long syudouItem = ENCOUNTER.queryHealingByCaster("Taryn",
-                        (ENCOUNTER.encounterLengthMillis() / timeStepCount) * j,
-                        (ENCOUNTER.encounterLengthMillis() / timeStepCount)) / SCALE;
+                long syudouItem = encounter.queryHealingByCaster("Taryn",
+                        (encounter.encounterLengthMillis() / timeStepCount) * j,
+                        (encounter.encounterLengthMillis() / timeStepCount)) / SCALE;
                 syudou.add(syudouItem);
-                long myloveItem = ENCOUNTER.queryHealingByCaster("Mylov",
-                        (ENCOUNTER.encounterLengthMillis() / timeStepCount) * j,
-                        (ENCOUNTER.encounterLengthMillis() / timeStepCount)) / SCALE;
+                long myloveItem = encounter.queryHealingByCaster("Mylov",
+                        (encounter.encounterLengthMillis() / timeStepCount) * j,
+                        (encounter.encounterLengthMillis() / timeStepCount)) / SCALE;
                 mylove.add(myloveItem);
-                long healingPotion = ENCOUNTER.queryHealingBySpell(Arrays.asList("Algari Healing Potion", "Healthstone"),
-                        (ENCOUNTER.encounterLengthMillis() / timeStepCount) * j,
-                        (ENCOUNTER.encounterLengthMillis() / timeStepCount)) / SCALE;
+                long healingPotion = encounter.queryHealingBySpell(Arrays.asList("Algari Healing Potion", "Healthstone"),
+                        (encounter.encounterLengthMillis() / timeStepCount) * j,
+                        (encounter.encounterLengthMillis() / timeStepCount)) / SCALE;
                 consumes.add(healingPotion);
             }
             graph.addAscent(new AscentBar(consumeFlameList, new Color(51, 147, 127))); // Uravaal
@@ -157,6 +158,16 @@ public class GraphGameObject implements GameObject, DrawListener {
             recompute = false;
             this.graph = graph;
         }
+    }
+
+    /**
+     * Sets the encounter that this GraphGameObject should be drawing.
+     *
+     * @param encounter The encounter to graph.
+     */
+    public void setEncounter (Encounter encounter) {
+        this.encounter = encounter;
+        recompute = true;
     }
 
     /**

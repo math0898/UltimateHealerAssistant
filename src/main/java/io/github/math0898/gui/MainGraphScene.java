@@ -1,12 +1,25 @@
 package io.github.math0898.gui;
 
+import io.github.math0898.Main;
+import suga.engine.GameEngine;
 import suga.engine.game.BasicScene;
 import suga.engine.game.Game;
 import suga.engine.input.keyboard.KeyValue;
+import suga.engine.logger.Logger;
 
 import java.awt.*;
 
 public class MainGraphScene extends BasicScene {
+
+    /**
+     * The index of the encounter that is currently being graphed.
+     */
+    private int graphedEncounterIndex = 39; // todo: Set to 0
+
+    /**
+     * The GraphGameObject that actually draws the graph.
+     */
+    private GraphGameObject graphGameObject;
 
     /**
      * Loads this scene into the given game.
@@ -16,7 +29,8 @@ public class MainGraphScene extends BasicScene {
      */
     @Override
     public boolean load (Game game) {
-        game.addGameObject("Main Graph", new GraphGameObject());
+        graphGameObject = new GraphGameObject();
+        game.addGameObject("Main Graph", graphGameObject);
         return true;
     }
 
@@ -28,7 +42,28 @@ public class MainGraphScene extends BasicScene {
      */
     @Override
     public void keyboardInput (KeyValue key, boolean pressed) {
+        Logger logger = GameEngine.getLogger();
+        if (pressed) logger.log("You pressed: " + key + "!");
+        else logger.log("You released: " + key + "!");
+        if (!pressed) {
+            switch (key) {
+                case ARROW_UP -> {
+                    graphedEncounterIndex = Math.min(graphedEncounterIndex + 1, Main.encounters.size() - 1);
+                    updateGraph();
+                }
+                case ARROW_DOWN -> {
+                    graphedEncounterIndex = Math.max(graphedEncounterIndex - 1, 0);
+                    updateGraph();
+                }
+            }
+        }
+    }
 
+    /**
+     * Forces the graph to update.
+     */
+    private void updateGraph () {
+        graphGameObject.setEncounter(Main.encounters.get(graphedEncounterIndex));
     }
 
     /**
@@ -39,6 +74,8 @@ public class MainGraphScene extends BasicScene {
      */
     @Override
     public void mouseInput (Point pos, boolean pressed) {
-
+        Logger logger = GameEngine.getLogger();
+        if (pressed) logger.log("Clicked at " + pos + "!");
+        else logger.log("Click released at " + pos + "!");
     }
 }

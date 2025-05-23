@@ -50,23 +50,39 @@ public class Graph {
         heal = new ArrayList<>(); // todo: Consider factor neq 1
         damage = new ArrayList<>();
         for (int i = 0; i < oldOverheal.size(); i++) {
-            long sum = oldOverheal.get(Math.max(i - 1, 0)) + oldOverheal.get(i) + oldOverheal.get(Math.min(i + 1, oldOverheal.size() - 1));
-            overheal.add(sum / 3);
+            long sum = 0;
+            for (int j = i - factor; j <= factor + i; j++) {
+                if (j > 0 && j < oldOverheal.size())
+                    sum += oldOverheal.get(j);
+            }
+            overheal.add(sum / ((factor * 2L) + 1));
         }
         for (int i = 0; i < oldHeal.size(); i++) {
-            long sum = oldHeal.get(Math.max(i - 1, 0)) + oldHeal.get(i) + oldHeal.get(Math.min(i + 1, oldHeal.size() - 1));
-            heal.add(sum / 3);
+            long sum = 0;
+            for (int j = i - factor; j <= factor + i; j++) {
+                if (j > 0 && j < oldHeal.size())
+                    sum += oldHeal.get(j);
+            }
+            heal.add(sum / ((factor * 2L) + 1));
         }
         for (int i = 0; i < oldDamage.size(); i++) {
-            long sum = oldDamage.get(Math.max(i - 1, 0)) + oldDamage.get(i) + oldDamage.get(Math.min(i + 1, oldDamage.size() - 1));
-            damage.add(sum / 3);
+            long sum = 0;
+            for (int j = i - factor; j <= factor + i; j++) {
+                if (j > 0 && j < oldDamage.size())
+                    sum += oldDamage.get(j);
+            }
+            damage.add(sum / ((factor * 2L) + 1));
         }
         for (AscentBar bar : ascentBars) {
             List<Long> list = bar.getValues();
             List<Long> swap = new ArrayList<>();
             for (int i = 0; i < list.size(); i++) {
-                long sum = list.get(Math.max(i - 1, 0)) + list.get(i) + list.get(Math.min(i + 1, list.size() - 1));
-                swap.add(sum / 3);
+                long sum = 0;
+                for (int j = i - factor; j <= factor + i; j++) {
+                    if (j > 0 && j < list.size())
+                        sum += list.get(j);
+                }
+                swap.add(sum / ((factor * 2L) + 1));
             }
             list.clear();
             list.addAll(swap);
