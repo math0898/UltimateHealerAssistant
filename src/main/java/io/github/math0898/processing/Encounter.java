@@ -12,7 +12,9 @@ import java.util.*;
  * An encounter represents all the data contained in a single encounter. This includes sums and results of multiple
  * events as well the raw data from the logs file.
  */
-public class Encounter {
+public class Encounter { // todo: Might be worthwhile during processing to create an index of players and spells so speed up queries.
+    //                            Maybe call it, "deep processing" and make it an option for faster graph generations at the cost of
+    //                            increased processing time and RAM usage.
 
     /**
      * Raw log data included in this encounter.

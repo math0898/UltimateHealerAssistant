@@ -1,5 +1,7 @@
 package io.github.math0898.processing;
 
+import io.github.math0898.gui.AscentBar;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +33,11 @@ public class Graph {
     public List<Long> damage = new ArrayList<>();
 
     /**
+     * A List of ascent bars to add to this graph.
+     */
+    public List<AscentBar> ascentBars = new ArrayList<>();
+
+    /**
      * Smooths the graph by looking ahead and behind to average the current note.
      *
      * @param factor This is the number of columns ahead and behind to look in order to average values.
@@ -54,6 +61,7 @@ public class Graph {
             long sum = oldDamage.get(Math.max(i - 1, 0)) + oldDamage.get(i) + oldDamage.get(Math.min(i + 1, oldDamage.size() - 1));
             damage.add(sum / 3);
         }
+        // todo: Smooth Ascents.
     }
 
     /**
@@ -75,6 +83,15 @@ public class Graph {
         if (max < overheal) max = overheal;
         this.overheal.add(overheal);
         this.heal.add(heal);
+    }
+
+    /**
+     * Adds an ascent bar to this graph.
+     *
+     * @param bar The bar to add to this graph.
+     */
+    public void addAscent (AscentBar bar) {
+        ascentBars.add(bar);
     }
 
     /**

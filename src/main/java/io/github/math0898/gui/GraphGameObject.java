@@ -9,6 +9,7 @@ import suga.engine.graphics.GraphicsPanel;
 import suga.engine.physics.collidables.Collidable;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 /**
  * The Graph is considered a GameObject so that we have access to {@link #runLogic()}. This runs on a separate thread
@@ -28,6 +29,11 @@ public class GraphGameObject implements GameObject, DrawListener {
      * The vertical scale component of the healing graph.
      */
     private static final int SCALE = 1000000; // todo: Figure out a way to dynamicly calculate.
+
+    /**
+     * Whether to stack ascent bars or not.
+     */
+    private static final boolean STACKED = false;
 
     /**
      * This is the width at which the graph should be calculated at. It may lag behind a cycle or two since it needs
@@ -62,30 +68,35 @@ public class GraphGameObject implements GameObject, DrawListener {
             return;
         }
         if (graph == null) return;
-        final int timeStepCount = ((panel.getWidth() * 3) / 4) / 10; // todo: Graphics shouldn't need intimate details of time steps.
         final int startX = panel.getWidth() / 8;
         final int startY = (panel.getHeight() * 7) / 8;
         for (long i = graph.max; i >= 0; i--)
             for (int j = 0; j < graph.overheal.size(); j++) {
                 if (graph.overheal.get(j) >= i) { // todo: Refactor so queries don't need to be ran during the graphics thread. Perhaps an "accents" list of arrays.
-                    long consumeFlame = ENCOUNTER.queryHealingBySpell("Lifebind",
-                            (ENCOUNTER.encounterLengthMillis() / timeStepCount) * j,
-                            (ENCOUNTER.encounterLengthMillis() / timeStepCount)) / SCALE;
-//                                long rewind = encounter.queryHealingBySpell(Arrays.asList("Atonement", "Premonition of Piety", "Dark Reprimand", "Penance", "Divine Aegis"),
-//                                (encounter.encounterLengthMillis() / timeStepCount) * j,
-//                                        (encounter.encounterLengthMillis() / timeStepCount)) / scale;
-                    long rewind = ENCOUNTER.queryHealingByCaster("Skullz",
-                            (ENCOUNTER.encounterLengthMillis() / timeStepCount) * j,
-                            (ENCOUNTER.encounterLengthMillis() / timeStepCount)) / SCALE;
-                    if (consumeFlame >= i && consumeFlame > 0)
-                        panel.setBigPixel(startX + (j * 10), startY - ((int) i * 10), 9, new Color(215, 55, 35));
-                    else if (rewind >= i && rewind > 0) {
-                        panel.setBigPixel(startX + (j * 10), startY - ((int) i * 10), 9, new Color(210, 204, 35));
-                    }
-                    else if (graph.heal.get(j) >= i)
+                    if (graph.heal.get(j) >= i) // todo: Make all of these ascent bars.
                         panel.setBigPixel(startX + (j * 10), startY - ((int) i * 10), 9, new Color(22, 237, 64));
                     else
                         panel.setBigPixel(startX + (j * 10), startY - ((int) i * 10), 9, new Color(39, 150, 60));
+                }
+                for (int k = 0; k < graph.ascentBars.size(); k++) {
+                    AscentBar bar = graph.ascentBars.get(k);
+                    long value = bar.getValues().get(j);
+                    if (!STACKED) {
+                        if (value >= i && value > 0)
+                            panel.setBigPixel(startX + (j * 10), startY - ((int) i * 10), 9, bar.getColor());
+                    } else if (STACKED) { // todo: Latest graph in the daisy chain is overwriting earlier ones. Need to also have an option to color if within it's realm.
+                        if (value >= i && value > 0)
+                            panel.setBigPixel(startX + (j * 10), startY - ((int) i * 10), 9, bar.getColor());
+                        else {
+                            for (int l = 0; l < k; l++) {
+                                value += graph.ascentBars.get(l).getValues().get(j);
+                                if (value >= i && value > 0) {
+                                    panel.setBigPixel(startX + (j * 10), startY - ((int) i * 10), 9, bar.getColor());
+                                    break;
+                                }
+                            }
+                        }
+                    }
                 }
                 if (graph.damage.get(j) == i)
                     panel.setRectangle(startX + (j * 10) - 3, startY - ((int) i * 10) - 1, 7, 3, new Color(230, 41, 28));
@@ -101,6 +112,23 @@ public class GraphGameObject implements GameObject, DrawListener {
             final int timeStepCount = ((targetWidth * 3) / 4) / 10;
             if (timeStepCount == 0) return;
             Graph graph = ENCOUNTER.graph(ENCOUNTER.encounterLengthMillis() / timeStepCount, SCALE);
+            ArrayList<Long> consumeFlameList = new ArrayList<>();
+            ArrayList<Long> rewindList = new ArrayList<>();
+            for (int j = 0; j < timeStepCount; j++) {
+                long consumeFlame = ENCOUNTER.queryHealingBySpell("Lifebind",
+                        (ENCOUNTER.encounterLengthMillis() / timeStepCount) * j,
+                        (ENCOUNTER.encounterLengthMillis() / timeStepCount)) / SCALE;
+//                                long rewind = encounter.queryHealingBySpell(Arrays.asList("Atonement", "Premonition of Piety", "Dark Reprimand", "Penance", "Divine Aegis"),
+//                                (encounter.encounterLengthMillis() / timeStepCount) * j,
+//                                        (encounter.encounterLengthMillis() / timeStepCount)) / scale;
+                consumeFlameList.add(consumeFlame);
+                long rewind = ENCOUNTER.queryHealingByCaster("Skullz",
+                        (ENCOUNTER.encounterLengthMillis() / timeStepCount) * j,
+                        (ENCOUNTER.encounterLengthMillis() / timeStepCount)) / SCALE;
+                rewindList.add(rewind);
+            }
+            graph.addAscent(new AscentBar(consumeFlameList, new Color(215, 55, 35)));
+            graph.addAscent(new AscentBar(rewindList, new Color(210, 204, 35)));
             graph.smooth(1);
             recompute = false;
             this.graph = graph;
@@ -123,7 +151,7 @@ public class GraphGameObject implements GameObject, DrawListener {
      * @return Either the DrawListener attached to this GameObject or null.
      */
     @Override
-    public DrawListener getDrawListener() {
+    public DrawListener getDrawListener () {
         return this;
     }
 
