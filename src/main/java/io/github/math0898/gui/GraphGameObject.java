@@ -33,7 +33,7 @@ public class GraphGameObject extends BasicGameObject implements  DrawListener {
     /**
      * Whether to stack ascent bars or not.
      */
-    private static final boolean STACKED = true;
+    private static final boolean STACKED = false;
 
     /**
      * This is the width at which the graph should be calculated at. It may lag behind a cycle or two since it needs
@@ -126,7 +126,7 @@ public class GraphGameObject extends BasicGameObject implements  DrawListener {
 //                                (encounter.encounterLengthMillis() / timeStepCount) * j,
 //                                        (encounter.encounterLengthMillis() / timeStepCount)) / scale;
                 consumeFlameList.add(consumeFlame);
-                long rewind = encounter.queryHealingByCaster("Skullz",
+                long rewind = encounter.queryHealingBySpell("Rewind",
                         (encounter.encounterLengthMillis() / timeStepCount) * j,
                         (encounter.encounterLengthMillis() / timeStepCount)) / SCALE;
                 rewindList.add(rewind);
@@ -134,7 +134,7 @@ public class GraphGameObject extends BasicGameObject implements  DrawListener {
                         (encounter.encounterLengthMillis() / timeStepCount) * j,
                         (encounter.encounterLengthMillis() / timeStepCount)) / SCALE;
                 sunflower.add(sunflowerItem);
-                long syudouItem = encounter.queryHealingByCaster("Taryn",
+                long syudouItem = encounter.queryHealingBySpell("Emerald Communion",
                         (encounter.encounterLengthMillis() / timeStepCount) * j,
                         (encounter.encounterLengthMillis() / timeStepCount)) / SCALE;
                 syudou.add(syudouItem);
@@ -142,17 +142,17 @@ public class GraphGameObject extends BasicGameObject implements  DrawListener {
                         (encounter.encounterLengthMillis() / timeStepCount) * j,
                         (encounter.encounterLengthMillis() / timeStepCount)) / SCALE;
                 mylove.add(myloveItem);
-                long healingPotion = encounter.queryHealingBySpell(Arrays.asList("Algari Healing Potion", "Healthstone"),
+                long healingPotion = encounter.queryHealingBySpell("Consume Flame",
                         (encounter.encounterLengthMillis() / timeStepCount) * j,
                         (encounter.encounterLengthMillis() / timeStepCount)) / SCALE;
                 consumes.add(healingPotion);
             }
             graph.addAscent(new AscentBar(consumeFlameList, new Color(51, 147, 127))); // Uravaal
-//            graph.addAscent(new AscentBar(rewindList, new Color(210, 204, 35))); // Skullz
+            graph.addAscent(new AscentBar(rewindList, new Color(210, 204, 35))); // Skullz
 //            graph.addAscent(new AscentBar(sunflower, new Color(215, 215, 230)));
-//            graph.addAscent(new AscentBar(syudou, new Color(85, 95, 230)));
+            graph.addAscent(new AscentBar(syudou, new Color(84, 227, 201)));
 //            graph.addAscent(new AscentBar(mylove, new Color(163, 48, 201)));
-//            graph.addAscent(new AscentBar(consumes, new Color(213, 76, 76)));
+            graph.addAscent(new AscentBar(consumes, new Color(213, 76, 76)));
             graph.smooth(1);
             recompute = false;
             this.graph = graph;

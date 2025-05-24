@@ -33,6 +33,7 @@ public class MainGraphScene extends BasicScene {
         graphGameObject = new GraphGameObject();
         game.addGameObject("Main Graph", graphGameObject);
         game.addGameObject("Encounter Indicator", new EncounterIndicator(this));
+        game.addGameObject("Cast Indicator", new CastIndicator(this)); // todo: Probably make separate instances per spell query.
         return true;
     }
 

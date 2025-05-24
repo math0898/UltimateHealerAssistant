@@ -255,6 +255,21 @@ public class Encounter { // todo: Might be worthwhile during processing to creat
     }
 
     /**
+     * Queries the timeline for when this specific spell appears. Returns a list of values that may be empty.
+     *
+     * @param spellName The name of the spell to query for.
+     */
+    public List<Long> querySpellHealingInstances (String spellName) {
+        List<Long> list = new ArrayList<>();
+        for (LogEntry log : entries) {
+            if (log instanceof HealEntry heal)
+                if (spellName.equalsIgnoreCase(heal.getSpellName()))
+                    list.add(log.getTime());
+        }
+        return list;
+    }
+
+    /**
      * The amount of time this encounter takes in milliseconds.
      *
      * @return The number of milliseconds that transpire in this encounter.
