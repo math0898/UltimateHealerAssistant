@@ -62,9 +62,20 @@ public class Encounter { // todo: Might be worthwhile during processing to creat
     public void process () {
         if (processed) return;
         processed = true;
-        Scanner s = new Scanner(data);
+        /*Scanner s = new Scanner(data);
         while (s.hasNextLine()) {
             String line = s.nextLine();
+            if (line.contains(" SPELL_HEAL_ABSORBED,")) entries.add(new HealAbsorbEntry(line));
+            else if (line.contains(" SPELL_HEAL,")) entries.add(new HealEntry(line));
+            else if (line.contains(" SPELL_PERIODIC_HEAL,")) entries.add(new HealEntry(line)); // todo: Almost identical data but distinction would be nice.
+            else if (line.contains("  SPELL_PERIODIC_DAMAGE,")) entries.add(new DamageTakenEntry(line));
+            else if (line.contains("  SPELL_DAMAGE,")) entries.add(new DamageTakenEntry(line));
+            else if (line.contains(" ENCOUNTER_START")) processEncounterStart(line);
+            else if (line.contains(" ENCOUNTER_END")) processEncounterEnd(line);
+        } */
+        String[] lines = data.split("\n");
+        for (int i = 0; i < lines.length; i++) {
+            String line = lines[i];
             if (line.contains(" SPELL_HEAL_ABSORBED,")) entries.add(new HealAbsorbEntry(line));
             else if (line.contains(" SPELL_HEAL,")) entries.add(new HealEntry(line));
             else if (line.contains(" SPELL_PERIODIC_HEAL,")) entries.add(new HealEntry(line)); // todo: Almost identical data but distinction would be nice.

@@ -11,10 +11,12 @@ import suga.engine.logger.Level;
 
 import java.awt.*;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class Main {
 
@@ -52,11 +54,12 @@ public class Main {
     public static void processFile (String logFile) {
         try (InputStream inputStream = Main.class.getResourceAsStream(logFile)) { // todo: Consider non-class resources.
             if (inputStream == null) return;
-            Scanner s = new Scanner(inputStream);
-            StringBuilder builder = new StringBuilder(); // todo: First encounter over counts healing.
+            StringBuilder builder = new StringBuilder();
             boolean encounter_start = false;
-            while (s.hasNextLine()) {
-                String line = s.nextLine();
+            String data = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8).lines().collect(Collectors.joining("\n"));
+            String[] lines = data.split("\n");
+            for (int i = 0; i < lines.length; i++) {
+                String line = lines[i];
                 if (line.contains("ENCOUNTER_END")) {
                     builder.append("\n").append(line);
                     Encounter encounter = new Encounter(builder.toString());
