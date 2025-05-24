@@ -4,9 +4,12 @@ import io.github.math0898.processing.logentries.DamageTakenEntry;
 import io.github.math0898.processing.logentries.HealAbsorbEntry;
 import io.github.math0898.processing.logentries.HealEntry;
 import io.github.math0898.processing.logentries.LogEntry;
+import suga.engine.GameEngine;
+import suga.engine.logger.Level;
 
 import java.text.NumberFormat;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -88,8 +91,13 @@ public class Encounter { // todo: Might be worthwhile during processing to creat
         for (int i = 0; s.hasNext(); i++) {
             switch (i) {
                 case 0 -> {
-                    String date = s.next().replaceAll("-\\d  ENCOUNTER_START", ""); // todo: Timezone?
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/dd/yyyy HH:mm:ss.SSS"); // todo: 2 digit dates?
+                    String date = s.next().replaceAll("  ENCOUNTER_START", ""); // todo: Timezone?
+                    String offset;
+                    if (date.contains("-")) offset = "-";
+                    else offset = "\\+";
+                    String zone = offset + "0" + date.replaceAll(".+" + offset, "");
+                    date = date.replaceAll("-\\d", "");
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/dd/yyyy HH:mm:ss.SSS").withZone(ZoneId.of(zone)); // todo: 2 digit dates?
                     LocalDateTime dateTime = LocalDateTime.parse(date, formatter);
                     encounterStartMillis = dateTime.toInstant(ZoneOffset.UTC).toEpochMilli();
                 }
