@@ -62,17 +62,6 @@ public class Encounter { // todo: Might be worthwhile during processing to creat
     public void process () {
         if (processed) return;
         processed = true;
-        /*Scanner s = new Scanner(data);
-        while (s.hasNextLine()) {
-            String line = s.nextLine();
-            if (line.contains(" SPELL_HEAL_ABSORBED,")) entries.add(new HealAbsorbEntry(line));
-            else if (line.contains(" SPELL_HEAL,")) entries.add(new HealEntry(line));
-            else if (line.contains(" SPELL_PERIODIC_HEAL,")) entries.add(new HealEntry(line)); // todo: Almost identical data but distinction would be nice.
-            else if (line.contains("  SPELL_PERIODIC_DAMAGE,")) entries.add(new DamageTakenEntry(line));
-            else if (line.contains("  SPELL_DAMAGE,")) entries.add(new DamageTakenEntry(line));
-            else if (line.contains(" ENCOUNTER_START")) processEncounterStart(line);
-            else if (line.contains(" ENCOUNTER_END")) processEncounterEnd(line);
-        } */
         String[] lines = data.split("\n");
         for (int i = 0; i < lines.length; i++) {
             String line = lines[i];
@@ -92,16 +81,9 @@ public class Encounter { // todo: Might be worthwhile during processing to creat
      * @param line The encounter start data.
      */
     private void processEncounterStart (String line) {
-        Scanner s = new Scanner(line);
-        s.useDelimiter(",");
-        for (int i = 0; s.hasNext(); i++) {
-            switch (i) {
-                case 0 -> encounterStartMillis = Utils.millisFromLogTime(s.next());
-                case 2 -> enemyName = s.next().replace("\"", "");
-                default -> s.next();
-            }
-        }
-        s.close();
+        String[] split = line.split(",");
+        encounterStartMillis = Utils.millisFromLogTime(split[0]);
+        enemyName = split[2].replace("\"", "");
     }
 
     /**
@@ -110,9 +92,7 @@ public class Encounter { // todo: Might be worthwhile during processing to creat
      * @param line The encounter end data.
      */
     private void processEncounterEnd (String line) {
-        Scanner s = new Scanner(line);
-        s.useDelimiter(",");
-        encounterEndMillis = Utils.millisFromLogTime(s.next());
+        encounterEndMillis = Utils.millisFromLogTime(line.split(",")[0]);
     }
 
     /**

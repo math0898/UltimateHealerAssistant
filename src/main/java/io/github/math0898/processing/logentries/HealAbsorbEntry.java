@@ -1,7 +1,5 @@
 package io.github.math0898.processing.logentries;
 
-import java.util.Scanner;
-
 /**
  * Heal Absorb events are a type of heal event but require different processing.
  *
@@ -27,19 +25,12 @@ public class HealAbsorbEntry extends HealEntry {
      * Initializes the data contained within this entry.
      */
     protected void init () {
-        Scanner s = new Scanner(data);
-        s.useDelimiter(",");
-        int total_heal = 0;
-        for (int i = 0; s.hasNext(); i++) {
-            switch (i) {
-                case 13 -> caster = s.next().replace("\"", "");
-                case 17 -> spellName = s.next().replace("\"", "");
-                case 19 -> absorbed = Integer.parseInt(s.next());
-                case 20 -> total_heal = Integer.parseInt(s.next());
-                case 21 -> overheal = Integer.parseInt(s.next());
-                default -> s.next();
-            }
-        }
+        String[] lines = data.split(",");
+        caster = lines[13].replace("\"", "");
+        spellName = lines[17].replace("\"", "");
+        absorbed = Integer.parseInt(lines[19]);
+        int total_heal = Integer.parseInt(lines[20]);
+        overheal = 0;// Integer.parseInt(lines[21]);
         heal = total_heal - overheal - absorbed;
     }
 

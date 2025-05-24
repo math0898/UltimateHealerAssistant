@@ -2,8 +2,6 @@ package io.github.math0898.processing.logentries;
 
 import io.github.math0898.processing.EntryType;
 
-import java.util.Scanner;
-
 public class DamageTakenEntry extends LogEntry {
 
     /**
@@ -25,22 +23,13 @@ public class DamageTakenEntry extends LogEntry {
      * Initializes the data contained within this entry.
      */
     protected void init () { // todo: This still doesn't consider all the incoming damage.
-        Scanner s = new Scanner(data);
-        s.useDelimiter(",");
-        for (int i = 0; i < 12; i++)
-            s.next();
-        String target = s.next();
+        String[] lines = data.split(",");
+        String target = lines[12];
         if (!target.contains("Player-")) return;
-        for (int i = 13; i < 31; i++)
-            s.next();
-        damageTaken = Long.parseLong(s.next());
-        s.next(); // Unmitigated
-        long overkill = Math.max(Long.parseLong(s.next()), 0); // > 0 Is overkill
+        damageTaken = Long.parseLong(lines[31]);
+        long overkill = Math.max(Long.parseLong(lines[33]), 0); // > 0 Is overkill
         damageTaken = damageTaken - overkill;
-        s.next(); // 8
-        s.next(); // 0
-        s.next(); // 0
-        damageTaken = damageTaken - Long.parseLong(s.next()); // Absorb
+        damageTaken = damageTaken - Long.parseLong(lines[37]); // Absorb
     }
 
     /**

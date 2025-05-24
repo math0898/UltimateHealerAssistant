@@ -8,10 +8,8 @@ import suga.engine.graphics.GraphicsPanel;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.text.DateFormat;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.TimeZone;
 
 /**
