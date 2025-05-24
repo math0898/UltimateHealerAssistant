@@ -33,14 +33,14 @@ public class DamageTakenEntry extends LogEntry {
         if (!target.contains("Player-")) return;
         for (int i = 13; i < 31; i++)
             s.next();
-        damageTaken = s.nextLong();
+        damageTaken = Long.parseLong(s.next());
         s.next(); // Unmitigated
-        long overkill = Math.max(s.nextLong(), 0); // > 0 Is overkill
+        long overkill = Math.max(Long.parseLong(s.next()), 0); // > 0 Is overkill
         damageTaken = damageTaken - overkill;
         s.next(); // 8
         s.next(); // 0
         s.next(); // 0
-        damageTaken = damageTaken - s.nextLong(); // Absorb
+        damageTaken = damageTaken - Long.parseLong(s.next()); // Absorb
     }
 
     /**

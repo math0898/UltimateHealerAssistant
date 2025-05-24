@@ -51,8 +51,8 @@ public class HealEntry extends LogEntry {
             switch (i) {
                 case 2 -> caster = s.next().replace("\"", "");
                 case 10 -> spellName = s.next().replace("\"", "");
-                case 31 -> total_heal = s.nextInt();
-                case 33 -> overheal = s.nextInt(); // todo: So far everything has been RAW_HEAL_AMOUNT, RAW_HEAL_AMOUNT. Is there heal absorb in here?
+                case 31 -> total_heal = Integer.parseInt(s.next());
+                case 33 -> overheal = Integer.parseInt(s.next()); // todo: So far everything has been RAW_HEAL_AMOUNT, RAW_HEAL_AMOUNT. Is there heal absorb in here?
                 // default -> System.out.println(i + ": " + s.next());
                 default -> s.next();
             }

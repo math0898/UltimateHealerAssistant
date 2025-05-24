@@ -34,9 +34,9 @@ public class HealAbsorbEntry extends HealEntry {
             switch (i) {
                 case 13 -> caster = s.next().replace("\"", "");
                 case 17 -> spellName = s.next().replace("\"", "");
-                case 19 -> absorbed = s.nextInt();
-                case 20 -> total_heal = s.nextInt();
-                case 21 -> overheal = s.nextInt();
+                case 19 -> absorbed = Integer.parseInt(s.next());
+                case 20 -> total_heal = Integer.parseInt(s.next());
+                case 21 -> overheal = Integer.parseInt(s.next());
                 default -> s.next();
             }
         }
