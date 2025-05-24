@@ -3,10 +3,9 @@ package io.github.math0898.gui;
 import io.github.math0898.Main;
 import io.github.math0898.processing.Encounter;
 import io.github.math0898.processing.Graph;
-import suga.engine.game.objects.GameObject;
+import suga.engine.game.objects.BasicGameObject;
 import suga.engine.graphics.DrawListener;
 import suga.engine.graphics.GraphicsPanel;
-import suga.engine.physics.collidables.Collidable;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -19,7 +18,7 @@ import java.util.Arrays;
  *
  * @author Sugaku
  */
-public class GraphGameObject implements GameObject, DrawListener {
+public class GraphGameObject extends BasicGameObject implements  DrawListener {
 
     /**
      * The encounter to graph.
@@ -168,45 +167,5 @@ public class GraphGameObject implements GameObject, DrawListener {
     public void setEncounter (Encounter encounter) {
         this.encounter = encounter;
         recompute = true;
-    }
-
-    /**
-     * Attaches a DrawListener to this GameObject.
-     *
-     * @param listener The DrawListener to attach to this GameObject.
-     */
-    @Override
-    public void setDrawListener (DrawListener listener) {
-
-    }
-
-    /**
-     * If present, returns the DrawListener associated with this GameObject. May be null.
-     *
-     * @return Either the DrawListener attached to this GameObject or null.
-     */
-    @Override
-    public DrawListener getDrawListener () {
-        return this;
-    }
-
-    /**
-     * Assigns a collider to this GameObject.
-     *
-     * @param collider The collider to assign to this GameObject.
-     */
-    @Override
-    public void setCollider (Collidable collider) {
-
-    }
-
-    /**
-     * Gets a collider that is present on this object. If none are present returns null.
-     *
-     * @return Either the Collider attached to this GameObject or null.
-     */
-    @Override
-    public Collidable getCollider () {
-        return null;
     }
 }

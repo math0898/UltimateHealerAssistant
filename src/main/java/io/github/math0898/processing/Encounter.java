@@ -6,6 +6,9 @@ import io.github.math0898.processing.logentries.HealEntry;
 import io.github.math0898.processing.logentries.LogEntry;
 
 import java.text.NumberFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /**
@@ -26,7 +29,25 @@ public class Encounter { // todo: Might be worthwhile during processing to creat
      */
     private final List<LogEntry> entries = new ArrayList<>();
 
-    boolean processed = false;
+    /**
+     * A quick boolean to determine whether this Encounter has undergone processing or not.
+     */
+    private boolean processed = false;
+
+    /**
+     * The start time of this Encounter in millis since epoch.
+     */
+    private long encounterStartMillis;
+
+    /**
+     * The end time of this Encounter in millis since epoch.
+     */
+    private long encounterEndMillis;
+
+    /**
+     * The name of the mob that this Encounter is with.
+     */
+    private String enemyName;
 
     /**
      * Creates a new Encounter with the given data.
@@ -51,7 +72,46 @@ public class Encounter { // todo: Might be worthwhile during processing to creat
             else if (line.contains(" SPELL_PERIODIC_HEAL,")) entries.add(new HealEntry(line)); // todo: Almost identical data but distinction would be nice.
             else if (line.contains("  SPELL_PERIODIC_DAMAGE,")) entries.add(new DamageTakenEntry(line));
             else if (line.contains("  SPELL_DAMAGE,")) entries.add(new DamageTakenEntry(line));
+            else if (line.contains(" ENCOUNTER_START")) processEncounterStart(line);
+            else if (line.contains(" ENCOUNTER_END")) processEncounterEnd(line);
         }
+    }
+
+    /**
+     * Processes the start of the Encounter.
+     *
+     * @param line The encounter start data.
+     */
+    private void processEncounterStart (String line) {
+        Scanner s = new Scanner(line);
+        s.useDelimiter(",");
+        for (int i = 0; s.hasNext(); i++) {
+            switch (i) {
+                case 0 -> {
+                    String date = s.next().replaceAll("-\\d  ENCOUNTER_START", ""); // todo: Timezone?
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/dd/yyyy HH:mm:ss.SSS"); // todo: 2 digit dates?
+                    LocalDateTime dateTime = LocalDateTime.parse(date, formatter);
+                    encounterStartMillis = dateTime.toInstant(ZoneOffset.UTC).toEpochMilli();
+                }
+                case 2 -> enemyName = s.next().replace("\"", "");
+                default -> s.next();
+            }
+        }
+        s.close();
+    }
+
+    /**
+     * Processes the end of the Encounter.
+     *
+     * @param line The encounter end data.
+     */
+    private void processEncounterEnd (String line) {
+        Scanner s = new Scanner(line);
+        s.useDelimiter(" ");
+        String date = s.next() + " " + s.next().replaceAll("-\\d", ""); // todo: Timezone?
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/dd/yyyy HH:mm:ss.SSS"); // todo: 2 digit dates?
+        LocalDateTime dateTime = LocalDateTime.parse(date, formatter);
+        encounterEndMillis = dateTime.toInstant(ZoneOffset.UTC).toEpochMilli();
     }
 
     /**
@@ -61,6 +121,24 @@ public class Encounter { // todo: Might be worthwhile during processing to creat
      */
     public int eventCount () {
         return entries.size();
+    }
+
+    /**
+     * Accessor method for the name of the enemy in this encounter.
+     *
+     * @return The enemy in this encounter.
+     */
+    public String getEnemyName () {
+        return enemyName;
+    }
+
+    /**
+     * Accessor method for the time that this encounter occurred.
+     *
+     * @return The date/time of this encounter in millis since epoch.
+     */
+    public long getEncounterStartMillis () {
+        return encounterStartMillis;
     }
 
     /**
@@ -152,9 +230,9 @@ public class Encounter { // todo: Might be worthwhile during processing to creat
     public long queryHealingByCaster (String casterName, long startTime, long length) {
         long total = 0;
         for (LogEntry log : entries) {
-            if (log.getTime() < (startTime + entries.getFirst().getTime())
-                    || log.getTime() > (startTime + entries.getFirst().getTime()) + length)
-                continue;
+            // Logs are sorted by time by construction. So we can safely stop searching once we break past the search bounds.
+            if (log.getTime() > (startTime + encounterStartMillis) + length) break;
+            if (log.getTime() < (startTime + entries.getFirst().getTime())) continue;
             if (log instanceof HealEntry heal)
                 if (heal.getCaster().contains(casterName))
                     total += heal.getHeal() + heal.getOverheal();
@@ -183,8 +261,9 @@ public class Encounter { // todo: Might be worthwhile during processing to creat
     public long queryHealingBySpell (Collection<String> spellNames, long startTime, long length) {
         long total = 0;
         for (LogEntry log : entries) {
-            if (log.getTime() < (startTime + entries.getFirst().getTime())
-                    || log.getTime() > (startTime + entries.getFirst().getTime()) + length)
+            // Logs are sorted by time by construction. So we can safely stop searching once we break past the search bounds.
+            if (log.getTime() > (startTime + encounterStartMillis) + length) break;
+            if (log.getTime() < (startTime + encounterStartMillis))
                 continue;
             if (log instanceof HealEntry heal)
                 if (spellNames.contains(heal.getSpellName()))
@@ -199,6 +278,6 @@ public class Encounter { // todo: Might be worthwhile during processing to creat
      * @return The number of milliseconds that transpire in this encounter.
      */
     public long encounterLengthMillis () {
-        return entries.getLast().getTime() - entries.getFirst().getTime();
+        return encounterEndMillis - encounterStartMillis;
     }
 }

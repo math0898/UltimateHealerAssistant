@@ -7,6 +7,7 @@ import suga.engine.game.BasicGame;
 import io.github.math0898.gui.*;
 import suga.engine.input.keyboard.GameKeyListener;
 import suga.engine.input.mouse.BasicMouseListener;
+import suga.engine.logger.Level;
 
 import java.awt.*;
 import java.io.InputStream;
@@ -17,25 +18,16 @@ import java.util.Scanner;
 
 public class Main {
 
-    private final static String TEST_FILE = "/Archive-WoWCombatLog-051525_185636.txt";
+    public final static String TEST_FILE = "/Archive-WoWCombatLog-051525_185636.txt";
 
     public final static List<Encounter> encounters = new ArrayList<>();
 
     public static void main(String[] args) {
+        GameEngine.getLogger().setLevel(Level.VERBOSE);
         long startTime = System.currentTimeMillis();
         processFile(TEST_FILE);
         long endTime = System.currentTimeMillis();
-        System.out.println("Found " + encounters.size() + " encounters. Took: " + NumberFormat.getInstance().format((endTime - startTime)) + "ms");
-//        for (int i = 0; i < encounters.size(); i++) {
-//            encounters.get(i).process();
-//            if (encounters.get(i).eventCount() < 50) continue;
-//            encounters.get(i).summarize();
-//            System.out.println("Wipe " + i);
-//        }
-        int testIndex = 5;
-        encounters.get(testIndex).process();
-        encounters.get(testIndex).summarize();
-        encounters.get(testIndex).queryHealingBySpell("Halo", 0, 1000000000);
+        GameEngine.getLogger().log("Found " + encounters.size() + " encounters. Took: " + NumberFormat.getInstance().format((endTime - startTime)) + "ms");
         gui();
     }
 
@@ -66,14 +58,14 @@ public class Main {
             while (s.hasNextLine()) {
                 String line = s.nextLine();
                 if (line.contains("ENCOUNTER_END")) {
+                    builder.append("\n").append(line);
                     Encounter encounter = new Encounter(builder.toString());
                     encounter.process();
                     if (encounter.eventCount() > 50 && encounter.encounterLengthMillis() > 3000)
                         encounters.add(encounter);
                     encounter_start = false;
                     builder = new StringBuilder();
-                } else if (line.contains("ENCOUNTER_START"))
-                    encounter_start = true;
+                } else if (line.contains("ENCOUNTER_START")) encounter_start = true;
                 if (encounter_start) builder.append("\n").append(line);
             }
         } catch (Exception e) {

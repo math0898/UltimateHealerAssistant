@@ -5,6 +5,7 @@ import suga.engine.GameEngine;
 import suga.engine.game.BasicScene;
 import suga.engine.game.Game;
 import suga.engine.input.keyboard.KeyValue;
+import suga.engine.logger.Level;
 import suga.engine.logger.Logger;
 
 import java.awt.*;
@@ -31,6 +32,7 @@ public class MainGraphScene extends BasicScene {
     public boolean load (Game game) {
         graphGameObject = new GraphGameObject();
         game.addGameObject("Main Graph", graphGameObject);
+        game.addGameObject("Encounter Indicator", new EncounterIndicator(this));
         return true;
     }
 
@@ -43,8 +45,8 @@ public class MainGraphScene extends BasicScene {
     @Override
     public void keyboardInput (KeyValue key, boolean pressed) {
         Logger logger = GameEngine.getLogger();
-        if (pressed) logger.log("You pressed: " + key + "!");
-        else logger.log("You released: " + key + "!");
+        if (pressed) logger.log("You pressed: " + key + "!", Level.VERBOSE);
+        else logger.log("You released: " + key + "!", Level.VERBOSE);
         if (!pressed) {
             switch (key) {
                 case ARROW_UP -> {
@@ -67,6 +69,15 @@ public class MainGraphScene extends BasicScene {
     }
 
     /**
+     * Accessor method for the encounter number this Scene is currently on.
+     *
+     * @return The index of the currently graphed encounter.
+     */
+    public int getGraphedEncounterIndex () {
+        return graphedEncounterIndex;
+    }
+
+    /**
      * Passes a mouse input into the scene.
      *
      * @param pos     The position of the mouse when it was clicked.
@@ -75,7 +86,7 @@ public class MainGraphScene extends BasicScene {
     @Override
     public void mouseInput (Point pos, boolean pressed) {
         Logger logger = GameEngine.getLogger();
-        if (pressed) logger.log("Clicked at " + pos + "!");
-        else logger.log("Click released at " + pos + "!");
+        if (pressed) logger.log("Clicked at " + pos + "!", Level.VERBOSE);
+        else logger.log("Click released at " + pos + "!", Level.VERBOSE);
     }
 }
