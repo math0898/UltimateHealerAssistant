@@ -15,7 +15,7 @@ import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
 public class Main {
@@ -27,7 +27,7 @@ public class Main {
     public static void main(String[] args) {
         GameEngine.getLogger().setLevel(Level.VERBOSE);
         long startTime = System.currentTimeMillis();
-        processFile(TEST_FILE);
+        new Main().processFile(TEST_FILE);
         long endTime = System.currentTimeMillis();
         GameEngine.getLogger().log("Found " + encounters.size() + " encounters. Took: " + NumberFormat.getInstance().format((endTime - startTime)) + "ms");
         gui();
@@ -51,25 +51,36 @@ public class Main {
      *
      * @param logFile The log file to investigate.
      */
-    public static void processFile (String logFile) {
+    public void processFile (String logFile) {
         try (InputStream inputStream = Main.class.getResourceAsStream(logFile)) { // todo: Consider non-class resources.
             if (inputStream == null) return;
             StringBuilder builder = new StringBuilder();
             boolean encounter_start = false;
             String data = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8).lines().collect(Collectors.joining("\n"));
             String[] lines = data.split("\n");
-            for (int i = 0; i < lines.length; i++) {
-                String line = lines[i];
-                if (line.contains("ENCOUNTER_END")) {
-                    builder.append("\n").append(line);
-                    Encounter encounter = new Encounter(builder.toString());
-                    encounter.process();
-                    if (encounter.eventCount() > 50 && encounter.encounterLengthMillis() > 3000)
-                        encounters.add(encounter);
-                    encounter_start = false;
-                    builder = new StringBuilder();
-                } else if (line.contains("ENCOUNTER_START")) encounter_start = true;
-                if (encounter_start) builder.append("\n").append(line);
+            try (ExecutorService executor = new ThreadPoolExecutor(4, 8, 5, TimeUnit.SECONDS, new LinkedBlockingQueue<>())) {
+                List<Future<?>> futures = new ArrayList<>();
+                for (int i = 0; i < lines.length; i++) {
+                    String line = lines[i];
+                    if (line.contains("ENCOUNTER_END")) {
+                        builder.append("\n").append(line);
+                        String finalDataString = builder.toString();
+                        Runnable thread = () -> {
+                            Encounter encounter = new Encounter(finalDataString);
+                            encounter.process();
+                            if (encounter.eventCount() > 50 && encounter.encounterLengthMillis() > 3000)
+                                encounters.add(encounter);
+                        };
+                        futures.add(executor.submit(thread));
+                        encounter_start = false;
+                        builder = new StringBuilder();
+                    } else if (line.contains("ENCOUNTER_START")) encounter_start = true;
+                    if (encounter_start) builder.append("\n").append(line);
+                }
+                for (Future<?> f : futures) f.get(); // Wait for all to finish.
+                encounters.sort((e1, e2) -> Math.toIntExact(e1.getEncounterStartMillis() - e2.getEncounterStartMillis()));
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
