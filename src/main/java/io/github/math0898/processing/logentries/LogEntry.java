@@ -3,8 +3,6 @@ package io.github.math0898.processing.logentries;
 import io.github.math0898.processing.EntryType;
 import io.github.math0898.utils.Utils;
 
-import java.util.Scanner;
-
 /**
  * Represents a single activity in an Encounter.
  *
@@ -29,9 +27,7 @@ public abstract class LogEntry {
      */
     public LogEntry (String data) {
         this.data = data;
-        Scanner s = new Scanner(data);
-        s.useDelimiter(",");
-        time = Utils.millisFromLogTime(s.next());
+        time = Utils.millisFromLogTime(data.split(",")[0]);
     }
 
     /**
