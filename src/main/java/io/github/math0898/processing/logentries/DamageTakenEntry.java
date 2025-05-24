@@ -1,7 +1,5 @@
 package io.github.math0898.processing.logentries;
 
-import io.github.math0898.processing.EntryType;
-
 public class DamageTakenEntry extends LogEntry {
 
     /**
@@ -30,6 +28,7 @@ public class DamageTakenEntry extends LogEntry {
         long overkill = Math.max(Long.parseLong(lines[33]), 0); // > 0 Is overkill
         damageTaken = damageTaken - overkill;
         damageTaken = damageTaken - Long.parseLong(lines[37]); // Absorb
+        data = null;
     }
 
     /**
@@ -39,15 +38,5 @@ public class DamageTakenEntry extends LogEntry {
      */
     public long damageTaken () {
         return damageTaken;
-    }
-
-    /**
-     * Returns the type of LogEntry this class represents.
-     *
-     * @return The entry type represented by this class.
-     */
-    @Override
-    public EntryType getType () {
-        return EntryType.DAMAGE;
     }
 }

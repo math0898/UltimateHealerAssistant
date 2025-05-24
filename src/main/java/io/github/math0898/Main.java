@@ -10,6 +10,7 @@ import suga.engine.input.mouse.BasicMouseListener;
 import suga.engine.logger.Level;
 
 import java.awt.*;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
@@ -20,7 +21,7 @@ import java.util.stream.Collectors;
 
 public class Main {
 
-    public final static String TEST_FILE = "/Archive-WoWCombatLog-051525_185636.txt";
+    public final static String TEST_FILE = "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/testfiles/Archive-WoWCombatLog-051525_185636.txt";
 
     public final static List<Encounter> encounters = new ArrayList<>();
 
@@ -52,8 +53,7 @@ public class Main {
      * @param logFile The log file to investigate.
      */
     public void processFile (String logFile) {
-        try (InputStream inputStream = Main.class.getResourceAsStream(logFile)) { // todo: Consider non-class resources.
-            if (inputStream == null) return;
+        try (InputStream inputStream = new FileInputStream(logFile)) {
             StringBuilder builder = new StringBuilder();
             boolean encounter_start = false;
             String data = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8).lines().collect(Collectors.joining("\n"));

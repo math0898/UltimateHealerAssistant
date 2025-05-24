@@ -32,6 +32,7 @@ public class HealAbsorbEntry extends HealEntry {
         int total_heal = Integer.parseInt(lines[20]);
         overheal = 0;// Integer.parseInt(lines[21]);
         heal = total_heal - overheal - absorbed;
+        data = null;
     }
 
     /**

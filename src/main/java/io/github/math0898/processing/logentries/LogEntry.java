@@ -1,6 +1,5 @@
 package io.github.math0898.processing.logentries;
 
-import io.github.math0898.processing.EntryType;
 import io.github.math0898.utils.Utils;
 
 /**
@@ -13,7 +12,7 @@ public abstract class LogEntry {
     /**
      * The data contained in this LogEntry.
      */
-    protected final String data;
+    protected String data;
 
     /**
      * The time at which this log occurs.
@@ -28,22 +27,6 @@ public abstract class LogEntry {
     public LogEntry (String data) {
         this.data = data;
         time = Utils.millisFromLogTime(data.split(",")[0]);
-    }
-
-    /**
-     * Returns the type of LogEntry this class represents.
-     *
-     * @return The entry type represented by this class.
-     */
-    public abstract EntryType getType ();
-
-    /**
-     * Accessor method for the raw data contained within this LogEntry.
-     *
-     * @return The raw data that creates this LogEntry.
-     */
-    public String rawData () {
-        return data;
     }
 
     /**

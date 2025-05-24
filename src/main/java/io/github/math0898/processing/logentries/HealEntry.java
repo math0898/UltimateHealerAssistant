@@ -1,7 +1,5 @@
 package io.github.math0898.processing.logentries;
 
-import io.github.math0898.processing.EntryType;
-
 /**
  * A HealEntry encapsulates the SPELL_HEAL event in raw log files.
  */
@@ -48,16 +46,7 @@ public class HealEntry extends LogEntry {
         int total_heal = Integer.parseInt(lines[31]);
         overheal = Integer.parseInt(lines[33]); // todo: So far everything has been RAW_HEAL_AMOUNT, RAW_HEAL_AMOUNT. Is there heal absorb in here?
         heal = total_heal - overheal;
-    }
-
-    /**
-     * Returns the type of LogEntry this class represents.
-     *
-     * @return The entry type represented by this class.
-     */
-    @Override
-    public EntryType getType() {
-        return EntryType.HEALING;
+        data = null;
     }
 
     /**

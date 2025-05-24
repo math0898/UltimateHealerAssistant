@@ -20,7 +20,7 @@ public class Encounter { // todo: Might be worthwhile during processing to creat
     /**
      * Raw log data included in this encounter.
      */
-    private final String data;
+    private String data;
 
     /**
      * An entire list of all the entries contained within this Encounter.
@@ -73,6 +73,7 @@ public class Encounter { // todo: Might be worthwhile during processing to creat
             else if (line.contains(" ENCOUNTER_START")) processEncounterStart(line);
             else if (line.contains(" ENCOUNTER_END")) processEncounterEnd(line);
         }
+        data = null;
     }
 
     /**
