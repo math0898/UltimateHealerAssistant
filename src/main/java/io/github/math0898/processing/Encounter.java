@@ -4,14 +4,9 @@ import io.github.math0898.processing.logentries.DamageTakenEntry;
 import io.github.math0898.processing.logentries.HealAbsorbEntry;
 import io.github.math0898.processing.logentries.HealEntry;
 import io.github.math0898.processing.logentries.LogEntry;
-import suga.engine.GameEngine;
-import suga.engine.logger.Level;
+import io.github.math0898.utils.Utils;
 
 import java.text.NumberFormat;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /**
@@ -90,17 +85,7 @@ public class Encounter { // todo: Might be worthwhile during processing to creat
         s.useDelimiter(",");
         for (int i = 0; s.hasNext(); i++) {
             switch (i) {
-                case 0 -> {
-                    String date = s.next().replaceAll("  ENCOUNTER_START", ""); // todo: Timezone?
-                    String offset;
-                    if (date.contains("-")) offset = "-";
-                    else offset = "\\+";
-                    String zone = offset + "0" + date.replaceAll(".+" + offset, "");
-                    date = date.replaceAll("-\\d", "");
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/dd/yyyy HH:mm:ss.SSS").withZone(ZoneId.of(zone)); // todo: 2 digit dates?
-                    LocalDateTime dateTime = LocalDateTime.parse(date, formatter);
-                    encounterStartMillis = dateTime.toInstant(ZoneOffset.UTC).toEpochMilli();
-                }
+                case 0 -> encounterStartMillis = Utils.millisFromLogTime(s.next());
                 case 2 -> enemyName = s.next().replace("\"", "");
                 default -> s.next();
             }
@@ -115,11 +100,8 @@ public class Encounter { // todo: Might be worthwhile during processing to creat
      */
     private void processEncounterEnd (String line) {
         Scanner s = new Scanner(line);
-        s.useDelimiter(" ");
-        String date = s.next() + " " + s.next().replaceAll("-\\d", ""); // todo: Timezone?
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/dd/yyyy HH:mm:ss.SSS"); // todo: 2 digit dates?
-        LocalDateTime dateTime = LocalDateTime.parse(date, formatter);
-        encounterEndMillis = dateTime.toInstant(ZoneOffset.UTC).toEpochMilli();
+        s.useDelimiter(",");
+        encounterEndMillis = Utils.millisFromLogTime(s.next());
     }
 
     /**

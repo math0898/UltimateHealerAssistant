@@ -1,10 +1,8 @@
 package io.github.math0898.processing.logentries;
 
 import io.github.math0898.processing.EntryType;
+import io.github.math0898.utils.Utils;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 /**
@@ -32,11 +30,8 @@ public abstract class LogEntry {
     public LogEntry (String data) {
         this.data = data;
         Scanner s = new Scanner(data);
-        s.useDelimiter(" ");
-        String date = s.next() + " " + s.next().replaceAll("-\\d", "");
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/dd/yyyy HH:mm:ss.SSS"); // todo: 2 digit dates?
-        LocalDateTime dateTime = LocalDateTime.parse(date, formatter);
-        time = dateTime.toInstant(ZoneOffset.UTC).toEpochMilli();
+        s.useDelimiter(",");
+        time = Utils.millisFromLogTime(s.next());
     }
 
     /**
