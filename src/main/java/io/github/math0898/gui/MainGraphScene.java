@@ -94,17 +94,17 @@ public class MainGraphScene extends BasicScene {
         if (pressed) logger.log("Clicked at " + pos + "!", Level.VERBOSE);
         else logger.log("Click released at " + pos + "!", Level.VERBOSE);
         if (pressed) {
-            if (pos.x < (1920 / 16) + 50 && pos.x > (1920 / 16)) {
-                if (pos.y > 1080 / 8 + 50 && pos.y < 1080 / 8 + 100) {
+            if (pos.x < (1920 / 16) + 56 && pos.x > (1920 / 16)) {
+                if (pos.y > 1080 / 8 + 30 && pos.y < 1080 / 8 + 30 + 56) {
                     graphGameObject.toggleSpec("pres");
                 }
-                if (pos.y > 1080 / 8 + 120 && pos.y < 1080 / 8 + 170) {
+                if (pos.y > 1080 / 8 + 30 + 70 && pos.y < 1080 / 8 + 30 + 70 + 56) {
                     graphGameObject.toggleSpec("holy");
                 }
-                if (pos.y > 1080 / 8 + 190 && pos.y < 1080 / 8 + 240) {
+                if (pos.y > 1080 / 8 + 30 + 140 && pos.y < 1080 / 8 + 30 + 140 + 56) {
                     graphGameObject.toggleSpec("disc");
                 }
-                if (pos.y > 1080 / 8 + 260 && pos.y < 1080 / 8 + 310) {
+                if (pos.y > 1080 / 8 + 30 + 210 && pos.y < 1080 / 8 + 30 + 210 + 56) {
                     graphGameObject.toggleSpec("resto");
                 }
             }

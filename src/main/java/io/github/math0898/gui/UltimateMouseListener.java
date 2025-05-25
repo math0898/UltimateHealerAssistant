@@ -28,7 +28,8 @@ public class UltimateMouseListener extends BasicMouseListener {
      */
     @Override
     public void mousePressed (MouseEvent e) {
-
+        getLogger().log("BasicMouseListener: Received mouse pressed event: " + e, Level.VERBOSE);
+        events.add(e);
     }
 
     /**
@@ -38,6 +39,7 @@ public class UltimateMouseListener extends BasicMouseListener {
      */
     @Override
     public void mouseReleased (MouseEvent e) {
-
+        getLogger().log("BasicMouseListener: Received mouse released event: " + e, Level.VERBOSE);
+        events.add(e);
     }
 }
