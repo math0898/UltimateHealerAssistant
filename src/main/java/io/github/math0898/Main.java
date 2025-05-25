@@ -7,6 +7,7 @@ import suga.engine.game.BasicGame;
 import io.github.math0898.gui.*;
 import suga.engine.input.keyboard.GameKeyListener;
 import suga.engine.input.mouse.BasicMouseListener;
+import suga.engine.input.mouse.GameMouseListener;
 import suga.engine.logger.Level;
 
 import java.awt.*;
@@ -40,10 +41,11 @@ public class Main {
     public static void gui () {
         GraphicsPanel graphicsPanel = new GraphicsPanel();
         GameKeyListener gameKeyListener = new UltimateHealerAssistantGameKeyListener();
-        BasicGame game = new UltimateHealerAssistantGame(graphicsPanel, gameKeyListener, new BasicMouseListener());
+        BasicMouseListener gameMouseListener = new UltimateMouseListener();
+        BasicGame game = new UltimateHealerAssistantGame(graphicsPanel, gameKeyListener, gameMouseListener);
         game.setPanel(graphicsPanel);
         GameEngine.launchGameWindow(1920, 1000, "Ultimate Healer Assistant", true, graphicsPanel,
-                Color.getHSBColor(0, 0, 0.05f), 30, 30, gameKeyListener, new BasicMouseListener(), game);
+                Color.getHSBColor(0, 0, 0.05f), 30, 30, gameKeyListener, gameMouseListener, game);
         game.loadScene("main");
     }
 
