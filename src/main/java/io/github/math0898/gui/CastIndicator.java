@@ -49,39 +49,39 @@ public class CastIndicator extends BasicGameObject implements DrawListener {
      */
     @Override
     public void applyChanges (int width, int height, GraphicsPanel panel) {
-        Encounter encounter = Main.encounters.get(parentScene.getGraphedEncounterIndex());
-        List<Long> results = encounter.querySpellHealingInstances("Consume Flame");
-        final int widthByPixel = ((width * 3) / 4);
-        final long widthByTime = encounter.encounterLengthMillis();
-        for (long l : results) {
-            float ratio = ((float) (l - encounter.getEncounterStartMillis())) / widthByTime;
-            panel.setRectangle(((width / 8) + ((int) (ratio * widthByPixel) / 10) * 10) - 1, ((height * 7) / 8) /*- 490*/, 3, 20, new Color(221, 33, 59));
-            try {
-                panel.addImage(((width / 8) + ((int) (ratio * widthByPixel) / 10) * 10) - 13, ((height * 7) / 8), 25, 25, ImageIO.read(new File("/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/icons/inv_ability_flameshaperevoker_engulf.jpg")));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        results = encounter.querySpellHealingInstances("Rewind");
-        for (long l : results) {
-            float ratio = ((float) (l - encounter.getEncounterStartMillis())) / widthByTime;
-            panel.setRectangle(((width / 8) + ((int) (ratio * widthByPixel) / 10) * 10) - 1, ((height * 7) / 8) /*- 490*/, 3, 20 + 30, new Color(241, 199, 63));
-            try {
-                panel.addImage(((width / 8) + ((int) (ratio * widthByPixel) / 10) * 10) - 13, ((height * 7) / 8) + 30, 25, 25, ImageIO.read(new File("/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/icons/ability_evoker_rewind.jpg")));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        results = encounter.querySpellHealingInstances("Emerald Communion");
-        for (long l : results) {
-            float ratio = ((float) (l - encounter.getEncounterStartMillis())) / widthByTime;
-            panel.setRectangle(((width / 8) + ((int) (ratio * widthByPixel) / 10) * 10) - 1, ((height * 7) / 8) /*- 490*/, 3, 20 + 60, new Color(68, 236, 222));
-            try {
-                panel.addImage(((width / 8) + ((int) (ratio * widthByPixel) / 10) * 10) - 13, ((height * 7) / 8) + 60, 25, 25, ImageIO.read(new File("/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/icons/ability_evoker_green_01.jpg")));
-            } catch (IOException e) {
-                throw new RuntimeException(e); // todo: Add a third layer.
-            }
-        }
+//        Encounter encounter = Main.encounters.get(parentScene.getGraphedEncounterIndex());
+//        List<Long> results = encounter.querySpellHealingInstances("Consume Flame");
+//        final int widthByPixel = ((width * 3) / 4);
+//        final long widthByTime = encounter.encounterLengthMillis();
+//        for (long l : results) {
+//            float ratio = ((float) (l - encounter.getEncounterStartMillis())) / widthByTime;
+//            panel.setRectangle(((width / 8) + ((int) (ratio * widthByPixel) / 10) * 10) - 1, ((height * 7) / 8) /*- 490*/, 3, 20, new Color(221, 33, 59));
+//            try {
+//                panel.addImage(((width / 8) + ((int) (ratio * widthByPixel) / 10) * 10) - 13, ((height * 7) / 8), 25, 25, ImageIO.read(new File("/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/icons/inv_ability_flameshaperevoker_engulf.jpg")));
+//            } catch (IOException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
+//        results = encounter.querySpellHealingInstances("Rewind");
+//        for (long l : results) {
+//            float ratio = ((float) (l - encounter.getEncounterStartMillis())) / widthByTime;
+//            panel.setRectangle(((width / 8) + ((int) (ratio * widthByPixel) / 10) * 10) - 1, ((height * 7) / 8) /*- 490*/, 3, 20 + 30, new Color(241, 199, 63));
+//            try {
+//                panel.addImage(((width / 8) + ((int) (ratio * widthByPixel) / 10) * 10) - 13, ((height * 7) / 8) + 30, 25, 25, ImageIO.read(new File("/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/icons/ability_evoker_rewind.jpg")));
+//            } catch (IOException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
+//
+//        results = encounter.querySpellHealingInstances("Emerald Communion");
+//        for (long l : results) {
+//            float ratio = ((float) (l - encounter.getEncounterStartMillis())) / widthByTime;
+//            panel.setRectangle(((width / 8) + ((int) (ratio * widthByPixel) / 10) * 10) - 1, ((height * 7) / 8) /*- 490*/, 3, 20 + 60, new Color(68, 236, 222));
+//            try {
+//                panel.addImage(((width / 8) + ((int) (ratio * widthByPixel) / 10) * 10) - 13, ((height * 7) / 8) + 60, 25, 25, ImageIO.read(new File("/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/icons/ability_evoker_green_01.jpg")));
+//            } catch (IOException e) {
+//                throw new RuntimeException(e); // todo: Add a third layer.
+//            }
+//        }
     }
 }

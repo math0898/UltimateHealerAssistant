@@ -9,6 +9,8 @@ import suga.engine.graphics.GraphicsPanel;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The Graph is considered a GameObject so that we have access to {@link #runLogic()}. This runs on a separate thread
@@ -50,6 +52,11 @@ public class GraphGameObject extends BasicGameObject implements  DrawListener {
      * The graph calculated on the logic thread that is then used to display.
      */
     private Graph graph = null;
+
+    /**
+     * A map of specs which including their current toggle state.
+     */
+    private Map<String, Boolean> specs = new HashMap<>();
 
     /**
      * Called every drawing frame so programs have a chance to make their voices heard on what gets drawn.
@@ -111,47 +118,155 @@ public class GraphGameObject extends BasicGameObject implements  DrawListener {
             if (timeStepCount == 0) return;
             if (encounter == null) return;
             Graph graph = encounter.graph(encounter.encounterLengthMillis() / timeStepCount, SCALE);
-            ArrayList<Long> consumeFlameList = new ArrayList<>();
-            ArrayList<Long> rewindList = new ArrayList<>();
-            ArrayList<Long> sunflower = new ArrayList<>();
-            ArrayList<Long> syudou = new ArrayList<>();
-            ArrayList<Long> mylove = new ArrayList<>();
-            ArrayList<Long> consumes = new ArrayList<>();
+            // todo: If this will be the strategy let's make an enum.
+            ArrayList<Long>[] queries = new ArrayList[13];
+            Color[] colors = {new Color(51, 147, 127), new Color(255, 255, 255), new Color(255, 244, 104), new Color(0, 112, 221),
+                    new Color(196, 30, 58), new Color(0, 255, 152), new Color(255, 244, 104),
+                    new Color(196, 30, 58),
+                    new Color(255, 255, 255), new Color(255, 255, 255), new Color(255, 255, 255),
+                    new Color(0, 255, 152), new Color(63, 199, 235)};
+            Boolean pres = specs.get("pres");
+            Boolean holy = specs.get("holy");
+            Boolean disc = specs.get("disc");
+            Boolean resto = specs.get("resto");
             for (int j = 0; j < timeStepCount; j++) {
-                long consumeFlame = encounter.queryHealingByCaster("Nillath",
-                        (encounter.encounterLengthMillis() / timeStepCount) * j,
-                        (encounter.encounterLengthMillis() / timeStepCount)) / SCALE;
-//                                long rewind = encounter.queryHealingBySpell(Arrays.asList("Atonement", "Premonition of Piety", "Dark Reprimand", "Penance", "Divine Aegis"),
-//                                (encounter.encounterLengthMillis() / timeStepCount) * j,
-//                                        (encounter.encounterLengthMillis() / timeStepCount)) / scale;
-                consumeFlameList.add(consumeFlame);
-                long rewind = encounter.queryHealingBySpell("Rewind",
-                        (encounter.encounterLengthMillis() / timeStepCount) * j,
-                        (encounter.encounterLengthMillis() / timeStepCount)) / SCALE;
-                rewindList.add(rewind);
-                long sunflowerItem = encounter.queryHealingByCaster("Sunfl",
-                        (encounter.encounterLengthMillis() / timeStepCount) * j,
-                        (encounter.encounterLengthMillis() / timeStepCount)) / SCALE;
-                sunflower.add(sunflowerItem);
-                long syudouItem = encounter.queryHealingBySpell("Emerald Communion",
-                        (encounter.encounterLengthMillis() / timeStepCount) * j,
-                        (encounter.encounterLengthMillis() / timeStepCount)) / SCALE;
-                syudou.add(syudouItem);
-                long myloveItem = encounter.queryHealingBySpell("Lifebind",
-                        (encounter.encounterLengthMillis() / timeStepCount) * j,
-                        (encounter.encounterLengthMillis() / timeStepCount)) / SCALE;
-                mylove.add(myloveItem);
-                long healingPotion = encounter.queryHealingBySpell("Consume Flame",
-                        (encounter.encounterLengthMillis() / timeStepCount) * j,
-                        (encounter.encounterLengthMillis() / timeStepCount)) / SCALE;
-                consumes.add(healingPotion);
+                if (pres != null && pres) {
+                    ArrayList<Long> list = queries[0];
+                    if (list == null) {
+                        list = new ArrayList<>();
+                        queries[0] = list;
+                    }
+                    long playerHealing = encounter.queryHealingByCaster("Nillath",
+                            (encounter.encounterLengthMillis() / timeStepCount) * j,
+                            (encounter.encounterLengthMillis() / timeStepCount)) / SCALE;
+                    list.add(playerHealing);
+                    list = queries[4];
+                    if (list == null) {
+                        list = new ArrayList<>();
+                        queries[4] = list;
+                    }
+                    long spellHealing = encounter.queryHealingBySpell("Consume Flame",
+                            (encounter.encounterLengthMillis() / timeStepCount) * j,
+                            (encounter.encounterLengthMillis() / timeStepCount)) / SCALE;
+                    list.add(spellHealing);
+                    list = queries[5];
+                    if (list == null) {
+                        list = new ArrayList<>();
+                        queries[5] = list;
+                    }
+                    spellHealing = encounter.queryHealingBySpell("Emerald Communion",
+                            (encounter.encounterLengthMillis() / timeStepCount) * j,
+                            (encounter.encounterLengthMillis() / timeStepCount)) / SCALE;
+                    list.add(spellHealing);
+                    list = queries[6];
+                    if (list == null) {
+                        list = new ArrayList<>();
+                        queries[6] = list;
+                    }
+                    spellHealing = encounter.queryHealingBySpell("Rewind",
+                            (encounter.encounterLengthMillis() / timeStepCount) * j,
+                            (encounter.encounterLengthMillis() / timeStepCount)) / SCALE;
+                    list.add(spellHealing);
+                }
+                if (holy != null && holy) {
+                    ArrayList<Long> list = queries[1];
+                    if (list == null) {
+                        list = new ArrayList<>();
+                        queries[1] = list;
+                    }
+                    long playerHealing = encounter.queryHealingByCaster("Sunfl",
+                            (encounter.encounterLengthMillis() / timeStepCount) * j,
+                            (encounter.encounterLengthMillis() / timeStepCount)) / SCALE;
+                    list.add(playerHealing);
+                    list = queries[7];
+                    if (list == null) {
+                        list = new ArrayList<>();
+                        queries[7] = list;
+                    }
+                    long spellHealing = encounter.queryHealingBySpell("Divine Hymn",
+                            (encounter.encounterLengthMillis() / timeStepCount) * j,
+                            (encounter.encounterLengthMillis() / timeStepCount)) / SCALE;
+                    list.add(spellHealing);
+                }
+                if (disc != null && disc) {
+                    ArrayList<Long> list = queries[2];
+                    if (list == null) {
+                        list = new ArrayList<>();
+                        queries[2] = list;
+                    }
+                    long playerHealing = encounter.queryHealingByCaster("Skullz",
+                            (encounter.encounterLengthMillis() / timeStepCount) * j,
+                            (encounter.encounterLengthMillis() / timeStepCount)) / SCALE;
+                    list.add(playerHealing);
+                    list = queries[8];
+                    if (list == null) {
+                        list = new ArrayList<>();
+                        queries[8] = list;
+                    }
+                    long spellHealing = encounter.queryHealingBySpell("Evangalism",
+                            (encounter.encounterLengthMillis() / timeStepCount) * j,
+                            (encounter.encounterLengthMillis() / timeStepCount)) / SCALE;
+                    list.add(spellHealing);
+                    // todo: Check timing relative to Evangalism.
+                    list = queries[9];
+                    if (list == null) {
+                        list = new ArrayList<>();
+                        queries[9] = list;
+                    }
+                    spellHealing = encounter.queryHealingBySpell("Premonition of Piety",
+                            (encounter.encounterLengthMillis() / timeStepCount) * j,
+                            (encounter.encounterLengthMillis() / timeStepCount)) / SCALE;
+                    list.add(spellHealing);
+                    // todo: Check timing relative to Evangalism.
+                    list = queries[10];
+                    if (list == null) {
+                        list = new ArrayList<>();
+                        queries[10] = list;
+                    }
+                    spellHealing = encounter.queryHealingBySpell("Atonement",
+                            (encounter.encounterLengthMillis() / timeStepCount) * j,
+                            (encounter.encounterLengthMillis() / timeStepCount)) / SCALE;
+                    list.add(spellHealing);
+                }
+                if (resto != null && resto) {
+                    ArrayList<Long> list = queries[3];
+                    if (list == null) {
+                        list = new ArrayList<>();
+                        queries[3] = list;
+                    }
+                    long playerHealing = encounter.queryHealingByCaster("Taryn", // todo: Syudou
+                            (encounter.encounterLengthMillis() / timeStepCount) * j,
+                            (encounter.encounterLengthMillis() / timeStepCount)) / SCALE;
+                    playerHealing += encounter.queryHealingBySpell("Spirit Link",
+                            (encounter.encounterLengthMillis() / timeStepCount) * j,
+                            (encounter.encounterLengthMillis() / timeStepCount)) / SCALE;
+                    list.add(playerHealing);
+                    list = queries[11];
+                    if (list == null) {
+                        list = new ArrayList<>();
+                        queries[11] = list;
+                    }
+                    long spellHealing = encounter.queryHealingBySpell("Spirit Link",
+                            (encounter.encounterLengthMillis() / timeStepCount) * j,
+                            (encounter.encounterLengthMillis() / timeStepCount)) / SCALE;
+                    list.add(spellHealing);
+                    list = queries[12];
+                    if (list == null) {
+                        list = new ArrayList<>();
+                        queries[12] = list;
+                    }
+                    spellHealing = encounter.queryHealingByCaster("Healing Tide Totem",
+                            (encounter.encounterLengthMillis() / timeStepCount) * j,
+                            (encounter.encounterLengthMillis() / timeStepCount)) / SCALE;
+                    list.add(spellHealing);
+                }
             }
-            graph.addAscent(new AscentBar(consumeFlameList, new Color(51, 147, 127))); // Uravaal
-            graph.addStackedAscent(new AscentBar(rewindList, new Color(210, 204, 35))); // Skullz
-//            graph.addAscent(new AscentBar(sunflower, new Color(215, 215, 230)));
-            graph.addStackedAscent(new AscentBar(syudou, new Color(84, 227, 201)));
-//            graph.addStackedAscent(new AscentBar(mylove, new Color(143, 64, 225)));
-            graph.addStackedAscent(new AscentBar(consumes, new Color(213, 76, 76)));
+            for (int i = 0; i < 4; i++)
+                if (queries[i] != null)
+                    graph.addAscent(new AscentBar(queries[i], colors[i]));
+            for (int i = 4; i < queries.length; i++)
+                if (queries[i] != null)
+                    graph.addStackedAscent(new AscentBar(queries[i], colors[i]));
             graph.smooth(1);
             recompute = false;
             this.graph = graph;
@@ -165,6 +280,19 @@ public class GraphGameObject extends BasicGameObject implements  DrawListener {
      */
     public void setEncounter (Encounter encounter) {
         this.encounter = encounter;
+        recompute = true;
+    }
+
+    /**
+     * Toggles the given spec to either on or off.
+     *
+     * @param spec The spec to toggle.
+     */
+    public void toggleSpec (String spec) {
+        Boolean current = specs.get(spec);
+        if (current == null) current = false;
+        current = !current;
+        specs.put(spec, current);
         recompute = true;
     }
 }

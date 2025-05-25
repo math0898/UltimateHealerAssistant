@@ -34,6 +34,10 @@ public class MainGraphScene extends BasicScene {
         game.addGameObject("Main Graph", graphGameObject);
         game.addGameObject("Encounter Indicator", new EncounterIndicator(this));
         game.addGameObject("Cast Indicator", new CastIndicator(this)); // todo: Probably make separate instances per spell query.
+        game.addGameObject("Pres Icon", new SpecIcon(0, "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/icons/classicon_evoker_preservation.jpg"));
+        game.addGameObject("Holy Icon", new SpecIcon(70, "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/icons/spell_holy_guardianspirit.jpg"));
+        game.addGameObject("Disc Icon", new SpecIcon(140, "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/icons/spell_holy_powerwordshield.jpg"));
+        game.addGameObject("Resto Icon", new SpecIcon(210, "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/icons/inv_1115_shaman_chainheal.jpg"));
         return true;
     }
 
@@ -89,5 +93,21 @@ public class MainGraphScene extends BasicScene {
         Logger logger = GameEngine.getLogger();
         if (pressed) logger.log("Clicked at " + pos + "!", Level.VERBOSE);
         else logger.log("Click released at " + pos + "!", Level.VERBOSE);
+        if (pressed) {
+            if (pos.x < (1920 / 16) + 50 && pos.x > (1920 / 16)) {
+                if (pos.y > 1080 / 8 + 50 && pos.y < 1080 / 8 + 100) {
+                    graphGameObject.toggleSpec("pres");
+                }
+                if (pos.y > 1080 / 8 + 120 && pos.y < 1080 / 8 + 170) {
+                    graphGameObject.toggleSpec("holy");
+                }
+                if (pos.y > 1080 / 8 + 190 && pos.y < 1080 / 8 + 240) {
+                    graphGameObject.toggleSpec("disc");
+                }
+                if (pos.y > 1080 / 8 + 260 && pos.y < 1080 / 8 + 310) {
+                    graphGameObject.toggleSpec("resto");
+                }
+            }
+        }
     }
 }
