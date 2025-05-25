@@ -223,6 +223,29 @@ public class Encounter { // todo: Might be worthwhile during processing to creat
     }
 
     /**
+     * Calculates the healing from a specific caster at each moment from encounter start to encounter end.
+     *
+     * @param casterName The name of the caster to query for.
+     * @param timeStep  The size of each time step.
+     */
+    public List<Long> queryHealingInstantsByCaster (String casterName, long timeStep) {
+        List<Long> values = new ArrayList<>();
+        int indexTracker = -1;
+        for (LogEntry log : entries) {
+            // Logs are sorted by time by construction. So we can safely move to the next window once we break past the current one.
+            if (log.getTime() > encounterStartMillis + (timeStep * indexTracker)) {
+                indexTracker++;
+                values.add(0L);
+            }
+            if (log instanceof HealEntry heal) {
+                if (heal.getCaster().contains(casterName))
+                    values.set(indexTracker, values.get(indexTracker) + heal.getTotalHeal());
+            }
+        }
+        return values;
+    }
+
+    /**
      * Calculates the healing from a specific spell within the given time window.
      *
      * @param spellName The name of the spell to query for.
@@ -252,6 +275,29 @@ public class Encounter { // todo: Might be worthwhile during processing to creat
                     total += heal.getHeal() + heal.getOverheal();
         }
         return total;
+    }
+
+    /**
+     * Calculates the healing from a specific spell at each moment from encounter start to encounter end.
+     *
+     * @param spellName The name of the spell to query for.
+     * @param timeStep  The size of each time step.
+     */
+    public List<Long> queryHealingInstantsBySpell (String spellName, long timeStep) {
+        List<Long> values = new ArrayList<>();
+        int indexTracker = -1;
+        for (LogEntry log : entries) {
+            // Logs are sorted by time by construction. So we can safely move to the next window once we break past the current one.
+            if (log.getTime() > encounterStartMillis + (timeStep * indexTracker)) {
+                indexTracker++;
+                values.add(0L);
+            }
+            if (log instanceof HealEntry heal) {
+                if (heal.getSpellName().contains(spellName))
+                    values.set(indexTracker, values.get(indexTracker) + heal.getTotalHeal());
+            }
+        }
+        return values;
     }
 
     /**

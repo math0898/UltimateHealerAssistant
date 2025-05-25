@@ -3,6 +3,7 @@ package io.github.math0898.gui;
 import io.github.math0898.Main;
 import io.github.math0898.processing.Encounter;
 import io.github.math0898.processing.Graph;
+import io.github.math0898.utils.Utils;
 import suga.engine.game.objects.BasicGameObject;
 import suga.engine.graphics.DrawListener;
 import suga.engine.graphics.GraphicsPanel;
@@ -10,6 +11,7 @@ import suga.engine.graphics.GraphicsPanel;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -57,6 +59,41 @@ public class GraphGameObject extends BasicGameObject implements  DrawListener {
      * A map of specs which including their current toggle state.
      */
     private Map<String, Boolean> specs = new HashMap<>();
+
+    /**
+     *
+     */
+    private enum SpellQueries {
+
+        // Pres spells
+        CONSUME_FLAME("Consume Flame", new Color(196, 30, 58)),
+        EMERALD_COMMUNION("Emerald Communion", new Color(0, 255, 152)),
+        REWIND("Rewind", new Color(255, 244, 104)),
+        // Holy Priest
+        DIVINE_HYMN("Divine Hymn", new Color(196, 30, 58)),
+        // Disc Priest
+        EVANGELISM("Evangelism", new Color(255, 255, 255)), // todo: Requires special handling.
+        PIETY("Premonition of Piety", new Color(255, 255, 255)), // todo: Requires special handling.
+        ATONEMENT("Atonement", new Color(255, 255, 255)), // todo: Requires special handling.
+        // Resto Shammy
+        SPIRIT_LINK("Spirit Link", new Color(0, 255, 152)),
+        HEALING_TIDE("Healing Tide Totem", new Color(63, 199, 235)); // todo: Requires special handling.
+
+        public final String spellName;
+        public final Color color;
+
+        SpellQueries (String spellName, Color color) {
+            this.spellName = spellName;
+            this.color = color;
+        }
+
+        public static SpellQueries fromOrdinal (int ordinal) {
+            for (SpellQueries query : SpellQueries.values())
+                if (ordinal == query.ordinal())
+                    return query;
+            return REWIND;
+        }
+    }
 
     /**
      * Called every drawing frame so programs have a chance to make their voices heard on what gets drawn.
@@ -115,158 +152,35 @@ public class GraphGameObject extends BasicGameObject implements  DrawListener {
     public void runLogic () {
         if (recompute) {
             final int timeStepCount = ((targetWidth * 3) / 4) / 10;
+            final long timeStepSize = encounter.encounterLengthMillis() / timeStepCount;
             if (timeStepCount == 0) return;
             if (encounter == null) return;
             Graph graph = encounter.graph(encounter.encounterLengthMillis() / timeStepCount, SCALE);
-            // todo: If this will be the strategy let's make an enum.
-            ArrayList<Long>[] queries = new ArrayList[13];
-            Color[] colors = {new Color(51, 147, 127), new Color(255, 255, 255), new Color(255, 244, 104), new Color(0, 112, 221),
-                    new Color(196, 30, 58), new Color(0, 255, 152), new Color(255, 244, 104),
-                    new Color(196, 30, 58),
-                    new Color(255, 255, 255), new Color(255, 255, 255), new Color(255, 255, 255),
-                    new Color(0, 255, 152), new Color(63, 199, 235)};
+            Color[] colors = {new Color(51, 147, 127), new Color(255, 255, 255), new Color(255, 244, 104), new Color(0, 112, 221)};
             Boolean pres = specs.get("pres");
             Boolean holy = specs.get("holy");
             Boolean disc = specs.get("disc");
             Boolean resto = specs.get("resto");
-            for (int j = 0; j < timeStepCount; j++) {
-                if (pres != null && pres) {
-                    ArrayList<Long> list = queries[0];
-                    if (list == null) {
-                        list = new ArrayList<>();
-                        queries[0] = list;
-                    }
-                    long playerHealing = encounter.queryHealingByCaster("Nillath",
-                            (encounter.encounterLengthMillis() / timeStepCount) * j,
-                            (encounter.encounterLengthMillis() / timeStepCount)) / SCALE;
-                    list.add(playerHealing);
-                    list = queries[4];
-                    if (list == null) {
-                        list = new ArrayList<>();
-                        queries[4] = list;
-                    }
-                    long spellHealing = encounter.queryHealingBySpell("Consume Flame",
-                            (encounter.encounterLengthMillis() / timeStepCount) * j,
-                            (encounter.encounterLengthMillis() / timeStepCount)) / SCALE;
-                    list.add(spellHealing);
-                    list = queries[5];
-                    if (list == null) {
-                        list = new ArrayList<>();
-                        queries[5] = list;
-                    }
-                    spellHealing = encounter.queryHealingBySpell("Emerald Communion",
-                            (encounter.encounterLengthMillis() / timeStepCount) * j,
-                            (encounter.encounterLengthMillis() / timeStepCount)) / SCALE;
-                    list.add(spellHealing);
-                    list = queries[6];
-                    if (list == null) {
-                        list = new ArrayList<>();
-                        queries[6] = list;
-                    }
-                    spellHealing = encounter.queryHealingBySpell("Rewind",
-                            (encounter.encounterLengthMillis() / timeStepCount) * j,
-                            (encounter.encounterLengthMillis() / timeStepCount)) / SCALE;
-                    list.add(spellHealing);
-                }
-                if (holy != null && holy) {
-                    ArrayList<Long> list = queries[1];
-                    if (list == null) {
-                        list = new ArrayList<>();
-                        queries[1] = list;
-                    }
-                    long playerHealing = encounter.queryHealingByCaster("Sunfl",
-                            (encounter.encounterLengthMillis() / timeStepCount) * j,
-                            (encounter.encounterLengthMillis() / timeStepCount)) / SCALE;
-                    list.add(playerHealing);
-                    list = queries[7];
-                    if (list == null) {
-                        list = new ArrayList<>();
-                        queries[7] = list;
-                    }
-                    long spellHealing = encounter.queryHealingBySpell("Divine Hymn",
-                            (encounter.encounterLengthMillis() / timeStepCount) * j,
-                            (encounter.encounterLengthMillis() / timeStepCount)) / SCALE;
-                    list.add(spellHealing);
-                }
-                if (disc != null && disc) {
-                    ArrayList<Long> list = queries[2];
-                    if (list == null) {
-                        list = new ArrayList<>();
-                        queries[2] = list;
-                    }
-                    long playerHealing = encounter.queryHealingByCaster("Skullz",
-                            (encounter.encounterLengthMillis() / timeStepCount) * j,
-                            (encounter.encounterLengthMillis() / timeStepCount)) / SCALE;
-                    list.add(playerHealing);
-                    list = queries[8];
-                    if (list == null) {
-                        list = new ArrayList<>();
-                        queries[8] = list;
-                    }
-                    long spellHealing = encounter.queryHealingBySpell("Evangalism",
-                            (encounter.encounterLengthMillis() / timeStepCount) * j,
-                            (encounter.encounterLengthMillis() / timeStepCount)) / SCALE;
-                    list.add(spellHealing);
-                    // todo: Check timing relative to Evangalism.
-                    list = queries[9];
-                    if (list == null) {
-                        list = new ArrayList<>();
-                        queries[9] = list;
-                    }
-                    spellHealing = encounter.queryHealingBySpell("Premonition of Piety",
-                            (encounter.encounterLengthMillis() / timeStepCount) * j,
-                            (encounter.encounterLengthMillis() / timeStepCount)) / SCALE;
-                    list.add(spellHealing);
-                    // todo: Check timing relative to Evangalism.
-                    list = queries[10];
-                    if (list == null) {
-                        list = new ArrayList<>();
-                        queries[10] = list;
-                    }
-                    spellHealing = encounter.queryHealingBySpell("Atonement",
-                            (encounter.encounterLengthMillis() / timeStepCount) * j,
-                            (encounter.encounterLengthMillis() / timeStepCount)) / SCALE;
-                    list.add(spellHealing);
-                }
-                if (resto != null && resto) {
-                    ArrayList<Long> list = queries[3];
-                    if (list == null) {
-                        list = new ArrayList<>();
-                        queries[3] = list;
-                    }
-                    long playerHealing = encounter.queryHealingByCaster("Taryn", // todo: Syudou
-                            (encounter.encounterLengthMillis() / timeStepCount) * j,
-                            (encounter.encounterLengthMillis() / timeStepCount)) / SCALE;
-                    playerHealing += encounter.queryHealingBySpell("Spirit Link",
-                            (encounter.encounterLengthMillis() / timeStepCount) * j,
-                            (encounter.encounterLengthMillis() / timeStepCount)) / SCALE;
-                    list.add(playerHealing);
-                    list = queries[11];
-                    if (list == null) {
-                        list = new ArrayList<>();
-                        queries[11] = list;
-                    }
-                    long spellHealing = encounter.queryHealingBySpell("Spirit Link",
-                            (encounter.encounterLengthMillis() / timeStepCount) * j,
-                            (encounter.encounterLengthMillis() / timeStepCount)) / SCALE;
-                    list.add(spellHealing);
-                    list = queries[12];
-                    if (list == null) {
-                        list = new ArrayList<>();
-                        queries[12] = list;
-                    }
-                    spellHealing = encounter.queryHealingByCaster("Healing Tide Totem",
-                            (encounter.encounterLengthMillis() / timeStepCount) * j,
-                            (encounter.encounterLengthMillis() / timeStepCount)) / SCALE;
-                    list.add(spellHealing);
-                }
+            if (pres != null && pres) {
+                for (SpellQueries spell : new SpellQueries[]{SpellQueries.CONSUME_FLAME, SpellQueries.EMERALD_COMMUNION, SpellQueries.REWIND})
+                    graph.addStackedAscent(new AscentBar(Utils.scaleList(encounter.queryHealingInstantsBySpell(spell.spellName, timeStepSize), SCALE), spell.color));
+                graph.addAscent(new AscentBar(Utils.scaleList(encounter.queryHealingInstantsByCaster("Nillath", timeStepSize), SCALE), colors[0]));
             }
-            for (int i = 0; i < 4; i++)
-                if (queries[i] != null)
-                    graph.addAscent(new AscentBar(queries[i], colors[i]));
-            for (int i = 4; i < queries.length; i++)
-                if (queries[i] != null)
-                    graph.addStackedAscent(new AscentBar(queries[i], colors[i]));
+            if (holy != null && holy){
+                graph.addStackedAscent(new AscentBar(Utils.scaleList(encounter.queryHealingInstantsBySpell(SpellQueries.DIVINE_HYMN.spellName, timeStepSize), SCALE), SpellQueries.DIVINE_HYMN.color));
+                graph.addAscent(new AscentBar(Utils.scaleList(encounter.queryHealingInstantsByCaster("Sunfl", timeStepSize), SCALE), colors[1]));
+            } if (disc != null && disc) {
+                // todo: disc priest is special with their cooldowns.
+                for (SpellQueries spell : new SpellQueries[]{SpellQueries.PIETY, SpellQueries.ATONEMENT, SpellQueries.EVANGELISM})
+                    graph.addStackedAscent(new AscentBar(Utils.scaleList(encounter.queryHealingInstantsBySpell(spell.spellName, timeStepSize), SCALE), spell.color));
+                graph.addAscent(new AscentBar(Utils.scaleList(encounter.queryHealingInstantsByCaster("Skullz", timeStepSize), SCALE), colors[2]));
+            } if (resto != null && resto) {
+                graph.addStackedAscent(new AscentBar(Utils.scaleList(encounter.queryHealingInstantsBySpell(SpellQueries.SPIRIT_LINK.spellName, timeStepSize), SCALE), SpellQueries.SPIRIT_LINK.color));
+                List<Long> playerHealing = Utils.addLists(encounter.queryHealingInstantsByCaster("Taryn", timeStepSize),
+                                                          encounter.queryHealingInstantsByCaster("Healing Tide Totem", timeStepSize));
+                graph.addAscent(new AscentBar(Utils.scaleList(playerHealing, SCALE), colors[3]));
+                graph.addStackedAscent(new AscentBar(Utils.scaleList(encounter.queryHealingInstantsByCaster("Healing Tide Totem", timeStepSize), SCALE), SpellQueries.HEALING_TIDE.color));
+            }
             graph.smooth(1);
             recompute = false;
             this.graph = graph;
