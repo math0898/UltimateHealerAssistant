@@ -102,7 +102,7 @@ public class Graph {
      * @param value The value to add.
      */
     public void addColumn (long value) {
-        addColumn(value, -1);
+        addColumn(value, value);
     }
 
     /**

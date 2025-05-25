@@ -242,7 +242,10 @@ public class Encounter { // todo: Might be worthwhile during processing to creat
                     values.set(indexTracker, values.get(indexTracker) + heal.getTotalHeal());
             }
         }
-        return values;
+        List<Long> swap = new ArrayList<>(); // todo: This syncs it with the indicator but might not be correct.
+        for (int i = 1; i < values.size(); i++)
+            swap.add(values.get(i));
+        return swap;
     }
 
     /**
@@ -288,7 +291,7 @@ public class Encounter { // todo: Might be worthwhile during processing to creat
         int indexTracker = -1;
         for (LogEntry log : entries) {
             // Logs are sorted by time by construction. So we can safely move to the next window once we break past the current one.
-            if (log.getTime() > encounterStartMillis + (timeStep * indexTracker)) {
+            if (log.getTime() >= encounterStartMillis + (timeStep * indexTracker)) {
                 indexTracker++;
                 values.add(0L);
             }
@@ -297,7 +300,10 @@ public class Encounter { // todo: Might be worthwhile during processing to creat
                     values.set(indexTracker, values.get(indexTracker) + heal.getTotalHeal());
             }
         }
-        return values;
+        List<Long> swap = new ArrayList<>(); // todo: This syncs it with the indicator but might not be correct.
+        for (int i = 1; i < values.size(); i++)
+            swap.add(values.get(i));
+        return swap;
     }
 
     /**

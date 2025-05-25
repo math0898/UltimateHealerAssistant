@@ -30,14 +30,23 @@ public class MainGraphScene extends BasicScene {
      */
     @Override
     public boolean load (Game game) {
+        this.game = game;
         graphGameObject = new GraphGameObject();
         game.addGameObject("Main Graph", graphGameObject);
         game.addGameObject("Encounter Indicator", new EncounterIndicator(this));
-        game.addGameObject("Cast Indicator", new CastIndicator(this)); // todo: Probably make separate instances per spell query.
         game.addGameObject("Pres Icon", new SpecIcon(0, "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/icons/classicon_evoker_preservation.jpg"));
         game.addGameObject("Holy Icon", new SpecIcon(70, "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/icons/spell_holy_guardianspirit.jpg"));
         game.addGameObject("Disc Icon", new SpecIcon(140, "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/icons/spell_holy_powerwordshield.jpg"));
         game.addGameObject("Resto Icon", new SpecIcon(210, "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/icons/inv_1115_shaman_chainheal.jpg"));
+        game.addGameObject("Pres Engulf", new CastIndicator(this, SpellQueries.CONSUME_FLAME, 0));
+        game.addGameObject("Pres Rewind", new CastIndicator(this, SpellQueries.REWIND, 30));
+        game.addGameObject("Pres Emerald Communion", new CastIndicator(this, SpellQueries.EMERALD_COMMUNION, 60));
+        game.addGameObject("Holy Divine Hymn", new CastIndicator(this, SpellQueries.DIVINE_HYMN, 0));
+        game.addGameObject("Disc Evangelism", new CastIndicator(this, SpellQueries.EVANGELISM, 0));
+        game.addGameObject("Disc Piety", new CastIndicator(this, SpellQueries.PIETY, 30)); // todo: Consider triple buff.
+//        game.addGameObject("Disc Atonement", new CastIndicator(this, SpellQueries.ATONEMENT, 60)); // todo: This is causing a lot of lag because it's technically drawing each cooldown every cast, not once per block.
+        game.addGameObject("Resto Healing Tide", new CastIndicator(this, SpellQueries.HEALING_TIDE, 0));
+        game.addGameObject("Resto Spirit Link", new CastIndicator(this, SpellQueries.SPIRIT_LINK, 30));
         return true;
     }
 
@@ -97,15 +106,24 @@ public class MainGraphScene extends BasicScene {
             if (pos.x < (1920 / 16) + 56 && pos.x > (1920 / 16)) {
                 if (pos.y > 1080 / 8 + 30 && pos.y < 1080 / 8 + 30 + 56) {
                     graphGameObject.toggleSpec("pres");
+                    ((CastIndicator) game.getGameObject("Pres Engulf")).toggle();
+                    ((CastIndicator) game.getGameObject("Pres Rewind")).toggle();
+                    ((CastIndicator) game.getGameObject("Pres Emerald Communion")).toggle();
                 }
                 if (pos.y > 1080 / 8 + 30 + 70 && pos.y < 1080 / 8 + 30 + 70 + 56) {
                     graphGameObject.toggleSpec("holy");
+                    ((CastIndicator) game.getGameObject("Holy Divine Hymn")).toggle();
                 }
                 if (pos.y > 1080 / 8 + 30 + 140 && pos.y < 1080 / 8 + 30 + 140 + 56) {
                     graphGameObject.toggleSpec("disc");
+                    ((CastIndicator) game.getGameObject("Disc Evangelism")).toggle();
+                    ((CastIndicator) game.getGameObject("Disc Piety")).toggle();
+//                    ((CastIndicator) game.getGameObject("Disc Atonement")).toggle();
                 }
                 if (pos.y > 1080 / 8 + 30 + 210 && pos.y < 1080 / 8 + 30 + 210 + 56) {
                     graphGameObject.toggleSpec("resto");
+                    ((CastIndicator) game.getGameObject("Resto Healing Tide")).toggle();
+                    ((CastIndicator) game.getGameObject("Resto Spirit Link")).toggle();
                 }
             }
         }

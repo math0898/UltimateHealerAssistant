@@ -9,7 +9,6 @@ import suga.engine.graphics.DrawListener;
 import suga.engine.graphics.GraphicsPanel;
 
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +30,7 @@ public class GraphGameObject extends BasicGameObject implements  DrawListener {
     /**
      * The vertical scale component of the healing graph.
      */
-    private static final int SCALE = 1000000; // todo: Figure out a way to dynamicly calculate.
+    private static final int SCALE = 1000000; // todo: Figure out a way to dynamically calculate.
 
     /**
      * Whether to stack ascent bars or not.
@@ -59,41 +58,6 @@ public class GraphGameObject extends BasicGameObject implements  DrawListener {
      * A map of specs which including their current toggle state.
      */
     private Map<String, Boolean> specs = new HashMap<>();
-
-    /**
-     *
-     */
-    private enum SpellQueries {
-
-        // Pres spells
-        CONSUME_FLAME("Consume Flame", new Color(196, 30, 58)),
-        EMERALD_COMMUNION("Emerald Communion", new Color(0, 255, 152)),
-        REWIND("Rewind", new Color(255, 244, 104)),
-        // Holy Priest
-        DIVINE_HYMN("Divine Hymn", new Color(196, 30, 58)),
-        // Disc Priest
-        EVANGELISM("Evangelism", new Color(255, 255, 255)), // todo: Requires special handling.
-        PIETY("Premonition of Piety", new Color(255, 255, 255)), // todo: Requires special handling.
-        ATONEMENT("Atonement", new Color(255, 255, 255)), // todo: Requires special handling.
-        // Resto Shammy
-        SPIRIT_LINK("Spirit Link", new Color(0, 255, 152)),
-        HEALING_TIDE("Healing Tide Totem", new Color(63, 199, 235)); // todo: Requires special handling.
-
-        public final String spellName;
-        public final Color color;
-
-        SpellQueries (String spellName, Color color) {
-            this.spellName = spellName;
-            this.color = color;
-        }
-
-        public static SpellQueries fromOrdinal (int ordinal) {
-            for (SpellQueries query : SpellQueries.values())
-                if (ordinal == query.ordinal())
-                    return query;
-            return REWIND;
-        }
-    }
 
     /**
      * Called every drawing frame so programs have a chance to make their voices heard on what gets drawn.
@@ -129,17 +93,15 @@ public class GraphGameObject extends BasicGameObject implements  DrawListener {
                             panel.setBigPixel(startX + (j * 10), startY - ((int) i * 10), 9, bar.getColor());
                     }
                 }
-//                if (STACKED) { // todo: Latest graph in the daisy chain is overwriting earlier ones. Need to also have an option to color if within it's realm.
-                    long lastSum = 0;
-                    long currentSum = 0;
-                    for (int k = 0; k < graph.stackedAscentBars.size(); k++) {
-                        long mod = graph.stackedAscentBars.get(k).getValues().get(j);
-                        currentSum += mod;
-                        if (i >= lastSum && i <= currentSum && mod != 0)
-                            panel.setBigPixel(startX + (j * 10), startY - ((int) i * 10), 9, graph.stackedAscentBars.get(k).getColor());
-                        lastSum = currentSum;
-                    }
-//                }
+                long lastSum = 0;
+                long currentSum = 0;
+                for (int k = 0; k < graph.stackedAscentBars.size(); k++) {
+                    long mod = graph.stackedAscentBars.get(k).getValues().get(j);
+                    currentSum += mod;
+                    if (i >= lastSum && i <= currentSum && mod != 0)
+                        panel.setBigPixel(startX + (j * 10), startY - ((int) i * 10), 9, graph.stackedAscentBars.get(k).getColor());
+                    lastSum = currentSum;
+                }
                 if (graph.damage.get(j) == i && graph.damage.get(j) != 0)
                     panel.setRectangle(startX + (j * 10) - 3, startY - ((int) i * 10) - 1, 7, 3, new Color(230, 41, 28));
             }
