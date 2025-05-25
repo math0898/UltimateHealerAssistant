@@ -4,6 +4,7 @@ import io.github.math0898.gui.AscentBar;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Graphs are a collection of points each with a column coordinate and height.
@@ -36,6 +37,11 @@ public class Graph {
      * A List of ascent bars to add to this graph.
      */
     public List<AscentBar> ascentBars = new ArrayList<>();
+
+    /**
+     * A list of ascent bars that are stacked and drawn in-front of the existing ascent bars.
+     */
+    public List<AscentBar> stackedAscentBars = new ArrayList<>();
 
     /**
      * Smooths the graph by looking ahead and behind to average the current note.
@@ -73,7 +79,8 @@ public class Graph {
             }
             damage.add(sum / ((factor * 2L) + 1));
         }
-        for (AscentBar bar : ascentBars) {
+        Stream<AscentBar> bars = Stream.concat(ascentBars.stream(), stackedAscentBars.stream());
+        for (AscentBar bar : bars.toList()) {
             List<Long> list = bar.getValues();
             List<Long> swap = new ArrayList<>();
             for (int i = 0; i < list.size(); i++) {
@@ -117,6 +124,15 @@ public class Graph {
      */
     public void addAscent (AscentBar bar) {
         ascentBars.add(bar);
+    }
+
+    /**
+     * Adds a stacked ascent bar to this graph.
+     *
+     * @param bar The bar to add to this graph.
+     */
+    public void addStackedAscent (AscentBar bar) {
+        stackedAscentBars.add(bar);
     }
 
     /**

@@ -9,7 +9,6 @@ import suga.engine.graphics.GraphicsPanel;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * The Graph is considered a GameObject so that we have access to {@link #runLogic()}. This runs on a separate thread
@@ -86,17 +85,17 @@ public class GraphGameObject extends BasicGameObject implements  DrawListener {
                             panel.setBigPixel(startX + (j * 10), startY - ((int) i * 10), 9, bar.getColor());
                     }
                 }
-                if (STACKED) { // todo: Latest graph in the daisy chain is overwriting earlier ones. Need to also have an option to color if within it's realm.
+//                if (STACKED) { // todo: Latest graph in the daisy chain is overwriting earlier ones. Need to also have an option to color if within it's realm.
                     long lastSum = 0;
                     long currentSum = 0;
-                    for (int k = 0; k < graph.ascentBars.size(); k++) {
-                        long mod = graph.ascentBars.get(k).getValues().get(j);
+                    for (int k = 0; k < graph.stackedAscentBars.size(); k++) {
+                        long mod = graph.stackedAscentBars.get(k).getValues().get(j);
                         currentSum += mod;
                         if (i >= lastSum && i <= currentSum && mod != 0)
-                            panel.setBigPixel(startX + (j * 10), startY - ((int) i * 10), 9, graph.ascentBars.get(k).getColor());
+                            panel.setBigPixel(startX + (j * 10), startY - ((int) i * 10), 9, graph.stackedAscentBars.get(k).getColor());
                         lastSum = currentSum;
                     }
-                }
+//                }
                 if (graph.damage.get(j) == i && graph.damage.get(j) != 0)
                     panel.setRectangle(startX + (j * 10) - 3, startY - ((int) i * 10) - 1, 7, 3, new Color(230, 41, 28));
             }
@@ -138,7 +137,7 @@ public class GraphGameObject extends BasicGameObject implements  DrawListener {
                         (encounter.encounterLengthMillis() / timeStepCount) * j,
                         (encounter.encounterLengthMillis() / timeStepCount)) / SCALE;
                 syudou.add(syudouItem);
-                long myloveItem = encounter.queryHealingByCaster("Mylov",
+                long myloveItem = encounter.queryHealingBySpell("Lifebind",
                         (encounter.encounterLengthMillis() / timeStepCount) * j,
                         (encounter.encounterLengthMillis() / timeStepCount)) / SCALE;
                 mylove.add(myloveItem);
@@ -148,11 +147,11 @@ public class GraphGameObject extends BasicGameObject implements  DrawListener {
                 consumes.add(healingPotion);
             }
             graph.addAscent(new AscentBar(consumeFlameList, new Color(51, 147, 127))); // Uravaal
-            graph.addAscent(new AscentBar(rewindList, new Color(210, 204, 35))); // Skullz
+            graph.addStackedAscent(new AscentBar(rewindList, new Color(210, 204, 35))); // Skullz
 //            graph.addAscent(new AscentBar(sunflower, new Color(215, 215, 230)));
-            graph.addAscent(new AscentBar(syudou, new Color(84, 227, 201)));
-//            graph.addAscent(new AscentBar(mylove, new Color(163, 48, 201)));
-            graph.addAscent(new AscentBar(consumes, new Color(213, 76, 76)));
+            graph.addStackedAscent(new AscentBar(syudou, new Color(84, 227, 201)));
+//            graph.addStackedAscent(new AscentBar(mylove, new Color(143, 64, 225)));
+            graph.addStackedAscent(new AscentBar(consumes, new Color(213, 76, 76)));
             graph.smooth(1);
             recompute = false;
             this.graph = graph;
