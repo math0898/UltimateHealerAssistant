@@ -19,7 +19,9 @@ public enum SpellQueries {
     ATONEMENT("Atonement", new Color(255, 255, 255), "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/icons/ability_priest_atonement.jpg"), // todo: Requires special handling.
     // Resto Shammy
     SPIRIT_LINK("Spirit Link", new Color(0, 255, 152), "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/icons/spell_shaman_spiritlink.jpg"),
-    HEALING_TIDE("Healing Tide Totem", new Color(63, 199, 235), "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/icons/ability_shaman_healingtide.jpg");
+    HEALING_TIDE("Healing Tide Totem", new Color(63, 199, 235), "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/icons/ability_shaman_healingtide.jpg"),
+    // Resto Druid
+    REGROWTH("Regrowth", new Color(171, 212, 115), "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/icons/talentspec_druid_restoration.jpg");
 
     public final String spellName;
     public final Color color;

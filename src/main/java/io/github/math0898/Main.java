@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 
 public class Main {
 
-    public final static String TEST_FILE = "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/testfiles/Archive-WoWCombatLog-051525_185636.txt";
+    public final static String TEST_FILE = "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/testfiles/WoWCombatLog-052525_155255.txt";
 
     public final static List<Encounter> encounters = new ArrayList<>();
 

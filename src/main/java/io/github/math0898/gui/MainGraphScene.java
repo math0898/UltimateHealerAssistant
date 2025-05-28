@@ -15,7 +15,7 @@ public class MainGraphScene extends BasicScene {
     /**
      * The index of the encounter that is currently being graphed.
      */
-    private int graphedEncounterIndex = 39; // todo: Set to 0
+    private int graphedEncounterIndex = 0; // todo: Set to 0
 
     /**
      * The GraphGameObject that actually draws the graph.
@@ -38,6 +38,7 @@ public class MainGraphScene extends BasicScene {
         game.addGameObject("Holy Icon", new SpecIcon(70, "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/icons/spell_holy_guardianspirit.jpg"));
         game.addGameObject("Disc Icon", new SpecIcon(140, "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/icons/spell_holy_powerwordshield.jpg"));
         game.addGameObject("Resto Icon", new SpecIcon(210, "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/icons/inv_1115_shaman_chainheal.jpg"));
+        game.addGameObject("Resto Druid Icon", new SpecIcon(280, "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/icons/talentspec_druid_restoration.jpg"));
         game.addGameObject("Pres Engulf", new CastIndicator(this, SpellQueries.CONSUME_FLAME, 0));
         game.addGameObject("Pres Rewind", new CastIndicator(this, SpellQueries.REWIND, 30));
         game.addGameObject("Pres Emerald Communion", new CastIndicator(this, SpellQueries.EMERALD_COMMUNION, 60));
@@ -47,6 +48,7 @@ public class MainGraphScene extends BasicScene {
 //        game.addGameObject("Disc Atonement", new CastIndicator(this, SpellQueries.ATONEMENT, 60)); // todo: This is causing a lot of lag because it's technically drawing each cooldown every cast, not once per block.
         game.addGameObject("Resto Healing Tide", new CastIndicator(this, SpellQueries.HEALING_TIDE, 0));
         game.addGameObject("Resto Spirit Link", new CastIndicator(this, SpellQueries.SPIRIT_LINK, 30));
+        game.addGameObject("Druid Regrowth", new CastIndicator(this, SpellQueries.REGROWTH, 0));
         return true;
     }
 
@@ -124,6 +126,10 @@ public class MainGraphScene extends BasicScene {
                     graphGameObject.toggleSpec("resto");
                     ((CastIndicator) game.getGameObject("Resto Healing Tide")).toggle();
                     ((CastIndicator) game.getGameObject("Resto Spirit Link")).toggle();
+                }
+                if (pos.y > 1080 / 8 + 30 + 280 && pos.y < 1080 / 8 + 30 + 280 + 56) {
+                    graphGameObject.toggleSpec("druid");
+                    ((CastIndicator) game.getGameObject("Druid Regrowth")).toggle();
                 }
             }
         }

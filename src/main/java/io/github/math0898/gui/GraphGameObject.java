@@ -25,7 +25,7 @@ public class GraphGameObject extends BasicGameObject implements  DrawListener {
     /**
      * The encounter to graph.
      */
-    private Encounter encounter = Main.encounters.get(39);
+    private Encounter encounter = Main.encounters.get(0);
 
     /**
      * The vertical scale component of the healing graph.
@@ -118,11 +118,12 @@ public class GraphGameObject extends BasicGameObject implements  DrawListener {
             if (timeStepCount == 0) return;
             if (encounter == null) return;
             Graph graph = encounter.graph(encounter.encounterLengthMillis() / timeStepCount, SCALE);
-            Color[] colors = {new Color(51, 147, 127), new Color(255, 255, 255), new Color(255, 244, 104), new Color(0, 112, 221)};
+            Color[] colors = {new Color(51, 147, 127), new Color(255, 255, 255), new Color(255, 244, 104), new Color(0, 112, 221), new Color(255, 125, 10)};
             Boolean pres = specs.get("pres");
             Boolean holy = specs.get("holy");
             Boolean disc = specs.get("disc");
             Boolean resto = specs.get("resto");
+            Boolean druid = specs.get("druid");
             if (pres != null && pres) {
                 for (SpellQueries spell : new SpellQueries[]{SpellQueries.CONSUME_FLAME, SpellQueries.EMERALD_COMMUNION, SpellQueries.REWIND})
                     graph.addStackedAscent(new AscentBar(Utils.scaleList(encounter.queryHealingInstantsBySpell(spell.spellName, timeStepSize), SCALE), spell.color));
@@ -142,6 +143,9 @@ public class GraphGameObject extends BasicGameObject implements  DrawListener {
                                                           encounter.queryHealingInstantsByCaster("Healing Tide Totem", timeStepSize));
                 graph.addAscent(new AscentBar(Utils.scaleList(playerHealing, SCALE), colors[3]));
                 graph.addStackedAscent(new AscentBar(Utils.scaleList(encounter.queryHealingInstantsByCaster("Healing Tide Totem", timeStepSize), SCALE), SpellQueries.HEALING_TIDE.color));
+            } if (druid != null && druid) {
+                graph.addStackedAscent(new AscentBar(Utils.scaleList(encounter.queryHealingInstantsBySpell(SpellQueries.REGROWTH.spellName, timeStepSize), SCALE), SpellQueries.REGROWTH.color));
+                graph.addAscent(new AscentBar(Utils.scaleList(encounter.queryHealingInstantsByCaster("Sol", timeStepSize), SCALE), colors[1]));
             }
             graph.smooth(1);
             recompute = false;
