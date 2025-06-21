@@ -7,7 +7,6 @@ import suga.engine.game.BasicGame;
 import io.github.math0898.gui.*;
 import suga.engine.input.keyboard.GameKeyListener;
 import suga.engine.input.mouse.BasicMouseListener;
-import suga.engine.input.mouse.GameMouseListener;
 import suga.engine.logger.Level;
 
 import java.awt.*;
@@ -22,7 +21,7 @@ import java.util.stream.Collectors;
 
 public class Main {
 
-    public final static String TEST_FILE = "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/testfiles/WoWCombatLog-052525_155255.txt";
+    public final static String TEST_FILE = "/home/sugaku/.var/app/com.usebottles.bottles/data/bottles/bottles/Battle.net/drive_c/Program Files (x86)/World of Warcraft/_retail_/Logs/warcraftlogsarchive/Archive-WoWCombatLog-061925_185426.txt";
 
     public final static List<Encounter> encounters = new ArrayList<>();
 

@@ -139,13 +139,13 @@ public class GraphGameObject extends BasicGameObject implements  DrawListener {
                 graph.addAscent(new AscentBar(Utils.scaleList(encounter.queryHealingInstantsByCaster("Skullz", timeStepSize), SCALE), colors[2]));
             } if (resto != null && resto) {
                 graph.addStackedAscent(new AscentBar(Utils.scaleList(encounter.queryHealingInstantsBySpell(SpellQueries.SPIRIT_LINK.spellName, timeStepSize), SCALE), SpellQueries.SPIRIT_LINK.color));
-                List<Long> playerHealing = Utils.addLists(encounter.queryHealingInstantsByCaster("Taryn", timeStepSize),
+                List<Long> playerHealing = Utils.addLists(encounter.queryHealingInstantsByCaster("Syudou", timeStepSize),
                                                           encounter.queryHealingInstantsByCaster("Healing Tide Totem", timeStepSize));
                 graph.addAscent(new AscentBar(Utils.scaleList(playerHealing, SCALE), colors[3]));
                 graph.addStackedAscent(new AscentBar(Utils.scaleList(encounter.queryHealingInstantsByCaster("Healing Tide Totem", timeStepSize), SCALE), SpellQueries.HEALING_TIDE.color));
             } if (druid != null && druid) {
-                graph.addStackedAscent(new AscentBar(Utils.scaleList(encounter.queryHealingInstantsBySpell(SpellQueries.REGROWTH.spellName, timeStepSize), SCALE), SpellQueries.REGROWTH.color));
-                graph.addAscent(new AscentBar(Utils.scaleList(encounter.queryHealingInstantsByCaster("Sol", timeStepSize), SCALE), colors[1]));
+                graph.addStackedAscent(new AscentBar(Utils.scaleList(encounter.queryHealingInstantsBySpell(SpellQueries.TRANQUILITY.spellName, timeStepSize), SCALE), SpellQueries.TRANQUILITY.color));
+                graph.addAscent(new AscentBar(Utils.scaleList(encounter.queryHealingInstantsByCaster("Skullz", timeStepSize), SCALE), colors[4]));
             }
             graph.smooth(1);
             recompute = false;

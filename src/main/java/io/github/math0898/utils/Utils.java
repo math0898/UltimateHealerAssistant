@@ -28,7 +28,7 @@ public class Utils {
         else offset = "\\+";
         String zone = offset + "0" + date.replaceAll(".+" + offset, "");
         date = date.replaceAll("-\\d", "");
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/dd/yyyy HH:mm:ss.SSS").withZone(ZoneId.of(zone)); // todo: 2 digit dates?
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yyyy HH:mm:ss.SSS").withZone(ZoneId.of(zone)); // todo: 2 digit dates?
         LocalDateTime dateTime = LocalDateTime.parse(date, formatter);
         return dateTime.toInstant(ZoneOffset.of(zone)).toEpochMilli();
     }

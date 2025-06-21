@@ -49,6 +49,7 @@ public class MainGraphScene extends BasicScene {
         game.addGameObject("Resto Healing Tide", new CastIndicator(this, SpellQueries.HEALING_TIDE, 0));
         game.addGameObject("Resto Spirit Link", new CastIndicator(this, SpellQueries.SPIRIT_LINK, 30));
         game.addGameObject("Druid Regrowth", new CastIndicator(this, SpellQueries.REGROWTH, 0));
+        game.addGameObject("Druid Tranquility", new CastIndicator(this, SpellQueries.TRANQUILITY, 0));
         return true;
     }
 
@@ -129,7 +130,8 @@ public class MainGraphScene extends BasicScene {
                 }
                 if (pos.y > 1080 / 8 + 30 + 280 && pos.y < 1080 / 8 + 30 + 280 + 56) {
                     graphGameObject.toggleSpec("druid");
-                    ((CastIndicator) game.getGameObject("Druid Regrowth")).toggle();
+//                    ((CastIndicator) game.getGameObject("Druid Regrowth")).toggle();
+                    ((CastIndicator) game.getGameObject("Druid Tranquility")).toggle();
                 }
             }
         }
