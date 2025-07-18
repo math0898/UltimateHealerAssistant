@@ -15,7 +15,7 @@ public enum SpellQueries {
     DIVINE_HYMN("Divine Hymn", new Color(196, 30, 58), "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/icons/spell_holy_divinehymn.jpg"),
     // Disc Priest
     EVANGELISM("Evangelism", new Color(255, 255, 255), "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/icons/spell_holy_divineillumination.jpg"), // todo: Requires special handling.
-    PIETY("Premonition of Piety", new Color(255, 255, 255), "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/icons/inv_ability_oraclepriest_premonitionpiety.jpg"), // todo: Requires special handling.
+    PIETY("Premonition of Piety", new Color(255, 244, 104), "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/icons/inv_ability_oraclepriest_premonitionpiety.jpg"), // todo: Requires special handling.
     ATONEMENT("Atonement", new Color(255, 255, 255), "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/icons/ability_priest_atonement.jpg"), // todo: Requires special handling.
     // Resto Shammy
     SPIRIT_LINK("Spirit Link", new Color(0, 255, 152), "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/icons/spell_shaman_spiritlink.jpg"),

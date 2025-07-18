@@ -21,7 +21,8 @@ import java.util.stream.Collectors;
 
 public class Main {
 
-    public final static String TEST_FILE = "/home/sugaku/.var/app/com.usebottles.bottles/data/bottles/bottles/Battle.net/drive_c/Program Files (x86)/World of Warcraft/_retail_/Logs/warcraftlogsarchive/Archive-WoWCombatLog-061925_185426.txt";
+//    public final static String TEST_FILE = "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/testfiles/Archive-WoWCombatLog-071625_185305.txt";
+    public final static String TEST_FILE = "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/testfiles/Archive-WoWCombatLog-071725_190112.txt";
 
     public final static List<Encounter> encounters = new ArrayList<>();
 

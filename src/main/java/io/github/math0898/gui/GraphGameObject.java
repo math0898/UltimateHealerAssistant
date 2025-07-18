@@ -130,8 +130,9 @@ public class GraphGameObject extends BasicGameObject implements  DrawListener {
                 graph.addAscent(new AscentBar(Utils.scaleList(encounter.queryHealingInstantsByCaster("Nillath", timeStepSize), SCALE), colors[0]));
             }
             if (holy != null && holy){
-                graph.addStackedAscent(new AscentBar(Utils.scaleList(encounter.queryHealingInstantsBySpell(SpellQueries.DIVINE_HYMN.spellName, timeStepSize), SCALE), SpellQueries.DIVINE_HYMN.color));
-                graph.addAscent(new AscentBar(Utils.scaleList(encounter.queryHealingInstantsByCaster("Sunfl", timeStepSize), SCALE), colors[1]));
+                for (SpellQueries spell : new SpellQueries[]{SpellQueries.DIVINE_HYMN, SpellQueries.PIETY})
+                    graph.addStackedAscent(new AscentBar(Utils.scaleList(encounter.queryHealingInstantsBySpell(spell.spellName, timeStepSize), SCALE), spell.color));
+                graph.addAscent(new AscentBar(Utils.scaleList(encounter.queryHealingInstantsByCaster("Seranite", timeStepSize), SCALE), colors[1]));
             } if (disc != null && disc) {
                 // todo: disc priest is special with their cooldowns.
                 for (SpellQueries spell : new SpellQueries[]{SpellQueries.PIETY, SpellQueries.ATONEMENT, SpellQueries.EVANGELISM})
