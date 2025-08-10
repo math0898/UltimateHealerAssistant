@@ -50,6 +50,31 @@ public class PlayerPlacard extends BasicGameObject implements DrawListener {
     private static final int VERT_OFFSET_NAME = -75;
 
     /**
+     * The horizontal padding for the starting point of the offences bars. This is anchored horizontally to the icon.
+     */
+    private static final int HOR_PADDING_BARS = 10;
+
+    /**
+     * The vertical offset for the first set of bars.
+     */
+    private static final int VERT_OFFSET_BARS = -15;
+
+    /**
+     * The vertical padding between each set of bars.
+     */
+    private static final int VERT_PADDING_BARS = 10;
+
+    /**
+     * The width of the bar rectangles.
+     */
+    private static final int BARS_WIDTHS = 10;
+
+    /**
+     * The height of the bar rectangles.
+     */
+    private static final int BARS_HEIGHT = 20;
+
+    /**
      * The name of the realm the Player in this placard is on.
      */
     private final String realm;
@@ -75,6 +100,9 @@ public class PlayerPlacard extends BasicGameObject implements DrawListener {
         this.character = characterName;
         this.pos = new Vector(x, y, 0);
         subObjects.put("Player Icon", new PlayerIcon(realmSlug, characterName, ICON_WIDTH, ICON_HEIGHT, x + ICON_OFFSET_HOR, y + ICON_OFFSET_VERT));
+        subObjects.put("Grievous Offenses", new RectangleBar(SpellQueries.CONSUME_FLAME.color, BARS_WIDTHS, BARS_HEIGHT, HOR_PADDING_BARS, 5, x + ICON_OFFSET_HOR + (ICON_WIDTH / 2) + HOR_PADDING_BARS, y + VERT_OFFSET_BARS));
+        subObjects.put("Moderate Offenses", new RectangleBar(SpellQueries.PIETY.color, BARS_WIDTHS, BARS_HEIGHT, HOR_PADDING_BARS, 6, x + ICON_OFFSET_HOR + (ICON_WIDTH / 2) + HOR_PADDING_BARS, y + VERT_OFFSET_BARS + BARS_HEIGHT + VERT_PADDING_BARS));
+        subObjects.put("Not Really Offenses", new RectangleBar(SpellQueries.EMERALD_COMMUNION.color, BARS_WIDTHS, BARS_HEIGHT, HOR_PADDING_BARS, 3, x + ICON_OFFSET_HOR + (ICON_WIDTH / 2) + HOR_PADDING_BARS, y + VERT_OFFSET_BARS + (BARS_HEIGHT + VERT_PADDING_BARS) * 2));
     }
 
     /**
