@@ -34,7 +34,7 @@ public class PlayerIcon extends BasicGameObject implements DrawListener {
     private final String realm;
 
     /**
-     * The name of the character this PLayer icon represents.
+     * The name of the character this Player icon represents.
      */
     private final String character;
 
@@ -120,6 +120,6 @@ public class PlayerIcon extends BasicGameObject implements DrawListener {
      */
     @Override
     public void applyChanges (int width, int height, GraphicsPanel panel) {
-        panel.addImage((int) pos.getX(), (int) pos.getY(), this.width, this.height, icon);
+        panel.addImage((int) pos.getX() - this.width / 2, (int) pos.getY() - this.height / 2, this.width, this.height, icon);
     }
 }
