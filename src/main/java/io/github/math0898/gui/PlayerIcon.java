@@ -87,7 +87,7 @@ public class PlayerIcon extends BasicGameObject implements DrawListener {
                     .method("GET", HttpRequest.BodyPublishers.noBody())
                     .build();
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            GameEngine.getLogger().log("Icon Request: " + realm + "-" + character);
+            GameEngine.getLogger().log("Icon Request: " + realm + "-" + character, Level.DEBUG);
             GameEngine.getLogger().log("Icon Request: " + response.statusCode(), Level.DEBUG);
             GameEngine.getLogger().log("Icon Request: " + response.body(), Level.DEBUG);
 
