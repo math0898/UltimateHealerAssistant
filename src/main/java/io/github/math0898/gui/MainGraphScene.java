@@ -74,6 +74,9 @@ public class MainGraphScene extends BasicScene {
                     graphedEncounterIndex = Math.max(graphedEncounterIndex - 1, 0);
                     updateGraph();
                 }
+                case NUM_2 -> {
+                    game.loadScene("prog");
+                }
             }
         }
     }

@@ -23,6 +23,7 @@ public class Main {
 
 //    public final static String TEST_FILE = "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/testfiles/Archive-WoWCombatLog-071625_185305.txt";
     public final static String TEST_FILE = "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/testfiles/Archive-WoWCombatLog-071725_190112.txt";
+//    public final static String TEST_FILE = "/home/sugaku/Development/Standalone/HolyC/WoWLogConverter/test/WoWCombatLog-062725_150059.txt";
 
     public final static List<Encounter> encounters = new ArrayList<>();
 
@@ -30,7 +31,7 @@ public class Main {
         GameEngine.getLogger().setLevel(Level.VERBOSE);
         long startTime = System.currentTimeMillis();
         new Main().processFile(TEST_FILE);
-        long endTime = System.currentTimeMillis();
+        long endTime = System.currentTimeMillis(); // todo: Mouseover Abilities, names.
         GameEngine.getLogger().log("Found " + encounters.size() + " encounters. Took: " + NumberFormat.getInstance().format((endTime - startTime)) + "ms");
         gui();
     }

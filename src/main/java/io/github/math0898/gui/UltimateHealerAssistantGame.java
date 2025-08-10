@@ -19,6 +19,7 @@ public class UltimateHealerAssistantGame extends BasicGame {
     public UltimateHealerAssistantGame (GraphicsPanel panel, GameKeyListener listener, BasicMouseListener mouseListener) {
         super(panel, listener, mouseListener);
         scenes.put("main", new MainGraphScene());
+        scenes.put("prog", new ProgOffencesScene());
     }
 
     /**
