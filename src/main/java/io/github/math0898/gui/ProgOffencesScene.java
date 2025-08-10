@@ -1,6 +1,7 @@
 package io.github.math0898.gui;
 
 import suga.engine.game.BasicScene;
+import suga.engine.game.Game;
 import suga.engine.input.keyboard.KeyValue;
 
 import java.awt.*;
@@ -14,6 +15,19 @@ import java.awt.*;
 public class ProgOffencesScene extends BasicScene {
 
     /**
+     * Loads this scene into the given game.
+     *
+     * @param game The game to load this scene into.
+     * @return True if loading was successful. Otherwise, false.
+     */
+    @Override
+    public boolean load (Game game) {
+        game.clear();
+        game.addGameObject("Test Player Icon", new PlayerIcon("stormrage", "nillath"));
+        return super.load(game);
+    }
+
+    /**
      * Passes a keyboard input into the scene.
      *
      * @param key     The value of the key pressed.
@@ -22,9 +36,7 @@ public class ProgOffencesScene extends BasicScene {
     @Override
     public void keyboardInput (KeyValue key, boolean pressed) {
         switch (key) {
-            case NUM_1 -> {
-                game.loadScene("main");
-            }
+            case NUM_1 -> game.loadScene("main");
         }
     }
 
