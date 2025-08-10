@@ -2,6 +2,8 @@ package io.github.math0898.gui;
 
 import suga.engine.game.BasicScene;
 import suga.engine.game.Game;
+import suga.engine.game.objects.BasicGameObject;
+import suga.engine.game.objects.GameObject;
 import suga.engine.input.keyboard.KeyValue;
 
 import java.awt.*;
@@ -23,7 +25,10 @@ public class ProgOffencesScene extends BasicScene {
     @Override
     public boolean load (Game game) {
         game.clear();
-        game.addGameObject("Test Player Icon", new PlayerIcon("stormrage", "nillath"));
+        game.addGameObject("Seranite", new PlayerIcon("malganis", "seranite", 200, 200, 1920 / 4, 1080 / 4));
+        game.addGameObject("Nillath", new PlayerIcon("stormrage", "nillath", 200, 200, (1920 / 4) * 3, 1080 / 4));
+        game.addGameObject("Skullzdrood", new PlayerIcon("stormrage", "skullzdrood", 200, 200, 1920 / 4, (1080 / 4) * 2));
+        game.addGameObject("Syudou", new PlayerIcon("stormrage", "syudou", 200, 200, (1920 / 4) * 3, (1080 / 4) * 2));
         return super.load(game);
     }
 
