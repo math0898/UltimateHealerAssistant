@@ -1,5 +1,7 @@
-package io.github.math0898.gui;
+package io.github.math0898.game;
 
+import io.github.math0898.views.healgraph.MainGraphScene;
+import io.github.math0898.views.nightsummary.ProgOffencesScene;
 import suga.engine.GameEngine;
 import suga.engine.game.BasicGame;
 import suga.engine.graphics.GraphicsPanel;

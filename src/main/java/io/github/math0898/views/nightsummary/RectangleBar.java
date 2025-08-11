@@ -1,4 +1,4 @@
-package io.github.math0898.gui;
+package io.github.math0898.views.nightsummary;
 
 import suga.engine.game.objects.BasicGameObject;
 import suga.engine.graphics.DrawListener;

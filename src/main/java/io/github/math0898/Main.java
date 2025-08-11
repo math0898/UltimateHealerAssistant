@@ -1,10 +1,12 @@
 package io.github.math0898;
 
-import io.github.math0898.gui.GraphicsPanel;
+import io.github.math0898.game.UltimateHealerAssistantGame;
+import io.github.math0898.game.UltimateHealerAssistantGameKeyListener;
+import io.github.math0898.game.UltimateMouseListener;
+import io.github.math0898.views.healgraph.GraphicsPanel;
 import io.github.math0898.processing.Encounter;
 import suga.engine.GameEngine;
 import suga.engine.game.BasicGame;
-import io.github.math0898.gui.*;
 import suga.engine.input.keyboard.GameKeyListener;
 import suga.engine.input.mouse.BasicMouseListener;
 import suga.engine.logger.Level;

@@ -1,4 +1,4 @@
-package io.github.math0898.gui;
+package io.github.math0898.game;
 
 import suga.engine.input.keyboard.KeyValue;
 import suga.engine.input.keyboard.StackGameKeyListener;

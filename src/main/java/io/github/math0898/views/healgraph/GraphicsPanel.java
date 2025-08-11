@@ -1,4 +1,4 @@
-package io.github.math0898.gui;
+package io.github.math0898.views.healgraph;
 
 import suga.engine.graphics.Graphics2d;
 

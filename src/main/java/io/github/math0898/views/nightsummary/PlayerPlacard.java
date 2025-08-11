@@ -1,5 +1,6 @@
-package io.github.math0898.gui;
+package io.github.math0898.views.nightsummary;
 
+import io.github.math0898.views.healgraph.SpellQueries;
 import suga.engine.game.objects.BasicGameObject;
 import suga.engine.game.objects.GameObject;
 import suga.engine.graphics.DrawListener;

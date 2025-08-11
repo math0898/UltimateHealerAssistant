@@ -1,6 +1,6 @@
 package io.github.math0898.processing;
 
-import io.github.math0898.gui.AscentBar;
+import io.github.math0898.views.healgraph.AscentBar;
 
 import java.util.ArrayList;
 import java.util.List;
