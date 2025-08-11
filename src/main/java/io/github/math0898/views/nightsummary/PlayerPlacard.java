@@ -137,7 +137,10 @@ public class PlayerPlacard extends BasicGameObject implements DrawListener {
     @Override
     public void applyChanges (int width, int height, GraphicsPanel panel) {
         for (GameObject o : subObjects.values()) o.getDrawListener().applyChanges(width, height, panel);
-        BufferedImage buffer = Utils.imageFromText(new Font("Comic Sans", Font.BOLD, 36), new Color(200, 200, 200), character.toUpperCase(), MAX_NAME_WIDTH, 48);
+        Font font = new Font("Comic Sans", Font.BOLD, 36);
+        FontMetrics metrics = panel.getFontMetrics(font);
+        final int textWidth = metrics.stringWidth(character.toUpperCase()) + 5;
+        BufferedImage buffer = Utils.imageFromText(font, new Color(200, 200, 200), character.toUpperCase(), Math.max(textWidth, MAX_NAME_WIDTH), 48);
         panel.addImage((int) pos.getX() + ICON_OFFSET_HOR + (ICON_WIDTH / 2) + HOR_PADDING_NAME,
                 (int) pos.getY() + VERT_OFFSET_NAME - 17, MAX_NAME_WIDTH, 48, buffer); // todo: These numbers need to be cleaned up.
     }
