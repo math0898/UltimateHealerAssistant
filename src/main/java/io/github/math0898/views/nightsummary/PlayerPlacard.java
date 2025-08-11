@@ -54,7 +54,7 @@ public class PlayerPlacard extends BasicGameObject implements DrawListener {
     /**
      * The horizontal padding for the starting point of the offences bars. This is anchored horizontally to the icon.
      */
-    private static final int HOR_PADDING_BARS = 10;
+    private static final int HOR_PADDING_BARS = 5;
 
     /**
      * The vertical offset for the first set of bars.
@@ -69,7 +69,7 @@ public class PlayerPlacard extends BasicGameObject implements DrawListener {
     /**
      * The width of the bar rectangles.
      */
-    private static final int BARS_WIDTHS = 10;
+    private static final int BARS_WIDTHS = 5;
 
     /**
      * The height of the bar rectangles.
