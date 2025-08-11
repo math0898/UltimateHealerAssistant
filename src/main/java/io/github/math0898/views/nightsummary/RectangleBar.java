@@ -39,7 +39,7 @@ public class RectangleBar extends BasicGameObject implements DrawListener {
     /**
      * The number of rectangles to draw.
      */
-    private final int count;
+    private int count;
 
     /**
      * The x coordinate for the bottom left rectangle's bottom left corner.
@@ -91,6 +91,16 @@ public class RectangleBar extends BasicGameObject implements DrawListener {
         this.xPos = x;
         this.yPos = y;
         this.showNumber = number;
+    }
+
+    /**
+     * Modifies the value contained in this rectangular bar by the given amount.
+     *
+     * @param amount The amount to add or subtract from the bar's current count.
+     */
+    public void add (int amount) {
+        count += amount;
+        count = Math.max(0, count); // The bar can't really display values less than 0 effectively. We'll constrain it here.
     }
 
     /**

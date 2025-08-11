@@ -9,7 +9,6 @@ import suga.engine.physics.Vector;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 /**
  * The ProgOffencesScene is used to generate nice looking graphics to track how many times players mess up during prog.
@@ -74,7 +73,6 @@ public class ProgOffencesScene extends BasicScene {
     public boolean load (Game game) {
         game.clear();
         if (firstLoad) {
-            Random rand = new Random(3);
             // Assumed 1040 height.
             // Assumed 1920 width.
             final int WIDTH = 1920;
@@ -85,24 +83,15 @@ public class ProgOffencesScene extends BasicScene {
             for (int x = 0; x < ROW_COUNT; x++) {
                 for (int y = 0; y < COLUMN_COUNT; y++) {
                     String key = "Placard " + x + ":" + y;
-                    if (names[x * COLUMN_COUNT + y].equalsIgnoreCase("nillath")) {
-                        SelectionRectangle o = new SelectionRectangle();
-                        o.setPos(new Vector(((WIDTH - SIDE_BUFFERS * 2) / COLUMN_COUNT) * x + SIDE_BUFFERS, ((HEIGHT - BOTTOM_BUFFER - TOP_BUFFER) / ROW_COUNT) * y + TOP_BUFFER, 0));
-                        o.setActive(true);
-                        game.addGameObject("SelectionBox", o);
-                        bufferedObjects.put("SelectionBox", o);
-
-                    }
-                    GameObject obj = new PlayerPlacard(realms[x * COLUMN_COUNT + y], names[x * COLUMN_COUNT + y], rand.nextInt(17), rand.nextInt(17), rand.nextInt(17),
+                    GameObject obj = new PlayerPlacard(realms[x * COLUMN_COUNT + y], names[x * COLUMN_COUNT + y], 0, 0, 0,
                             ((WIDTH - SIDE_BUFFERS * 2) / COLUMN_COUNT) * x + SIDE_BUFFERS, ((HEIGHT - BOTTOM_BUFFER - TOP_BUFFER) / ROW_COUNT) * y + TOP_BUFFER);
                     game.addGameObject(key, obj);
                     bufferedObjects.put(key, obj);
                 }
             }
-//        game.addGameObject("Seranite Placard", new PlayerPlacard("malganis", "seranite", rand.nextInt(10), rand.nextInt(10), rand.nextInt(10), 1920 / 4, 1080 / 4));
-//        game.addGameObject("Nillath Placard", new PlayerPlacard("stormrage", "nillath", rand.nextInt(10), rand.nextInt(10), rand.nextInt(10), (1920 / 4) * 3, 1080 / 4));
-//        game.addGameObject("Skullzdrood Placard", new PlayerPlacard("stormrage", "skullzdrood", rand.nextInt(10), rand.nextInt(10), rand.nextInt(10), 1920 / 4, (1080 / 4) * 3));
-//        game.addGameObject("Syudou Placard", new PlayerPlacard("stormrage", "syudou", rand.nextInt(10), rand.nextInt(10), rand.nextInt(10), (1920 / 4) * 3, (1080 / 4) * 3));
+            SelectionRectangle o = new SelectionRectangle();
+            game.addGameObject("SelectionBox", o);
+            bufferedObjects.put("SelectionBox", o);
             firstLoad = false;
         } else {
             bufferedObjects.forEach(game::addGameObject);
@@ -149,6 +138,24 @@ public class ProgOffencesScene extends BasicScene {
                     SelectionRectangle rect = (SelectionRectangle) game.getGameObject("SelectionBox");
                     rect.setPos(placard.getPos());
                     rect.setActive(true);
+                }
+                case Q -> {
+                    if (placard != null) placard.modifyBar("Grievous Offenses", 1);
+                }
+                case W -> {
+                    if (placard != null) placard.modifyBar("Moderate Offenses", 1);
+                }
+                case E -> {
+                    if (placard != null) placard.modifyBar("Not Really Offenses", 1);
+                }
+                case A -> {
+                    if (placard != null) placard.modifyBar("Grievous Offenses", -1);
+                }
+                case S -> {
+                    if (placard != null) placard.modifyBar("Moderate Offenses", -1);
+                }
+                case D -> {
+                    if (placard != null) placard.modifyBar("Not Really Offenses", -1);
                 }
             }
         }

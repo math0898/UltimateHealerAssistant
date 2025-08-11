@@ -69,7 +69,7 @@ public class PlayerPlacard extends BasicGameObject implements DrawListener {
     /**
      * The width of the bar rectangles.
      */
-    private static final int BARS_WIDTHS = 5;
+    private static final int BARS_WIDTHS = 10;
 
     /**
      * The height of the bar rectangles.
@@ -115,6 +115,18 @@ public class PlayerPlacard extends BasicGameObject implements DrawListener {
         subObjects.put("Grievous Offenses", new RectangleBar(SpellQueries.CONSUME_FLAME.color, BARS_WIDTHS, BARS_HEIGHT, HOR_PADDING_BARS, grievousOffenses, x + ICON_OFFSET_HOR + (ICON_WIDTH / 2) + HOR_PADDING_BARS, y + VERT_OFFSET_BARS));
         subObjects.put("Moderate Offenses", new RectangleBar(SpellQueries.PIETY.color, BARS_WIDTHS, BARS_HEIGHT, HOR_PADDING_BARS, moderateOffenses, x + ICON_OFFSET_HOR + (ICON_WIDTH / 2) + HOR_PADDING_BARS, y + VERT_OFFSET_BARS + BARS_HEIGHT + VERT_PADDING_BARS));
         subObjects.put("Not Really Offenses", new RectangleBar(SpellQueries.EMERALD_COMMUNION.color, BARS_WIDTHS, BARS_HEIGHT, HOR_PADDING_BARS, notReallyOffenses, x + ICON_OFFSET_HOR + (ICON_WIDTH / 2) + HOR_PADDING_BARS, y + VERT_OFFSET_BARS + (BARS_HEIGHT + VERT_PADDING_BARS) * 2));
+    }
+
+    /**
+     * Modifies the Rectangle bar of the given String key value.
+     *
+     * @param bar The bar to modify.
+     * @param amount The amount to modify it by.
+     */
+    public void modifyBar (String bar, int amount) {
+        RectangleBar recBar = (RectangleBar) subObjects.get(bar);
+        if (recBar == null) return;
+        recBar.add(amount);
     }
 
     /**
