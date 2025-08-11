@@ -54,7 +54,7 @@ public class PlayerPlacard extends BasicGameObject implements DrawListener {
     /**
      * The horizontal padding for the starting point of the offences bars. This is anchored horizontally to the icon.
      */
-    private static final int HOR_PADDING_BARS = 5;
+    private static final int HOR_PADDING_BARS = 3;
 
     /**
      * The vertical offset for the first set of bars.
@@ -69,7 +69,7 @@ public class PlayerPlacard extends BasicGameObject implements DrawListener {
     /**
      * The width of the bar rectangles.
      */
-    private static final int BARS_WIDTHS = 10;
+    private static final int BARS_WIDTHS = 5;
 
     /**
      * The height of the bar rectangles.
@@ -127,6 +127,16 @@ public class PlayerPlacard extends BasicGameObject implements DrawListener {
         RectangleBar recBar = (RectangleBar) subObjects.get(bar);
         if (recBar == null) return;
         recBar.add(amount);
+    }
+
+    /**
+     * Sets the role icon of this player placard. Reflected by a small icon on the player's icon.
+     *
+     * @param role The role to assign this placard.
+     */
+    public void setRole (String role) {
+        PlayerIcon icon = (PlayerIcon) subObjects.get("Player Icon");
+        icon.setRole(role);
     }
 
     /**

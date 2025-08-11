@@ -157,6 +157,15 @@ public class ProgOffencesScene extends BasicScene {
                 case D -> {
                     if (placard != null) placard.modifyBar("Not Really Offenses", -1);
                 }
+                case J -> {
+                    if (placard != null) placard.setRole("DPS");
+                }
+                case K -> {
+                    if (placard != null) placard.setRole("Healer");
+                }
+                case L -> {
+                    if (placard != null) placard.setRole("Tank");
+                }
             }
         }
     }

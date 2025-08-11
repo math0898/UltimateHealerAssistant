@@ -62,7 +62,7 @@ public class PlayerIcon extends BasicGameObject implements DrawListener {
     /**
      * This player's role if one is specified.
      */
-    private final String role;
+    private String role;
 
     /**
      * Creates a new PlayerIcon with the given realm slug and character name.
@@ -103,6 +103,15 @@ public class PlayerIcon extends BasicGameObject implements DrawListener {
         Graphics2D tmp = icon.createGraphics();
         tmp.drawImage(img, 0, 0, null);
         tmp.dispose();
+    }
+
+    /**
+     * Sets the role for this PlayerIcon.
+     *
+     * @param role The new role for this PlayerIcon.
+     */
+    public void setRole (String role) {
+        this.role = role;
     }
 
     /**
