@@ -55,6 +55,16 @@ public class ProgOffencesScene extends BasicScene {
     private boolean firstLoad = true;
 
     /**
+     * The active Placard that is potentially being modified.
+     */
+    private PlayerPlacard placard = null;
+
+    /**
+     * The coordinates of the currently selected Placard.
+     */
+    private Vector selectionPos = new Vector(0, 0, 0);
+
+    /**
      * Loads this scene into the given game.
      *
      * @param game The game to load this scene into.
@@ -74,7 +84,7 @@ public class ProgOffencesScene extends BasicScene {
             String[] realms = new String[]{"area-52", "stormrage", "malganis", "stormrage", "moon-guard", "stormrage", "stormrage", "stormrage", "tichondrius", "aegwynn", "stormrage", "greymane", "zuljin", "zuljin", "bleeding-hollow", "stormrage", "illidan", "stormrage", "moon-guard", "stormrage"};
             for (int x = 0; x < ROW_COUNT; x++) {
                 for (int y = 0; y < COLUMN_COUNT; y++) {
-                    String key = "Placard" + x + y;
+                    String key = "Placard " + x + ":" + y;
                     if (names[x * COLUMN_COUNT + y].equalsIgnoreCase("nillath")) {
                         SelectionRectangle o = new SelectionRectangle();
                         o.setPos(new Vector(((WIDTH - SIDE_BUFFERS * 2) / COLUMN_COUNT) * x + SIDE_BUFFERS, ((HEIGHT - BOTTOM_BUFFER - TOP_BUFFER) / ROW_COUNT) * y + TOP_BUFFER, 0));
@@ -101,6 +111,17 @@ public class ProgOffencesScene extends BasicScene {
     }
 
     /**
+     * A utility method to grab the specific placard at the given coordinates.
+     *
+     * @param pos The grid position of the placard to grab.
+     */
+    private PlayerPlacard getPlacardAt (Vector pos) {
+        int x = (int) pos.getX();
+        int y = (int) pos.getY();
+        return (PlayerPlacard) game.getGameObject("Placard " + x + ":" + y);
+    }
+
+    /**
      * Passes a keyboard input into the scene.
      *
      * @param key     The value of the key pressed.
@@ -108,8 +129,28 @@ public class ProgOffencesScene extends BasicScene {
      */
     @Override
     public void keyboardInput (KeyValue key, boolean pressed) {
-        switch (key) {
-            case NUM_1 -> game.loadScene("main");
+        if (pressed) {
+            switch (key) {
+                case NUM_1 -> game.loadScene("main");
+                case ESC -> {
+                    selectionPos = new Vector(0, 0, 0);
+                    placard = null;
+                    SelectionRectangle rect = (SelectionRectangle) game.getGameObject("SelectionBox");
+                    rect.setActive(false);
+                }
+                case ARROW_DOWN, ARROW_UP, ARROW_LEFT, ARROW_RIGHT -> {
+                    switch (key) {
+                        case ARROW_DOWN -> selectionPos.setY(Math.min(COLUMN_COUNT - 1, selectionPos.getY() + 1));
+                        case ARROW_UP -> selectionPos.setY(Math.max(0, selectionPos.getY() - 1));
+                        case ARROW_RIGHT -> selectionPos.setX(Math.min(ROW_COUNT - 1, selectionPos.getX() + 1));
+                        case ARROW_LEFT -> selectionPos.setX(Math.max(0, selectionPos.getX() - 1));
+                    }
+                    placard = getPlacardAt(selectionPos);
+                    SelectionRectangle rect = (SelectionRectangle) game.getGameObject("SelectionBox");
+                    rect.setPos(placard.getPos());
+                    rect.setActive(true);
+                }
+            }
         }
     }
 
