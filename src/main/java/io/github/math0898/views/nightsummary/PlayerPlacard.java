@@ -1,5 +1,6 @@
 package io.github.math0898.views.nightsummary;
 
+import io.github.math0898.utils.Utils;
 import io.github.math0898.views.healgraph.SpellQueries;
 import suga.engine.game.objects.BasicGameObject;
 import suga.engine.game.objects.GameObject;
@@ -76,6 +77,11 @@ public class PlayerPlacard extends BasicGameObject implements DrawListener {
     private static final int BARS_HEIGHT = 20;
 
     /**
+     * The max width of names.
+     */
+    private static final int MAX_NAME_WIDTH = 190;
+
+    /**
      * The name of the realm the Player in this placard is on.
      */
     private final String realm;
@@ -131,12 +137,8 @@ public class PlayerPlacard extends BasicGameObject implements DrawListener {
     @Override
     public void applyChanges (int width, int height, GraphicsPanel panel) {
         for (GameObject o : subObjects.values()) o.getDrawListener().applyChanges(width, height, panel);
-        BufferedImage buffer = new BufferedImage(300, 48, BufferedImage.TYPE_INT_ARGB);
-        Graphics graphics = buffer.createGraphics();
-        graphics.setFont(new Font("Comic Sans", Font.BOLD, 36));
-        graphics.setColor(new Color(200,200,200));
-        graphics.drawString(character.toUpperCase(), 0, 32);
+        BufferedImage buffer = Utils.imageFromText(new Font("Comic Sans", Font.BOLD, 36), new Color(200, 200, 200), character.toUpperCase(), MAX_NAME_WIDTH, 48);
         panel.addImage((int) pos.getX() + ICON_OFFSET_HOR + (ICON_WIDTH / 2) + HOR_PADDING_NAME,
-                (int) pos.getY() + VERT_OFFSET_NAME, 300, 48, buffer);
+                (int) pos.getY() + VERT_OFFSET_NAME - 17, MAX_NAME_WIDTH, 48, buffer); // todo: These numbers need to be cleaned up.
     }
 }

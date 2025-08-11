@@ -1,5 +1,6 @@
 package io.github.math0898.views.nightsummary;
 
+import io.github.math0898.utils.Utils;
 import suga.engine.game.objects.BasicGameObject;
 import suga.engine.graphics.DrawListener;
 import suga.engine.graphics.GraphicsPanel;
@@ -112,16 +113,12 @@ public class RectangleBar extends BasicGameObject implements DrawListener {
     @Override
     public void applyChanges (int width, int height, GraphicsPanel panel) {
         final int PER_STEP_OFFSET = this.width + padding;
+        final int CANVAS_WIDTH = 40;
         for (int i = 0; i < count; i++)
             panel.setRectangle(xPos + (PER_STEP_OFFSET * i) , yPos - this.height, this.width, this.height, color);
         if (showNumber) {
-            // todo: We need a better way to do text. Probably also need to make a utility function out of this.
-            BufferedImage buffer = new BufferedImage(300, this.height, BufferedImage.TYPE_INT_ARGB);
-            Graphics graphics = buffer.createGraphics();
-            graphics.setFont(new Font("Comic Sans", Font.BOLD, (int) (this.height * 0.8)));
-            graphics.setColor(new Color(200,200,200));
-            graphics.drawString("(" + count + ")", 0, this.height);
-            panel.addImage(xPos + (PER_STEP_OFFSET * count), yPos - (int) (this.height * 0.2) - this.height, 300, this.height, buffer);
+            BufferedImage buffer = Utils.imageFromText(new Font("Comic Sans", Font.BOLD, (int) (this.height * 0.8)), new Color(200, 200, 200), "(" + count + ")", CANVAS_WIDTH, this.height);
+            panel.addImage(xPos + (PER_STEP_OFFSET * count), yPos - (int) (this.height * 0.2) - this.height, CANVAS_WIDTH, this.height, buffer);
         }
     }
 }
