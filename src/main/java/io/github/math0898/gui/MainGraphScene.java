@@ -31,6 +31,7 @@ public class MainGraphScene extends BasicScene {
     @Override
     public boolean load (Game game) {
         this.game = game;
+        game.clear();
         graphGameObject = new GraphGameObject();
         game.addGameObject("Main Graph", graphGameObject);
         game.addGameObject("Encounter Indicator", new EncounterIndicator(this));

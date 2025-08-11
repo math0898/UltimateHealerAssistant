@@ -5,6 +5,7 @@ import suga.engine.game.Game;
 import suga.engine.input.keyboard.KeyValue;
 
 import java.awt.*;
+import java.util.Random;
 
 /**
  * The ProgOffencesScene is used to generate nice looking graphics to track how many times players mess up during prog.
@@ -23,10 +24,11 @@ public class ProgOffencesScene extends BasicScene {
     @Override
     public boolean load (Game game) {
         game.clear();
-        game.addGameObject("Seranite", new PlayerIcon("malganis", "seranite", 200, 200, 1920 / 4, 1080 / 4));
-        game.addGameObject("Nillath Placard", new PlayerPlacard("stormrage", "nillath", (1920 / 4) * 3, 1080 / 4));
-        game.addGameObject("Skullzdrood", new PlayerIcon("stormrage", "skullzdrood", 200, 200, 1920 / 4, (1080 / 4) * 3));
-        game.addGameObject("Syudou", new PlayerIcon("stormrage", "syudou", 200, 200, (1920 / 4) * 3, (1080 / 4) * 3));
+        Random rand = new Random(3);
+        game.addGameObject("Seranite Placard", new PlayerPlacard("malganis", "seranite", rand.nextInt(10), rand.nextInt(10), rand.nextInt(10), 1920 / 4, 1080 / 4));
+        game.addGameObject("Nillath Placard", new PlayerPlacard("stormrage", "nillath", rand.nextInt(10), rand.nextInt(10), rand.nextInt(10), (1920 / 4) * 3, 1080 / 4));
+        game.addGameObject("Skullzdrood Placard", new PlayerPlacard("stormrage", "skullzdrood", rand.nextInt(10), rand.nextInt(10), rand.nextInt(10), 1920 / 4, (1080 / 4) * 3));
+        game.addGameObject("Syudou Placard", new PlayerPlacard("stormrage", "syudou", rand.nextInt(10), rand.nextInt(10), rand.nextInt(10), (1920 / 4) * 3, (1080 / 4) * 3));
         return super.load(game);
     }
 
