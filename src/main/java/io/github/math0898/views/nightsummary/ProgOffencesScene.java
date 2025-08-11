@@ -4,6 +4,7 @@ import suga.engine.game.BasicScene;
 import suga.engine.game.Game;
 import suga.engine.game.objects.GameObject;
 import suga.engine.input.keyboard.KeyValue;
+import suga.engine.physics.Vector;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -74,6 +75,14 @@ public class ProgOffencesScene extends BasicScene {
             for (int x = 0; x < ROW_COUNT; x++) {
                 for (int y = 0; y < COLUMN_COUNT; y++) {
                     String key = "Placard" + x + y;
+                    if (names[x * COLUMN_COUNT + y].equalsIgnoreCase("nillath")) {
+                        SelectionRectangle o = new SelectionRectangle();
+                        o.setPos(new Vector(((WIDTH - SIDE_BUFFERS * 2) / COLUMN_COUNT) * x + SIDE_BUFFERS, ((HEIGHT - BOTTOM_BUFFER - TOP_BUFFER) / ROW_COUNT) * y + TOP_BUFFER, 0));
+                        o.setActive(true);
+                        game.addGameObject("SelectionBox", o);
+                        bufferedObjects.put("SelectionBox", o);
+
+                    }
                     GameObject obj = new PlayerPlacard(realms[x * COLUMN_COUNT + y], names[x * COLUMN_COUNT + y], rand.nextInt(17), rand.nextInt(17), rand.nextInt(17),
                             ((WIDTH - SIDE_BUFFERS * 2) / COLUMN_COUNT) * x + SIDE_BUFFERS, ((HEIGHT - BOTTOM_BUFFER - TOP_BUFFER) / ROW_COUNT) * y + TOP_BUFFER);
                     game.addGameObject(key, obj);

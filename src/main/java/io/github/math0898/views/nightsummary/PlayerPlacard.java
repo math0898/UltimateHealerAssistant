@@ -24,7 +24,7 @@ public class PlayerPlacard extends BasicGameObject implements DrawListener {
     /**
      * Horizontal offset for the PlayerIcon relative to the PlayerPlacard's actual position.
      */
-    private static final int ICON_OFFSET_HOR = -100;
+    public static final int ICON_OFFSET_HOR = -100;
 
     /**
      * Vertical offset for the PlayerIcon relative to the PlayerPlacard's actual position.
@@ -34,17 +34,17 @@ public class PlayerPlacard extends BasicGameObject implements DrawListener {
     /**
      * The vertical height for the icon in the Player's placard.
      */
-    private static final int ICON_HEIGHT = 150;
+    public static final int ICON_HEIGHT = 150;
 
     /**
      * The horizontal width for the icon in the PLayer's placard.
      */
-    private static final int ICON_WIDTH = 150;
+    public static final int ICON_WIDTH = 150;
 
     /**
      * Horizontal padding between the character name text and the icon.
      */
-    private static final int HOR_PADDING_NAME = 5;
+    public static final int HOR_PADDING_NAME = 5;
 
     /**
      * A vertical offset for the character name text.
@@ -79,7 +79,7 @@ public class PlayerPlacard extends BasicGameObject implements DrawListener {
     /**
      * The max width of names.
      */
-    private static final int MAX_NAME_WIDTH = 190;
+    public static final int MAX_NAME_WIDTH = 190;
 
     /**
      * The name of the realm the Player in this placard is on.
