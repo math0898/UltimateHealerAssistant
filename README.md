@@ -8,7 +8,7 @@ A utility program intended to help analyze World of Warcraft raid healing, assis
 
 Nicely summarize the healing profile of pulls into an easy-to-read graph, including the impact players and CDs had on the healing profile.
 
-![Healing Graph.png](media/Healing Graph.png)
+![HealingGraph.png](media/HealingGraph.png)
 
 Plans to support all 7 healing classes as well as their major CDs.
 
@@ -16,4 +16,4 @@ Plans to support all 7 healing classes as well as their major CDs.
 
 Categorize and nicely summarize the night's mistakes in a single panel.
 
-![Nightly Summary.png](media/Nightly Summary.png)
+![NightlySummary.png](media/NightlySummary.png)
