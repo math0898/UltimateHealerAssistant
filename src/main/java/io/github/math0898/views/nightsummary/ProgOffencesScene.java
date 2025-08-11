@@ -59,7 +59,7 @@ public class ProgOffencesScene extends BasicScene {
         String[] realms = new String[]{ "area-52", "stormrage", "malganis", "stormrage", "moon-guard", "stormrage", "stormrage", "stormrage", "tichondrius", "aegwynn", "stormrage", "greymane", "zuljin", "zuljin", "bleeding-hollow", "stormrage", "illidan", "stormrage", "moon-guard", "stormrage" };
         for (int x = 0; x < ROW_COUNT; x++) {
             for (int y = 0; y < COLUMN_COUNT; y++) {
-                game.addGameObject("Placard" + x + y, new PlayerPlacard(realms[x * COLUMN_COUNT + y], names[x * COLUMN_COUNT + y], rand.nextInt(10), rand.nextInt(10), rand.nextInt(10),
+                game.addGameObject("Placard" + x + y, new PlayerPlacard(realms[x * COLUMN_COUNT + y], names[x * COLUMN_COUNT + y], rand.nextInt(9), rand.nextInt(9), rand.nextInt(9),
                         ((WIDTH - SIDE_BUFFERS * 2) / COLUMN_COUNT) * x + SIDE_BUFFERS, ((HEIGHT - BOTTOM_BUFFER - TOP_BUFFER) / ROW_COUNT) * y + TOP_BUFFER));
             }
         }
