@@ -111,7 +111,7 @@ public class PlayerPlacard extends BasicGameObject implements DrawListener {
         this.realm = realmSlug;
         this.character = characterName;
         this.pos = new Vector(x, y, 0);
-        subObjects.put("Player Icon", new PlayerIcon(realmSlug, characterName, ICON_WIDTH, ICON_HEIGHT, x + ICON_OFFSET_HOR, y + ICON_OFFSET_VERT));
+        subObjects.put("Player Icon", new PlayerIcon(realmSlug, characterName, "DPS", ICON_WIDTH, ICON_HEIGHT, x + ICON_OFFSET_HOR, y + ICON_OFFSET_VERT));
         subObjects.put("Grievous Offenses", new RectangleBar(SpellQueries.CONSUME_FLAME.color, BARS_WIDTHS, BARS_HEIGHT, HOR_PADDING_BARS, grievousOffenses, x + ICON_OFFSET_HOR + (ICON_WIDTH / 2) + HOR_PADDING_BARS, y + VERT_OFFSET_BARS));
         subObjects.put("Moderate Offenses", new RectangleBar(SpellQueries.PIETY.color, BARS_WIDTHS, BARS_HEIGHT, HOR_PADDING_BARS, moderateOffenses, x + ICON_OFFSET_HOR + (ICON_WIDTH / 2) + HOR_PADDING_BARS, y + VERT_OFFSET_BARS + BARS_HEIGHT + VERT_PADDING_BARS));
         subObjects.put("Not Really Offenses", new RectangleBar(SpellQueries.EMERALD_COMMUNION.color, BARS_WIDTHS, BARS_HEIGHT, HOR_PADDING_BARS, notReallyOffenses, x + ICON_OFFSET_HOR + (ICON_WIDTH / 2) + HOR_PADDING_BARS, y + VERT_OFFSET_BARS + (BARS_HEIGHT + VERT_PADDING_BARS) * 2));
