@@ -15,7 +15,7 @@ public class MainGraphScene extends BasicScene {
     /**
      * The index of the encounter that is currently being graphed.
      */
-    private int graphedEncounterIndex = 0; // todo: Set to 0
+    public static int graphedEncounterIndex = 0; // todo: Set to 0, this should be moved elsewhere. Same with Main.encounters();
 
     /**
      * The GraphGameObject that actually draws the graph.
@@ -76,6 +76,7 @@ public class MainGraphScene extends BasicScene {
                     updateGraph();
                 }
                 case NUM_2 -> game.loadScene("prog");
+                case NUM_3 -> game.loadScene("encounter");
             }
         }
     }

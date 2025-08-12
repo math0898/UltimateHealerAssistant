@@ -1,5 +1,6 @@
 package io.github.math0898.game;
 
+import io.github.math0898.views.encountersummary.EncounterSummaryScene;
 import io.github.math0898.views.healgraph.MainGraphScene;
 import io.github.math0898.views.nightsummary.ProgOffencesScene;
 import suga.engine.GameEngine;
@@ -22,6 +23,7 @@ public class UltimateHealerAssistantGame extends BasicGame {
         super(panel, listener, mouseListener);
         scenes.put("main", new MainGraphScene());
         scenes.put("prog", new ProgOffencesScene());
+        scenes.put("encounter", new EncounterSummaryScene());
     }
 
     /**
