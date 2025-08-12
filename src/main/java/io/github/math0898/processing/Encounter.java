@@ -1,9 +1,6 @@
 package io.github.math0898.processing;
 
-import io.github.math0898.processing.logentries.DamageTakenEntry;
-import io.github.math0898.processing.logentries.HealAbsorbEntry;
-import io.github.math0898.processing.logentries.HealEntry;
-import io.github.math0898.processing.logentries.LogEntry;
+import io.github.math0898.processing.logentries.*;
 import io.github.math0898.utils.Utils;
 
 import java.text.NumberFormat;
@@ -26,6 +23,11 @@ public class Encounter { // todo: Might be worthwhile during processing to creat
      * An entire list of all the entries contained within this Encounter.
      */
     private final List<LogEntry> entries = new ArrayList<>();
+
+    /**
+     * A list of deaths that happened during this encounter.
+     */
+    private final List<UnitDeathEntry> unitDeaths = new ArrayList<>();
 
     /**
      * A quick boolean to determine whether this Encounter has undergone processing or not.
@@ -72,8 +74,15 @@ public class Encounter { // todo: Might be worthwhile during processing to creat
             else if (line.contains("  SPELL_DAMAGE,")) entries.add(new DamageTakenEntry(line));
             else if (line.contains(" ENCOUNTER_START")) processEncounterStart(line);
             else if (line.contains(" ENCOUNTER_END")) processEncounterEnd(line);
+            else if (line.contains(" UNIT_DIED")) unitDeaths.add(new UnitDeathEntry(line));
         }
         data = null;
+        unitDeaths.sort((u1, u2) -> {
+            long val = u1.getTime() - u2.getTime();
+            if (val > 0L) return 1;
+            else if (val == 0) return 0;
+            else return -1;
+        });
     }
 
     /**
@@ -191,9 +200,9 @@ public class Encounter { // todo: Might be worthwhile during processing to creat
             while (i < entries.size() && entries.get(i).getTime() < windowStart + timeStep) {
                 if (entries.get(i) instanceof DamageTakenEntry damage)
                     windowDamage += damage.damageTaken();
-                else {
-                    windowTotalHealing += ((HealEntry) entries.get(i)).getTotalHeal();
-                    windowHealing += ((HealEntry) entries.get(i)).getHeal();
+                else if (entries.get(i) instanceof HealEntry healEntry) {
+                    windowTotalHealing += healEntry.getTotalHeal();
+                    windowHealing += healEntry.getHeal();
                 }
                 i++;
             }
@@ -304,6 +313,15 @@ public class Encounter { // todo: Might be worthwhile during processing to creat
         for (int i = 1; i < values.size(); i++)
             swap.add(values.get(i));
         return swap;
+    }
+
+    /**
+     * Accessor method to a list of all the deaths that occurred during this event.
+     *
+     * @return The encounter death list.
+     */
+    public List<UnitDeathEntry> getUnitDeaths () {
+        return unitDeaths;
     }
 
     /**
