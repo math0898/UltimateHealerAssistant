@@ -96,7 +96,6 @@ public class PlayerIcon extends BasicGameObject implements DrawListener {
         this.height = height;
         this.width = width;
         this.role = role;
-
         BufferedImage bufferedImage = requestImage();
         Image img = bufferedImage.getScaledInstance(width, height, Image.SCALE_DEFAULT);
         icon = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);

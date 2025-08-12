@@ -83,8 +83,9 @@ public class ProgOffencesScene extends BasicScene {
             for (int x = 0; x < ROW_COUNT; x++) {
                 for (int y = 0; y < COLUMN_COUNT; y++) {
                     String key = "Placard " + x + ":" + y;
-                    GameObject obj = new PlayerPlacard(realms[x * COLUMN_COUNT + y], names[x * COLUMN_COUNT + y], 0, 0, 0,
-                            ((WIDTH - SIDE_BUFFERS * 2) / COLUMN_COUNT) * x + SIDE_BUFFERS, ((HEIGHT - BOTTOM_BUFFER - TOP_BUFFER) / ROW_COUNT) * y + TOP_BUFFER);
+                    GameObject obj = new PlayerPlacard(realms[x * COLUMN_COUNT + y], names[x * COLUMN_COUNT + y],
+                            ((WIDTH - SIDE_BUFFERS * 2) / COLUMN_COUNT) * x + SIDE_BUFFERS,
+                            ((HEIGHT - BOTTOM_BUFFER - TOP_BUFFER) / ROW_COUNT) * y + TOP_BUFFER);
                     game.addGameObject(key, obj);
                     bufferedObjects.put(key, obj);
                 }
@@ -140,22 +141,22 @@ public class ProgOffencesScene extends BasicScene {
                     rect.setActive(true);
                 }
                 case Q -> {
-                    if (placard != null) placard.modifyBar("Grievous Offenses", 1);
+                    if (placard != null) placard.modifyBar("Red Bar", 1);
                 }
                 case W -> {
-                    if (placard != null) placard.modifyBar("Moderate Offenses", 1);
+                    if (placard != null) placard.modifyBar("Yellow Bar", 1);
                 }
                 case E -> {
-                    if (placard != null) placard.modifyBar("Not Really Offenses", 1);
+                    if (placard != null) placard.modifyBar("Green Bar", 1);
                 }
                 case A -> {
-                    if (placard != null) placard.modifyBar("Grievous Offenses", -1);
+                    if (placard != null) placard.modifyBar("Red Bar", -1);
                 }
                 case S -> {
-                    if (placard != null) placard.modifyBar("Moderate Offenses", -1);
+                    if (placard != null) placard.modifyBar("Yellow Bar", -1);
                 }
                 case D -> {
-                    if (placard != null) placard.modifyBar("Not Really Offenses", -1);
+                    if (placard != null) placard.modifyBar("Green Bar", -1);
                 }
                 case J -> {
                     if (placard != null) placard.setRole("DPS");
