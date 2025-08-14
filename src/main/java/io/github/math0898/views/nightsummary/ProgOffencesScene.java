@@ -1,14 +1,20 @@
 package io.github.math0898.views.nightsummary;
 
+import io.github.math0898.Main;
+import io.github.math0898.processing.Encounter;
+import io.github.math0898.processing.logentries.UnitDeathEntry;
+import io.github.math0898.processing.logentries.UnitTypes;
+import io.github.math0898.utils.Utils;
+import suga.engine.GameEngine;
 import suga.engine.game.BasicScene;
 import suga.engine.game.Game;
 import suga.engine.game.objects.GameObject;
 import suga.engine.input.keyboard.KeyValue;
+import suga.engine.logger.Level;
 import suga.engine.physics.Vector;
 
 import java.awt.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * The ProgOffencesScene is used to generate nice looking graphics to track how many times players mess up during prog.
@@ -26,7 +32,7 @@ public class ProgOffencesScene extends BasicScene {
     /**
      * The number of columns to have in the summary.
      */
-    private static final int COLUMN_COUNT = 4;
+    private static final int COLUMN_COUNT = 5;
 
     /**
      * The amount of vertical space to leave at the top. This isn't precise and goes to the center of the placards.
@@ -64,6 +70,21 @@ public class ProgOffencesScene extends BasicScene {
     private Vector selectionPos = new Vector(0, 0, 0);
 
     /**
+     * A helper method to find all the players who are involved in the log file.
+     */
+    private Stack<String> findAllPlayers () {
+        ArrayList<String> list = new ArrayList<>(); // todo: Deaths are probably not the best way to find all players in a night.
+        for (Encounter e : Main.encounters)
+            for (UnitDeathEntry death : e.getUnitDeaths())
+                if (death.getUnitType() == UnitTypes.PLAYER)
+                    if (!list.contains(death.getUnitName()))
+                        list.add(death.getUnitName());
+        Stack<String> toReturn = new Stack<>();
+        toReturn.addAll(list);
+        return toReturn;
+    }
+
+    /**
      * Loads this scene into the given game.
      *
      * @param game The game to load this scene into.
@@ -77,14 +98,17 @@ public class ProgOffencesScene extends BasicScene {
             // Assumed 1920 width.
             final int WIDTH = 1920;
             final int HEIGHT = 1040;
-            // todo: Populate with actual data.
-            String[] names = new String[]{"holyføx", "nillath", "seranite", "auriprodeo", "heiderich", "shadowbat", "skullzdrood", "syudou", "skyvana", "thvnder", "citlalith", "vandalism", "khamosh", "delphian", "berzx", "weblock", "chuber", "mylovè", "sarinias", "sinys"};
-            String[] realms = new String[]{"area-52", "stormrage", "malganis", "stormrage", "moon-guard", "stormrage", "stormrage", "stormrage", "tichondrius", "aegwynn", "stormrage", "greymane", "zuljin", "zuljin", "bleeding-hollow", "stormrage", "illidan", "stormrage", "moon-guard", "stormrage"};
+            Stack<String> characters = findAllPlayers();
             for (int x = 0; x < COLUMN_COUNT; x++) {
                 for (int y = 0; y < ROW_COUNT; y++) {
+                    GameEngine.getLogger().log("Characters Left: " + characters.size(), Level.DEBUG);
+                    if (characters.isEmpty()) continue;
+                    String character = characters.pop();
                     String key = "Placard " + x + ":" + y;
-                    GameObject obj = new PlayerPlacard(realms[x * COLUMN_COUNT + y], names[x * COLUMN_COUNT + y],
-                            ((WIDTH - (SIDE_BUFFERS * 2)) / (COLUMN_COUNT + 1)) * (x + 1) + SIDE_BUFFERS,
+                    GameObject obj = new PlayerPlacard(
+                            Utils.parseRealm(character),
+                            Utils.parseCharName(character),
+                        ((WIDTH - (SIDE_BUFFERS * 2)) / COLUMN_COUNT) * x + SIDE_BUFFERS - PlayerPlacard.ICON_OFFSET_HOR + (PlayerPlacard.ICON_WIDTH / 2),
                             ((HEIGHT - BOTTOM_BUFFER - TOP_BUFFER) / ROW_COUNT) * y + TOP_BUFFER);
                     game.addGameObject(key, obj);
                     bufferedObjects.put(key, obj);
