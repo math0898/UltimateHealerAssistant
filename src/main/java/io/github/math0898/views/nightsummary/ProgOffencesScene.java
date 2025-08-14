@@ -31,7 +31,7 @@ public class ProgOffencesScene extends BasicScene {
     /**
      * The amount of vertical space to leave at the top. This isn't precise and goes to the center of the placards.
      */
-    private static final int TOP_BUFFER = 150;
+    private static final int TOP_BUFFER = 200;
 
     /**
      * The amount of vertical space to leave at the bottom. This isn't precise and goes to the center of the placards.
@@ -41,7 +41,7 @@ public class ProgOffencesScene extends BasicScene {
     /**
      * The amount of space to leave on either side of the screen. This isn't precise and goes to the center of the placards.
      */
-    private static final int SIDE_BUFFERS = 250;
+    private static final int SIDE_BUFFERS = 50;
 
     /**
      * A map of game objects we keep to buffer. This means we don't need to regenerate them when scene is changed back.
@@ -80,11 +80,11 @@ public class ProgOffencesScene extends BasicScene {
             // todo: Populate with actual data.
             String[] names = new String[]{"holyføx", "nillath", "seranite", "auriprodeo", "heiderich", "shadowbat", "skullzdrood", "syudou", "skyvana", "thvnder", "citlalith", "vandalism", "khamosh", "delphian", "berzx", "weblock", "chuber", "mylovè", "sarinias", "sinys"};
             String[] realms = new String[]{"area-52", "stormrage", "malganis", "stormrage", "moon-guard", "stormrage", "stormrage", "stormrage", "tichondrius", "aegwynn", "stormrage", "greymane", "zuljin", "zuljin", "bleeding-hollow", "stormrage", "illidan", "stormrage", "moon-guard", "stormrage"};
-            for (int x = 0; x < ROW_COUNT; x++) {
-                for (int y = 0; y < COLUMN_COUNT; y++) {
+            for (int x = 0; x < COLUMN_COUNT; x++) {
+                for (int y = 0; y < ROW_COUNT; y++) {
                     String key = "Placard " + x + ":" + y;
                     GameObject obj = new PlayerPlacard(realms[x * COLUMN_COUNT + y], names[x * COLUMN_COUNT + y],
-                            ((WIDTH - SIDE_BUFFERS * 2) / COLUMN_COUNT) * x + SIDE_BUFFERS,
+                            ((WIDTH - (SIDE_BUFFERS * 2)) / (COLUMN_COUNT + 1)) * (x + 1) + SIDE_BUFFERS,
                             ((HEIGHT - BOTTOM_BUFFER - TOP_BUFFER) / ROW_COUNT) * y + TOP_BUFFER);
                     game.addGameObject(key, obj);
                     bufferedObjects.put(key, obj);
@@ -130,9 +130,9 @@ public class ProgOffencesScene extends BasicScene {
                 }
                 case ARROW_DOWN, ARROW_UP, ARROW_LEFT, ARROW_RIGHT -> {
                     switch (key) {
-                        case ARROW_DOWN -> selectionPos.setY(Math.min(COLUMN_COUNT - 1, selectionPos.getY() + 1));
+                        case ARROW_DOWN -> selectionPos.setY(Math.min(ROW_COUNT - 1, selectionPos.getY() + 1));
                         case ARROW_UP -> selectionPos.setY(Math.max(0, selectionPos.getY() - 1));
-                        case ARROW_RIGHT -> selectionPos.setX(Math.min(ROW_COUNT - 1, selectionPos.getX() + 1));
+                        case ARROW_RIGHT -> selectionPos.setX(Math.min(COLUMN_COUNT - 1, selectionPos.getX() + 1));
                         case ARROW_LEFT -> selectionPos.setX(Math.max(0, selectionPos.getX() - 1));
                     }
                     placard = getPlacardAt(selectionPos);
