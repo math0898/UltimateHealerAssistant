@@ -93,4 +93,27 @@ public class Utils {
         graphics.dispose();
         return buffer;
     }
+
+    /**
+     * Returns the realm portion of the given actor name. Expected input is of the form '"Username-Realm-US"'
+     *
+     * @param actorName The unprocessed actor name.
+     * @return The realm name for this actor.
+     */
+    public static String parseRealm (String actorName) {
+        String cleaned = actorName.replace("\"", "").toLowerCase();
+        String realmSlug = cleaned.split("-")[1];
+        return realmSlug.replace("'", "").replace("guard", "-guard").replace("hollow", "-hollow").replace("52", "-52");
+    }
+
+    /**
+     * Returns the character name of the given actor name. Expected input is of the form '"Username-Realm-US"'
+     *
+     * @param actorName The unprocessed actor name.
+     * @return The character name for this actor.
+     */
+    public static String parseCharName (String actorName) {
+        String cleaned = actorName.replace("\"", "").toLowerCase();
+        return cleaned.split("-")[0];
+    }
 }

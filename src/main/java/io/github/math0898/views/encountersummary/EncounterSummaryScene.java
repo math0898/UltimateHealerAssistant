@@ -3,6 +3,7 @@ package io.github.math0898.views.encountersummary;
 import io.github.math0898.Main;
 import io.github.math0898.processing.logentries.UnitDeathEntry;
 import io.github.math0898.processing.logentries.UnitTypes;
+import io.github.math0898.utils.Utils;
 import io.github.math0898.views.healgraph.MainGraphScene;
 import io.github.math0898.views.nightsummary.PlayerPlacard;
 import io.github.math0898.views.nightsummary.SelectionRectangle;
@@ -59,28 +60,23 @@ public class EncounterSummaryScene extends BasicScene {
             // Assumed 1920 width.
             final int WIDTH = 1920;
             final int HEIGHT = 1040;
-            // todo: Populate with actual data.
             java.util.List<UnitDeathEntry> deaths = Main.encounters.get(MainGraphScene.graphedEncounterIndex).getUnitDeaths();
             final long lastDeath = deaths.getLast().getTime();
-            ArrayList<String> playerNames = new ArrayList<>();
-            ArrayList<String> playerRealms = new ArrayList<>();
-            ArrayList<Long> deathTimes = new ArrayList<>();
-            for (int i = 0; i < deaths.size(); i++) {
-                UnitDeathEntry entry = deaths.get(i);
+            final ArrayList<UnitDeathEntry> events = new ArrayList<>();
+            for (UnitDeathEntry entry : deaths) {
                 if (entry.getUnitType() != UnitTypes.PLAYER) continue;
-                String cleanName = entry.getUnitName().replace("\"", "");
-                playerNames.add(cleanName.split("-")[0].toLowerCase());
-                String realmSlug = cleanName.split("-")[1];
-                playerRealms.add(realmSlug.toLowerCase().replace("'", "").replace("guard", "-guard").replace("hollow", "-hollow").replace("52", "-52"));
-                deathTimes.add(entry.getTime());
+                events.add(entry);
             }
-             for (int x = 0; x < ROW_COUNT; x++) {
+            for (int x = 0; x < ROW_COUNT; x++) {
                 for (int y = 0; y < COLUMN_COUNT; y++) {
                     String key = "Placard " + x + ":" + y;
-                    int index = Math.min(x * COLUMN_COUNT + y, playerNames.size() - 1);
-                    int differenceInDeath = (int) (lastDeath - deathTimes.get(index));
-                    GameObject obj = new PlayerPlacard(playerRealms.get(index), playerNames.get(index),
-                            differenceInDeath / 10000,
+                    int index = x * COLUMN_COUNT + y;
+                    if (index >= events.size()) continue;
+                    int differenceInDeath = (int) (lastDeath - events.get(index).getTime());
+                    GameObject obj = new PlayerPlacard(
+                            Utils.parseRealm(events.get(index).getUnitName()),
+                            Utils.parseCharName(events.get(index).getUnitName()),
+                            differenceInDeath / 10000,             // todo: Populate with actual data.
                             (differenceInDeath % 10000) / 1000,
                             (differenceInDeath % 1000) / 100,
                             ((WIDTH - SIDE_BUFFERS * 2) / COLUMN_COUNT) * x + SIDE_BUFFERS,
