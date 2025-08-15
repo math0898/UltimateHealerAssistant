@@ -1,4 +1,4 @@
-package io.github.math0898.views.nightsummary;
+package io.github.math0898.views.general;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

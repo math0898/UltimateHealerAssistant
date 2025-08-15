@@ -26,7 +26,8 @@ public class Main {
 //    public final static String TEST_FILE = "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/testfiles/Archive-WoWCombatLog-071625_185305.txt";
 //    public final static String TEST_FILE = "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/testfiles/Archive-WoWCombatLog-071725_190112.txt";
 //    public final static String TEST_FILE = "/home/sugaku/Development/Standalone/HolyC/WoWLogConverter/test/WoWCombatLog-062725_150059.txt";
-    public final static String TEST_FILE = "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/testfiles/Archive-WoWCombatLog-081325_185940.txt";
+//    public final static String TEST_FILE = "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/testfiles/Archive-WoWCombatLog-081325_185940.txt";
+    public final static String TEST_FILE = "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/testfiles/Archive-WoWCombatLog-081425_185246.txt";
 
     public final static List<Encounter> encounters = new ArrayList<>();
 

@@ -7,6 +7,7 @@ import io.github.math0898.utils.Utils;
 import io.github.math0898.views.healgraph.MainGraphScene;
 import io.github.math0898.views.nightsummary.PlayerPlacard;
 import io.github.math0898.views.nightsummary.SelectionRectangle;
+import suga.engine.game.BasicGame;
 import suga.engine.game.BasicScene;
 import suga.engine.game.Game;
 import suga.engine.game.objects.GameObject;
@@ -73,14 +74,15 @@ public class EncounterSummaryScene extends BasicScene {
                     int index = x * COLUMN_COUNT + y;
                     if (index >= events.size()) continue;
                     int differenceInDeath = (int) (lastDeath - events.get(index).getTime());
-                    GameObject obj = new PlayerPlacard(
-                            Utils.parseRealm(events.get(index).getUnitName()),
-                            Utils.parseCharName(events.get(index).getUnitName()),
-                            differenceInDeath / 10000,             // todo: Populate with actual data.
-                            (differenceInDeath % 10000) / 1000,
-                            (differenceInDeath % 1000) / 100,
-                            ((WIDTH - SIDE_BUFFERS * 2) / COLUMN_COUNT) * x + SIDE_BUFFERS,
-                            ((HEIGHT - BOTTOM_BUFFER - TOP_BUFFER) / ROW_COUNT) * y + TOP_BUFFER);
+                    PlayerDeathReport obj = new PlayerDeathReport(events.get(index), ((WIDTH - SIDE_BUFFERS * 2) / COLUMN_COUNT) * x + SIDE_BUFFERS, ((HEIGHT - BOTTOM_BUFFER - TOP_BUFFER) / ROW_COUNT) * y + TOP_BUFFER , (BasicGame) game);
+//                    GameObject obj = new PlayerPlacard(
+//                            Utils.parseRealm(events.get(index).getUnitName()),
+//                            Utils.parseCharName(events.get(index).getUnitName()),
+//                            differenceInDeath / 10000,             // todo: Populate with actual data.
+//                            (differenceInDeath % 10000) / 1000,
+//                            (differenceInDeath % 1000) / 100,
+//                            ((WIDTH - SIDE_BUFFERS * 2) / COLUMN_COUNT) * x + SIDE_BUFFERS,
+//                            ((HEIGHT - BOTTOM_BUFFER - TOP_BUFFER) / ROW_COUNT) * y + TOP_BUFFER);
                     game.addGameObject(key, obj);
                 }
             }

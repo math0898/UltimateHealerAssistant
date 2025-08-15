@@ -1,4 +1,4 @@
-package io.github.math0898.views.nightsummary;
+package io.github.math0898.views.general;
 
 import io.github.math0898.utils.Utils;
 import suga.engine.game.objects.BasicGameObject;
@@ -19,7 +19,7 @@ public class RectangleBar extends BasicGameObject implements DrawListener {
     /**
      * The color of this RectangleBar.
      */
-    private final Color color;
+    private Color color;
 
     /**
      * The width of the rectangles.
@@ -101,6 +101,15 @@ public class RectangleBar extends BasicGameObject implements DrawListener {
     public void add (int amount) {
         count += amount;
         count = Math.max(0, count); // The bar can't really display values less than 0 effectively. We'll constrain it here.
+    }
+
+    /**
+     * Sets the color of this bar.
+     *
+     * @param color The new color for this bar.
+     */
+    public void setColor (Color color) {
+        this.color = color;
     }
 
     /**

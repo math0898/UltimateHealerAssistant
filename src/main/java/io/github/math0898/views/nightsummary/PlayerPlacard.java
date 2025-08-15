@@ -1,6 +1,8 @@
 package io.github.math0898.views.nightsummary;
 
 import io.github.math0898.utils.Utils;
+import io.github.math0898.views.general.PlayerIcon;
+import io.github.math0898.views.general.RectangleBar;
 import io.github.math0898.views.healgraph.SpellQueries;
 import suga.engine.game.objects.BasicGameObject;
 import suga.engine.game.objects.GameObject;
