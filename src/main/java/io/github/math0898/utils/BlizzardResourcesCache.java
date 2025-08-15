@@ -11,19 +11,9 @@ import java.util.Map;
 public class BlizzardResourcesCache {
 
     /**
-     * The amount of time before player icons are considered stale and should be updated.
-     */
-    private static final long PLAYER_ICONS = 1000L * 60 * 60 * 24;
-
-    /**
-     * The amount of time before spell icons are considered stale and should be updated.
-     */
-    private static final long SPELL_ICONS = 1000L * 60 * 60 * 24 * 31;
-
-    /**
      * A collection of known resources by their name.
      */
-    private final Map<String, String> resourcesMap = new HashMap<>();
+    private final Map<String, Resource> resourcesMap = new HashMap<>();
 
     /**
      * The active BlizzardResourceCache.
