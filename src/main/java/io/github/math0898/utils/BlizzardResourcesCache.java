@@ -2,12 +2,14 @@ package io.github.math0898.utils;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import suga.engine.GameEngine;
 import suga.engine.logger.Level;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -95,6 +97,21 @@ public class BlizzardResourcesCache {
     }
 
     /**
+     * Updates the registry file with resources contained in the resources Map.
+     */
+    private void updateRegistry () {
+        File file = new File("./cache/registry.json");
+        ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
+        Resource[] list = resourcesMap.values().toArray(new Resource[0]);
+        try (FileWriter writer = new FileWriter(file)) {
+            String str = mapper.writeValueAsString(list);
+            writer.write(str);
+        } catch (Exception exception) {
+            GameEngine.getLogger().log(exception);
+        }
+    }
+
+    /**
      *
      */
     public BufferedImage requestSpellResource (String resourceName) {
@@ -111,6 +128,7 @@ public class BlizzardResourcesCache {
         BufferedImage image = BlizzardAPIHelper.getInstance().requestPlayerIcon(Utils.parseRealm(resourceName), Utils.parseCharName(resourceName));
         resourcesMap.put(resourceName, new Resource(resourceName, "./cache/" + resourceName + ".png", System.currentTimeMillis(), ResourceTypes.PLAYER_ICONS));
         saveImage(image, "./cache/" + resourceName + ".png");
+        updateRegistry();
         return image;
     }
 

@@ -96,30 +96,28 @@ public class PlayerPlacard extends BasicGameObject implements DrawListener {
     /**
      * Creates a new PlayerIcon with the given realm slug and character name.
      *
-     * @param realmSlug This is the server name without US and a dash. Full lowercase.
-     * @param characterName This is the name of the character. Full lowercase.
+     * @param actorName This is the name of the character as it appears in log files.
      * @param x The x position of this placard.
      * @param y The y position of this placard.
      */
-    public PlayerPlacard (String realmSlug, String characterName, int x, int y) {
-        this(realmSlug, characterName, 0, 0, 0, x, y);
+    public PlayerPlacard (String actorName, int x, int y) {
+        this(actorName, 0, 0, 0, x, y);
     }
 
     /**
      * Creates a new PlayerIcon with the given realm slug and character name.
      *
-     * @param realmSlug This is the server name without US and a dash. Full lowercase.
-     * @param characterName This is the name of the character. Full lowercase.
+     * @param actorName This is the name of the character as it appears in log files.
      * @param grievousOffenses The number of offenses that are especially bad.
      * @param moderateOffenses The number of offenses that are kinda mid.
      * @param notReallyOffenses Offenses that don't really matter in the grand scale of things.
      * @param x The x position of this placard.
      * @param y The y position of this placard.
      */
-    public PlayerPlacard (String realmSlug, String characterName, int grievousOffenses, int moderateOffenses, int notReallyOffenses, int x, int y) {
-        this.character = characterName;
+    public PlayerPlacard (String actorName, int grievousOffenses, int moderateOffenses, int notReallyOffenses, int x, int y) {
+        this.character = Utils.parseCharName(actorName);
         this.pos = new Vector(x, y, 0);
-        subObjects.put("Player Icon", new PlayerIcon(realmSlug, characterName, ICON_WIDTH, ICON_HEIGHT, x + ICON_OFFSET_HOR, y + ICON_OFFSET_VERT));
+        subObjects.put("Player Icon", new PlayerIcon(actorName, ICON_WIDTH, ICON_HEIGHT, x + ICON_OFFSET_HOR, y + ICON_OFFSET_VERT));
         subObjects.put("Red Bar", new RectangleBar(SpellQueries.CONSUME_FLAME.color, BARS_WIDTHS, BARS_HEIGHT, HOR_PADDING_BARS, grievousOffenses, x + ICON_OFFSET_HOR + (ICON_WIDTH / 2) + HOR_PADDING_BARS, y + VERT_OFFSET_BARS));
         subObjects.put("Yellow Bar", new RectangleBar(SpellQueries.PIETY.color, BARS_WIDTHS, BARS_HEIGHT, HOR_PADDING_BARS, moderateOffenses, x + ICON_OFFSET_HOR + (ICON_WIDTH / 2) + HOR_PADDING_BARS, y + VERT_OFFSET_BARS + BARS_HEIGHT + VERT_PADDING_BARS));
         subObjects.put("Green Bar", new RectangleBar(SpellQueries.EMERALD_COMMUNION.color, BARS_WIDTHS, BARS_HEIGHT, HOR_PADDING_BARS, notReallyOffenses, x + ICON_OFFSET_HOR + (ICON_WIDTH / 2) + HOR_PADDING_BARS, y + VERT_OFFSET_BARS + (BARS_HEIGHT + VERT_PADDING_BARS) * 2));

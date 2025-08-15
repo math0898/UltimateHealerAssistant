@@ -28,16 +28,6 @@ public class PlayerIcon extends BasicGameObject implements DrawListener {
     private static final double ROLE_ICON_SIZE_PERCENTAGE = 0.24;
 
     /**
-     * The name of the realm the Player in this icon is on.
-     */
-    private final String realm;
-
-    /**
-     * The name of the character this Player icon represents.
-     */
-    private final String character;
-
-    /**
      * A saved version of the Player icon in memory so we don't need to bother blizzard all the time.
      */
     private final BufferedImage icon;
@@ -60,36 +50,32 @@ public class PlayerIcon extends BasicGameObject implements DrawListener {
     /**
      * Creates a new PlayerIcon with the given realm slug and character name.
      *
-     * @param realmSlug This is the server name without US and a dash. Full lowercase.
-     * @param characterName This is the name of the character. Full lowercase.
+     * @param actorName This is the name of the character as it appears in log files.
      * @param width The total width of the PlayerIcon.
      * @param height The total height of the PlayerIcon.
      * @param x The x coordinate of this PlayerIcon. This is the center point.
      * @param y The y coordinate of this PlayerIcon. This is the center point.
      */
-    public PlayerIcon (String realmSlug, String characterName, int width, int height, int x, int y) {
-        this(realmSlug, characterName, "none", width, height, x, y);
+    public PlayerIcon (String actorName, int width, int height, int x, int y) {
+        this(actorName, "none", width, height, x, y);
     }
 
     /**
      * Creates a new PlayerIcon with the given realm slug and character name.
      *
-     * @param realmSlug This is the server name without US and a dash. Full lowercase.
-     * @param characterName This is the name of the character. Full lowercase.
+     * @param actorName This is the name of the character as it appears in log files.
      * @param role The role of this character. Can be DPS, Tank, Healer, or one of the specs. // todo: requires spec implementations.
      * @param width The total width of the PlayerIcon.
      * @param height The total height of the PlayerIcon.
      * @param x The x coordinate of this PlayerIcon. This is the center point.
      * @param y The y coordinate of this PlayerIcon. This is the center point.
      */
-    public PlayerIcon (String realmSlug, String characterName, String role, int width, int height, int x, int y) {
-        this.realm = realmSlug;
-        this.character = characterName;
+    public PlayerIcon (String actorName, String role, int width, int height, int x, int y) {
         this.pos = new Vector(x, y, 0);
         this.height = height;
         this.width = width;
         this.role = role;
-        BufferedImage bufferedImage = BlizzardResourcesCache.getInstance().loadResource(characterName + "-" + realm, ResourceTypes.PLAYER_ICONS);
+        BufferedImage bufferedImage = BlizzardResourcesCache.getInstance().loadResource(actorName, ResourceTypes.PLAYER_ICONS);
         Image img = bufferedImage.getScaledInstance(width, height, Image.SCALE_DEFAULT);
         icon = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D tmp = icon.createGraphics();

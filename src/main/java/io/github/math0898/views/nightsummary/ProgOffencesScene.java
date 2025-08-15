@@ -1,11 +1,9 @@
 package io.github.math0898.views.nightsummary;
 
-import io.github.math0898.Main;
 import io.github.math0898.processing.Encounter;
 import io.github.math0898.processing.LogManager;
 import io.github.math0898.processing.logentries.UnitDeathEntry;
 import io.github.math0898.processing.logentries.UnitTypes;
-import io.github.math0898.utils.Utils;
 import suga.engine.GameEngine;
 import suga.engine.game.BasicScene;
 import suga.engine.game.Game;
@@ -107,8 +105,7 @@ public class ProgOffencesScene extends BasicScene {
                     String character = characters.pop();
                     String key = "Placard " + x + ":" + y;
                     GameObject obj = new PlayerPlacard(
-                            Utils.parseRealm(character),
-                            Utils.parseCharName(character),
+                            character,
                         ((WIDTH - (SIDE_BUFFERS * 2)) / COLUMN_COUNT) * x + SIDE_BUFFERS - PlayerPlacard.ICON_OFFSET_HOR + (PlayerPlacard.ICON_WIDTH / 2),
                             ((HEIGHT - BOTTOM_BUFFER - TOP_BUFFER) / ROW_COUNT) * y + TOP_BUFFER);
                     game.addGameObject(key, obj);

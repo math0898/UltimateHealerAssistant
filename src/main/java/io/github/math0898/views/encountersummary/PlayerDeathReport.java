@@ -122,7 +122,7 @@ public class PlayerDeathReport extends BasicGameObject implements DrawListener {
         super.runLogic();
         if (computed) return;
 
-        game.addDrawingListener(new PlayerIcon(Utils.parseRealm(entry.getUnitName()), Utils.parseCharName(entry.getUnitName()), ICON_WIDTH, ICON_HEIGHT, (int) pos.getX() + ICON_OFFSET_HOR, (int) pos.getY() + ICON_OFFSET_VERT));
+        game.addDrawingListener(new PlayerIcon(entry.getUnitName(), ICON_WIDTH, ICON_HEIGHT, (int) pos.getX() + ICON_OFFSET_HOR, (int) pos.getY() + ICON_OFFSET_VERT));
 
         Encounter encounter = LogManager.getInstance().getHighlightedEncounter();
         final long timeAlive = entry.getTime() - encounter.getEncounterStartMillis();
