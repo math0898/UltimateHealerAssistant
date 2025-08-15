@@ -1,4 +1,4 @@
-package io.github.math0898;
+package io.github.math0898.utils;
 
 import suga.engine.GameEngine;
 import suga.engine.logger.Level;

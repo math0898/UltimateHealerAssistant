@@ -1,7 +1,7 @@
 package io.github.math0898.views.healgraph;
 
-import io.github.math0898.Main;
 import io.github.math0898.processing.Encounter;
+import io.github.math0898.processing.LogManager;
 import suga.engine.game.objects.BasicGameObject;
 import suga.engine.graphics.DrawListener;
 import suga.engine.graphics.GraphicsPanel;
@@ -12,11 +12,6 @@ import java.io.IOException;
 import java.util.List;
 
 public class CastIndicator extends BasicGameObject implements DrawListener {
-
-    /**
-     * The MainGraphScene this indicator is part of.
-     */
-    private final MainGraphScene parentScene;
 
     /**
      * The spell to be and indicator for.
@@ -36,12 +31,10 @@ public class CastIndicator extends BasicGameObject implements DrawListener {
     /**
      * Creates a new CastIndicator with the given parent scene.
      *
-     * @param parentScene The parent scene of this indicator.
      * @param spell       The spell to indicate.
      * @param offset      A vertical offset applied to the icon.
      */
-    public CastIndicator (MainGraphScene parentScene, SpellQueries spell, int offset) {
-        this.parentScene = parentScene;
+    public CastIndicator (SpellQueries spell, int offset) {
         this.spell = spell;
         this.offset = offset;
     }
@@ -66,7 +59,7 @@ public class CastIndicator extends BasicGameObject implements DrawListener {
     @Override
     public void applyChanges (int width, int height, GraphicsPanel panel) {
         if (!active) return;
-        Encounter encounter = Main.encounters.get(parentScene.getGraphedEncounterIndex());
+        Encounter encounter = LogManager.getInstance().getHighlightedEncounter();
         List<Long> castTimes = encounter.querySpellHealingInstances(spell.spellName);
         final int widthByPixel = ((width * 3) / 4);
         final long widthByTime = encounter.encounterLengthMillis();

@@ -2,7 +2,7 @@ package io.github.math0898.views.general;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.math0898.BlizzardAPIHelper;
+import io.github.math0898.utils.BlizzardAPIHelper;
 import suga.engine.GameEngine;
 import suga.engine.game.objects.BasicGameObject;
 import suga.engine.graphics.DrawListener;

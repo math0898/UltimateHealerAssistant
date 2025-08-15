@@ -1,29 +1,21 @@
 package io.github.math0898.views.encountersummary;
 
-import io.github.math0898.Main;
 import io.github.math0898.processing.Encounter;
+import io.github.math0898.processing.LogManager;
 import io.github.math0898.processing.logentries.UnitDeathEntry;
 import io.github.math0898.processing.logentries.UnitTypes;
 import io.github.math0898.utils.Utils;
 import io.github.math0898.views.general.PlayerIcon;
 import io.github.math0898.views.general.RectangleBar;
-import io.github.math0898.views.healgraph.MainGraphScene;
 import io.github.math0898.views.healgraph.SpellQueries;
-import suga.engine.GameEngine;
 import suga.engine.game.BasicGame;
 import suga.engine.game.objects.BasicGameObject;
-import suga.engine.game.objects.GameObject;
 import suga.engine.graphics.DrawListener;
 import suga.engine.graphics.GraphicsPanel;
-import suga.engine.logger.Level;
 import suga.engine.physics.Vector;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.time.Instant;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * The PlayerDeathReport is a general report about the time a player died at in an encounter.
@@ -132,7 +124,7 @@ public class PlayerDeathReport extends BasicGameObject implements DrawListener {
 
         game.addDrawingListener(new PlayerIcon(Utils.parseRealm(entry.getUnitName()), Utils.parseCharName(entry.getUnitName()), ICON_WIDTH, ICON_HEIGHT, (int) pos.getX() + ICON_OFFSET_HOR, (int) pos.getY() + ICON_OFFSET_VERT));
 
-        Encounter encounter = Main.encounters.get(MainGraphScene.graphedEncounterIndex);
+        Encounter encounter = LogManager.getInstance().getHighlightedEncounter();
         final long timeAlive = entry.getTime() - encounter.getEncounterStartMillis();
         formattedDeathTime = timeAlive / (1000L * 60) + "m " + (timeAlive % (1000L * 60)) / 1000L + "s";
 

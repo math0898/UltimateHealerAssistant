@@ -2,6 +2,7 @@ package io.github.math0898.views.nightsummary;
 
 import io.github.math0898.Main;
 import io.github.math0898.processing.Encounter;
+import io.github.math0898.processing.LogManager;
 import io.github.math0898.processing.logentries.UnitDeathEntry;
 import io.github.math0898.processing.logentries.UnitTypes;
 import io.github.math0898.utils.Utils;
@@ -74,7 +75,7 @@ public class ProgOffencesScene extends BasicScene {
      */
     private Stack<String> findAllPlayers () {
         ArrayList<String> list = new ArrayList<>(); // todo: Deaths are probably not the best way to find all players in a night.
-        for (Encounter e : Main.encounters)
+        for (Encounter e : LogManager.getInstance().getAllEncounters())
             for (UnitDeathEntry death : e.getUnitDeaths())
                 if (death.getUnitType() == UnitTypes.PLAYER)
                     if (!list.contains(death.getUnitName()))
@@ -146,6 +147,7 @@ public class ProgOffencesScene extends BasicScene {
         if (pressed) {
             switch (key) {
                 case NUM_1 -> game.loadScene("main");
+                case NUM_2 -> game.loadScene("encounter");
                 case ESC -> {
                     selectionPos = new Vector(0, 0, 0);
                     placard = null;

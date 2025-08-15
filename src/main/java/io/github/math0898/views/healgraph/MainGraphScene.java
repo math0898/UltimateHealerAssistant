@@ -1,6 +1,6 @@
 package io.github.math0898.views.healgraph;
 
-import io.github.math0898.Main;
+import io.github.math0898.processing.LogManager;
 import suga.engine.GameEngine;
 import suga.engine.game.BasicScene;
 import suga.engine.game.Game;
@@ -11,11 +11,6 @@ import suga.engine.logger.Logger;
 import java.awt.*;
 
 public class MainGraphScene extends BasicScene {
-
-    /**
-     * The index of the encounter that is currently being graphed.
-     */
-    public static int graphedEncounterIndex = 0; // todo: Set to 0, this should be moved elsewhere. Same with Main.encounters();
 
     /**
      * The GraphGameObject that actually draws the graph.
@@ -34,23 +29,23 @@ public class MainGraphScene extends BasicScene {
         game.clear();
         graphGameObject = new GraphGameObject();
         game.addGameObject("Main Graph", graphGameObject);
-        game.addGameObject("Encounter Indicator", new EncounterIndicator(this));
+        game.addGameObject("Encounter Indicator", new EncounterIndicator());
         game.addGameObject("Pres Icon", new SpecIcon(0, "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/icons/classicon_evoker_preservation.jpg"));
         game.addGameObject("Holy Icon", new SpecIcon(70, "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/icons/spell_holy_guardianspirit.jpg"));
         game.addGameObject("Disc Icon", new SpecIcon(140, "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/icons/spell_holy_powerwordshield.jpg"));
         game.addGameObject("Resto Icon", new SpecIcon(210, "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/icons/inv_1115_shaman_chainheal.jpg"));
         game.addGameObject("Resto Druid Icon", new SpecIcon(280, "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/icons/talentspec_druid_restoration.jpg"));
-        game.addGameObject("Pres Engulf", new CastIndicator(this, SpellQueries.CONSUME_FLAME, 0));
-        game.addGameObject("Pres Rewind", new CastIndicator(this, SpellQueries.REWIND, 30));
-        game.addGameObject("Pres Emerald Communion", new CastIndicator(this, SpellQueries.EMERALD_COMMUNION, 60));
-        game.addGameObject("Holy Divine Hymn", new CastIndicator(this, SpellQueries.DIVINE_HYMN, 0));
-        game.addGameObject("Disc Evangelism", new CastIndicator(this, SpellQueries.EVANGELISM, 0));
-        game.addGameObject("Disc Piety", new CastIndicator(this, SpellQueries.PIETY, 30)); // todo: Consider triple buff.
-//        game.addGameObject("Disc Atonement", new CastIndicator(this, SpellQueries.ATONEMENT, 60)); // todo: This is causing a lot of lag because it's technically drawing each cooldown every cast, not once per block.
-        game.addGameObject("Resto Healing Tide", new CastIndicator(this, SpellQueries.HEALING_TIDE, 0));
-        game.addGameObject("Resto Spirit Link", new CastIndicator(this, SpellQueries.SPIRIT_LINK, 30));
-        game.addGameObject("Druid Regrowth", new CastIndicator(this, SpellQueries.REGROWTH, 0));
-        game.addGameObject("Druid Tranquility", new CastIndicator(this, SpellQueries.TRANQUILITY, 0));
+        game.addGameObject("Pres Engulf", new CastIndicator(SpellQueries.CONSUME_FLAME, 0));
+        game.addGameObject("Pres Rewind", new CastIndicator(SpellQueries.REWIND, 30));
+        game.addGameObject("Pres Emerald Communion", new CastIndicator(SpellQueries.EMERALD_COMMUNION, 60));
+        game.addGameObject("Holy Divine Hymn", new CastIndicator(SpellQueries.DIVINE_HYMN, 0));
+        game.addGameObject("Disc Evangelism", new CastIndicator(SpellQueries.EVANGELISM, 0));
+        game.addGameObject("Disc Piety", new CastIndicator(SpellQueries.PIETY, 30)); // todo: Consider triple buff.
+//        game.addGameObject("Disc Atonement", new CastIndicator(SpellQueries.ATONEMENT, 60)); // todo: This is causing a lot of lag because it's technically drawing each cooldown every cast, not once per block.
+        game.addGameObject("Resto Healing Tide", new CastIndicator(SpellQueries.HEALING_TIDE, 0));
+        game.addGameObject("Resto Spirit Link", new CastIndicator(SpellQueries.SPIRIT_LINK, 30));
+        game.addGameObject("Druid Regrowth", new CastIndicator(SpellQueries.REGROWTH, 0));
+        game.addGameObject("Druid Tranquility", new CastIndicator(SpellQueries.TRANQUILITY, 0));
         return true;
     }
 
@@ -68,11 +63,11 @@ public class MainGraphScene extends BasicScene {
         if (!pressed) {
             switch (key) {
                 case ARROW_UP -> {
-                    graphedEncounterIndex = Math.min(graphedEncounterIndex + 1, Main.encounters.size() - 1);
+                    LogManager.getInstance().changeHighlightedEncounter(1);
                     updateGraph();
                 }
                 case ARROW_DOWN -> {
-                    graphedEncounterIndex = Math.max(graphedEncounterIndex - 1, 0);
+                    LogManager.getInstance().changeHighlightedEncounter(-1);
                     updateGraph();
                 }
                 case NUM_2 -> game.loadScene("prog");
@@ -85,16 +80,7 @@ public class MainGraphScene extends BasicScene {
      * Forces the graph to update.
      */
     private void updateGraph () {
-        graphGameObject.setEncounter(Main.encounters.get(graphedEncounterIndex));
-    }
-
-    /**
-     * Accessor method for the encounter number this Scene is currently on.
-     *
-     * @return The index of the currently graphed encounter.
-     */
-    public int getGraphedEncounterIndex () {
-        return graphedEncounterIndex;
+        graphGameObject.setEncounter(LogManager.getInstance().getHighlightedEncounter());
     }
 
     /**

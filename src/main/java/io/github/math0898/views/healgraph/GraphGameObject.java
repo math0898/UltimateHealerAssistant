@@ -3,6 +3,7 @@ package io.github.math0898.views.healgraph;
 import io.github.math0898.Main;
 import io.github.math0898.processing.Encounter;
 import io.github.math0898.processing.Graph;
+import io.github.math0898.processing.LogManager;
 import io.github.math0898.utils.Utils;
 import suga.engine.game.objects.BasicGameObject;
 import suga.engine.graphics.DrawListener;
@@ -25,7 +26,7 @@ public class GraphGameObject extends BasicGameObject implements  DrawListener {
     /**
      * The encounter to graph.
      */
-    private Encounter encounter = Main.encounters.get(0);
+    private Encounter encounter = LogManager.getInstance().getHighlightedEncounter();
 
     /**
      * The vertical scale component of the healing graph.
