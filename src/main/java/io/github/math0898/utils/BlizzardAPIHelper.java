@@ -119,7 +119,26 @@ public class BlizzardAPIHelper {
      * @return The buffered image version of the SpellIcon.
      */
     public BufferedImage requestSpellIcon (long id) {
-        return null; // todo: Implement.
+        try (HttpClient client = HttpClient.newHttpClient()) {
+            String bearerToken = BlizzardAPIHelper.getInstance().getBearerToken();
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create("https://us.api.blizzard.com/data/wow/media/spell/" + id + "?namespace=static-us&locale=en_US"))
+                    .header("Authorization", "Bearer " + bearerToken)
+                    .method("GET", HttpRequest.BodyPublishers.noBody())
+                    .build();
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            GameEngine.getLogger().log("Spell Icon Request: " + id, Level.DEBUG);
+            GameEngine.getLogger().log("Spell Icon Request: " + response.statusCode(), Level.DEBUG);
+            GameEngine.getLogger().log("Spell Icon Request: " + response.body(), Level.DEBUG);
+
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode node = mapper.readTree(response.body());
+            String iconUrl = node.get("assets").get(0).get("value").asText();
+            return ImageIO.read(URI.create(iconUrl).toURL());
+        } catch (InterruptedException | IOException exception) {
+            GameEngine.getLogger().log(exception);
+            return null;
+        }
     }
 
     /**

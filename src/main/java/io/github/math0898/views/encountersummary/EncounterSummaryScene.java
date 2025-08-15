@@ -3,6 +3,7 @@ package io.github.math0898.views.encountersummary;
 import io.github.math0898.processing.LogManager;
 import io.github.math0898.processing.logentries.UnitDeathEntry;
 import io.github.math0898.processing.logentries.UnitTypes;
+import io.github.math0898.views.general.SpellIcon;
 import io.github.math0898.views.healgraph.EncounterIndicator;
 import io.github.math0898.views.nightsummary.PlayerPlacard;
 import suga.engine.game.BasicGame;
@@ -57,6 +58,9 @@ public class EncounterSummaryScene extends BasicScene {
             PlayerDeathReport obj = new PlayerDeathReport(events.get(x), ((WIDTH - (SIDE_BUFFERS * 2)) / deathsCount) * x + SIDE_BUFFERS - PlayerPlacard.ICON_OFFSET_HOR + (PlayerPlacard.ICON_WIDTH / 2), TOP_BUFFER + (PlayerDeathReport.ICON_HEIGHT / 2), (BasicGame) game);
             game.addGameObject(key, obj);
         }
+
+        game.addGameObject("Test Spell", new SpellIcon(360995, 125, 125, 960, 540));
+
         game.addGameObject("Encounter Indicator", new EncounterIndicator());
         return super.load(game);
     }

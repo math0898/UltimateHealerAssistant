@@ -102,17 +102,24 @@ public class BlizzardResourcesCache {
     }
 
     /**
+     * Use when a spell icon has been requested that is either not in the cache, the one in the cache is out of date,
+     * or force a refresh of the SpellIcon. This will freeze the thread as it pings Blizzard's server.
      *
+     * @param resourceName The resource name of the icon being requested.
      */
     public BufferedImage requestSpellResource (String resourceName) {
-        return null; // todo: Implement.
+        BufferedImage image = BlizzardAPIHelper.getInstance().requestSpellIcon(Long.parseLong(resourceName));
+        resourcesMap.put(resourceName, new Resource(resourceName, "./cache/" + resourceName + ".png", System.currentTimeMillis(), ResourceTypes.SPELL_ICONS));
+        saveImage(image, "./cache/" + resourceName + ".png");
+        updateRegistry();
+        return image;
     }
 
     /**
      * Use when a player icon has been requested that is either not in the cache, the one in the cache is out of date,
      * or force a refresh of the PlayerIcon. This will freeze the thread as it pings Blizzard's server.
      *
-     * @param resourceName The resource
+     * @param resourceName The resource name of the icon being requested.
      */
     public BufferedImage requestPlayerIconResource (String resourceName) {
         BufferedImage image = BlizzardAPIHelper.getInstance().requestPlayerIcon(Utils.parseRealm(resourceName), Utils.parseCharName(resourceName));
