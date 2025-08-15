@@ -31,7 +31,7 @@ public class EncounterIndicator extends BasicGameObject implements DrawListener 
         graphics.setFont(new Font("Comic Sans", Font.BOLD, 32));
         graphics.setColor(new Color(200,200,200));
 
-        graphics.drawString("Pull: " + LogManager.getInstance().getHighlightedEncounterIndex() + 1, 0, 32);
+        graphics.drawString("Pull: " + (LogManager.getInstance().getHighlightedEncounterIndex() + 1), 0, 32);
 
         FontMetrics metrics = graphics.getFontMetrics();
         Encounter encounter = LogManager.getInstance().getHighlightedEncounter();

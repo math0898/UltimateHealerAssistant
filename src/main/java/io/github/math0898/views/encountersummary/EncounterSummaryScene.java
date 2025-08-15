@@ -22,7 +22,7 @@ public class EncounterSummaryScene extends BasicScene {
     /**
      * The number of deaths to show in the summary.
      */
-    private static final int DEATHS_COUNT = 3;
+    private static int deathsCount = 3;
 
     /**
      * The amount of vertical space to leave at the top. This isn't precise and goes to the center of the placards.
@@ -43,21 +43,21 @@ public class EncounterSummaryScene extends BasicScene {
     @Override
     public boolean load (Game game) {
         game.clear();
-            // Assumed 1920 width.
-            final int WIDTH = 1920;
-            java.util.List<UnitDeathEntry> deaths = LogManager.getInstance().getHighlightedEncounter().getUnitDeaths();
-            final ArrayList<UnitDeathEntry> events = new ArrayList<>();
-            for (UnitDeathEntry entry : deaths) {
-                if (entry.getUnitType() != UnitTypes.PLAYER) continue;
-                events.add(entry);
-            }
-            for (int x = 0; x < DEATHS_COUNT; x++) {
-                    String key = "Death Report " + x;
-                    if (x >= events.size()) continue;
-                    PlayerDeathReport obj = new PlayerDeathReport(events.get(x), ((WIDTH - (SIDE_BUFFERS * 2)) / DEATHS_COUNT) * x + SIDE_BUFFERS - PlayerPlacard.ICON_OFFSET_HOR + (PlayerPlacard.ICON_WIDTH / 2), TOP_BUFFER + (PlayerDeathReport.ICON_HEIGHT / 2), (BasicGame) game);
-                    game.addGameObject(key, obj);
-            }
-            game.addGameObject("Encounter Indicator", new EncounterIndicator());
+        // Assumed 1920 width.
+        final int WIDTH = 1920;
+        java.util.List<UnitDeathEntry> deaths = LogManager.getInstance().getHighlightedEncounter().getUnitDeaths();
+        final ArrayList<UnitDeathEntry> events = new ArrayList<>();
+        for (UnitDeathEntry entry : deaths) {
+            if (entry.getUnitType() != UnitTypes.PLAYER) continue;
+            events.add(entry);
+        }
+        for (int x = 0; x < deathsCount; x++) {
+            String key = "Death Report " + x;
+            if (x >= events.size()) continue;
+            PlayerDeathReport obj = new PlayerDeathReport(events.get(x), ((WIDTH - (SIDE_BUFFERS * 2)) / deathsCount) * x + SIDE_BUFFERS - PlayerPlacard.ICON_OFFSET_HOR + (PlayerPlacard.ICON_WIDTH / 2), TOP_BUFFER + (PlayerDeathReport.ICON_HEIGHT / 2), (BasicGame) game);
+            game.addGameObject(key, obj);
+        }
+        game.addGameObject("Encounter Indicator", new EncounterIndicator());
         return super.load(game);
     }
 
@@ -75,10 +75,18 @@ public class EncounterSummaryScene extends BasicScene {
                 case NUM_2 -> game.loadScene("prog");
                 case ARROW_UP -> {
                     LogManager.getInstance().changeHighlightedEncounter(1);
-                    load(game);
+                    load(game); // todo: Make an update or reload function instead of simply completely reloading this scene.
                 }
                 case ARROW_DOWN -> {
                     LogManager.getInstance().changeHighlightedEncounter(-1);
+                    load(game);
+                }
+                case Q -> {
+                    deathsCount = Math.min(deathsCount + 1, 10);
+                    load(game);
+                }
+                case A -> {
+                    deathsCount = Math.max(deathsCount - 1, 0);
                     load(game);
                 }
             }
