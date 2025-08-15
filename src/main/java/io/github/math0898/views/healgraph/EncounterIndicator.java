@@ -18,17 +18,11 @@ import java.util.TimeZone;
 public class EncounterIndicator extends BasicGameObject implements DrawListener {
 
     /**
-     * The MainGraphScene this indicator is part of.
-     */
-    private final MainGraphScene parentScene;
-
-    /**
      * Creates a new EncounterIndicator with the given parent scene.
      *
      * @param parentScene The parent scene of this indicator.
      */
     public EncounterIndicator (MainGraphScene parentScene) {
-        this.parentScene = parentScene;
     }
 
     /**
@@ -45,10 +39,10 @@ public class EncounterIndicator extends BasicGameObject implements DrawListener 
         graphics.setFont(new Font("Comic Sans", Font.BOLD, 32));
         graphics.setColor(new Color(200,200,200));
 
-        graphics.drawString("Pull: " + (parentScene.getGraphedEncounterIndex() + 1), 0, 32);
+        graphics.drawString("Pull: " + (MainGraphScene.graphedEncounterIndex + 1), 0, 32);
 
         FontMetrics metrics = graphics.getFontMetrics();
-        Encounter encounter = Main.encounters.get(parentScene.getGraphedEncounterIndex());
+        Encounter encounter = Main.encounters.get(MainGraphScene.graphedEncounterIndex);
         int length = metrics.stringWidth(encounter.getEnemyName());
         graphics.drawString(encounter.getEnemyName(), width / 2 - (length / 2), 32);
 
