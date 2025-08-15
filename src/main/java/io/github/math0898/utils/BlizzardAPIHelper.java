@@ -129,7 +129,25 @@ public class BlizzardAPIHelper {
      * @return The details of the spell.
      */
     public SpellDetails requestSpellDetails (long id) {
-        return null; // todo: Implement.
+        try (HttpClient client = HttpClient.newHttpClient()) {
+            String bearerToken = BlizzardAPIHelper.getInstance().getBearerToken();
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create("https://us.api.blizzard.com/data/wow/spell/" + id + "?namespace=static-us&locale=en_US"))
+                    .header("Authorization", "Bearer " + bearerToken)
+                    .method("GET", HttpRequest.BodyPublishers.noBody())
+                    .build();
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            GameEngine.getLogger().log("Spell Details Request: " + id, Level.DEBUG);
+            GameEngine.getLogger().log("Spell Details Request: " + response.statusCode(), Level.DEBUG);
+            GameEngine.getLogger().log("Spell Details Request: " + response.body(), Level.DEBUG);
+            if (response.statusCode() == 404) return null;
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode node = mapper.readTree(response.body());
+            return new SpellDetails(id, node.get("name").asText(), node.get("description").asText(), System.currentTimeMillis());
+        } catch (InterruptedException | IOException exception) {
+            GameEngine.getLogger().log(exception);
+            return null;
+        }
     }
 
     /**
