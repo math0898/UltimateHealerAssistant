@@ -1,24 +1,17 @@
 package io.github.math0898.views.general;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.math0898.utils.BlizzardAPIHelper;
+import io.github.math0898.utils.BlizzardResourcesCache;
+import io.github.math0898.utils.ResourceTypes;
 import suga.engine.GameEngine;
 import suga.engine.game.objects.BasicGameObject;
 import suga.engine.graphics.DrawListener;
 import suga.engine.graphics.GraphicsPanel;
-import suga.engine.logger.Level;
 import suga.engine.physics.Vector;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
-import java.net.*;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 
 /**
  * The Player icon is an icon generated with a player name and server which allows this to grab the image from Blizzard's
@@ -96,7 +89,7 @@ public class PlayerIcon extends BasicGameObject implements DrawListener {
         this.height = height;
         this.width = width;
         this.role = role;
-        BufferedImage bufferedImage = requestImage();
+        BufferedImage bufferedImage = BlizzardResourcesCache.getInstance().loadResource(characterName + "-" + realm, ResourceTypes.PLAYER_ICONS);
         Image img = bufferedImage.getScaledInstance(width, height, Image.SCALE_DEFAULT);
         icon = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D tmp = icon.createGraphics();
@@ -111,32 +104,6 @@ public class PlayerIcon extends BasicGameObject implements DrawListener {
      */
     public void setRole (String role) {
         this.role = role;
-    }
-
-    /**
-     * Requests the image from the Blizzard API creating a new bearer token during the process.
-     */
-    public BufferedImage requestImage () {
-        try (HttpClient client = HttpClient.newHttpClient()) {
-            String bearerToken = BlizzardAPIHelper.getInstance().getBearerToken();
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("https://us.api.blizzard.com/profile/wow/character/" + realm + "/" + character + "/character-media?namespace=profile-us&locale=en_US"))
-                    .header("Authorization", "Bearer " + bearerToken)
-                    .method("GET", HttpRequest.BodyPublishers.noBody())
-                    .build();
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            GameEngine.getLogger().log("Icon Request: " + realm + "-" + character, Level.DEBUG);
-            GameEngine.getLogger().log("Icon Request: " + response.statusCode(), Level.DEBUG);
-            GameEngine.getLogger().log("Icon Request: " + response.body(), Level.DEBUG);
-
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode node = mapper.readTree(response.body());
-            String avatarUrl = node.get("assets").get(0).get("value").asText();
-            return ImageIO.read(URI.create(avatarUrl).toURL());
-        } catch (InterruptedException | IOException exception) {
-            GameEngine.getLogger().log(exception);
-            return null;
-        }
     }
 
     /**

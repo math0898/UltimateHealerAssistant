@@ -15,7 +15,12 @@ public enum ResourceTypes {
     /**
      * The amount of time before spell icons are considered stale and should be updated.
      */
-    SPELL_ICONS(1000L * 60 * 60 * 24 * 31);
+    SPELL_ICONS(1000L * 60 * 60 * 24 * 31),
+
+    /**
+     * Resources provided by UltimateHealerAssistant which never become stale.
+     */
+    STATIC_ICONS(Long.MAX_VALUE);
 
     /**
      * The amount of time before a cached resource should be grabbed from Blizzard's servers again.

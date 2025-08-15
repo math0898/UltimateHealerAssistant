@@ -1,8 +1,12 @@
 package io.github.math0898.utils;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import suga.engine.GameEngine;
 import suga.engine.logger.Level;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -73,6 +77,36 @@ public class BlizzardAPIHelper {
             GameEngine.getLogger().log("Generate Bearer Token: " + response.body(), Level.DEBUG); // todo: JSON Parse and include expiration time.
             return response.body().replaceAll("\\{\"access_token\":\"(.+)\",\"token_type\":.+", "$1");
         } catch (IOException | InterruptedException exception) {
+            GameEngine.getLogger().log(exception);
+            return null;
+        }
+    }
+
+    /**
+     * Requests a PlayerIcon from Blizzard's API.
+     *
+     * @param realm The realm of the character to grab. {@link Utils#parseRealm(String)}
+     * @param character The character's name. {@link Utils#parseCharName(String)}
+     * @return The buffered image version of the PlayerIcon.
+     */
+    public BufferedImage requestPlayerIcon (String realm, String character) {
+        try (HttpClient client = HttpClient.newHttpClient()) {
+            String bearerToken = BlizzardAPIHelper.getInstance().getBearerToken();
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create("https://us.api.blizzard.com/profile/wow/character/" + realm + "/" + character + "/character-media?namespace=profile-us&locale=en_US"))
+                    .header("Authorization", "Bearer " + bearerToken)
+                    .method("GET", HttpRequest.BodyPublishers.noBody())
+                    .build();
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            GameEngine.getLogger().log("Icon Request: " + realm + "-" + character, Level.DEBUG);
+            GameEngine.getLogger().log("Icon Request: " + response.statusCode(), Level.DEBUG);
+            GameEngine.getLogger().log("Icon Request: " + response.body(), Level.DEBUG);
+
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode node = mapper.readTree(response.body());
+            String avatarUrl = node.get("assets").get(0).get("value").asText();
+            return ImageIO.read(URI.create(avatarUrl).toURL());
+        } catch (InterruptedException | IOException exception) {
             GameEngine.getLogger().log(exception);
             return null;
         }
