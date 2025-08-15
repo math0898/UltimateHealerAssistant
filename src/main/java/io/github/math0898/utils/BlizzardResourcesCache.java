@@ -58,16 +58,6 @@ public class BlizzardResourcesCache {
             GameEngine.getLogger().log("Failed read registry file.", Level.WARNING);
             GameEngine.getLogger().log(exception);
         }
-//        Resource testResource = new Resource("Test Resource", "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/icons/Dps_icon.png", 0, ResourceTypes.SPELL_ICONS);
-//        ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
-//        try {
-//            String raw = mapper.writeValueAsString(testResource);
-//            GameEngine.getLogger().log("= > " + raw);
-//            Resource newResource = mapper.readValue(raw, Resource.class);
-//            GameEngine.getLogger().log("= > " + newResource);
-//        } catch (Exception exception) {
-//            GameEngine.getLogger().log(exception);
-//        }
     }
 
     /**
@@ -147,7 +137,7 @@ public class BlizzardResourcesCache {
                 expired = true;
         if (resource == null || expired) {
             return switch (type) {
-                case STATIC_ICONS -> null;
+                default -> null;
                 case SPELL_ICONS -> requestSpellResource(resourceName);
                 case PLAYER_ICONS -> requestPlayerIconResource(resourceName);
             };

@@ -113,6 +113,26 @@ public class BlizzardAPIHelper {
     }
 
     /**
+     * Requests a spell icon from Blizzard's API.
+     *
+     * @param id The id of the spell to request.
+     * @return The buffered image version of the SpellIcon.
+     */
+    public BufferedImage requestSpellIcon (long id) {
+        return null; // todo: Implement.
+    }
+
+    /**
+     * Requests the details on a spell from Blizzard.
+     *
+     * @param id The id of the spell to request.
+     * @return The details of the spell.
+     */
+    public SpellDetails requestSpellDetails (long id) {
+        return null; // todo: Implement.
+    }
+
+    /**
      * Requests a Bearer token to be used in API calls.
      */
     public String getBearerToken () {
