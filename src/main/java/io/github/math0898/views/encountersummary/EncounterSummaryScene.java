@@ -61,16 +61,17 @@ public class EncounterSummaryScene extends BasicScene {
             if (x >= events.size()) continue;
             PlayerDeathReport obj = new PlayerDeathReport(events.get(x), ((WIDTH - (SIDE_BUFFERS * 2)) / deathsCount) * x + SIDE_BUFFERS - PlayerPlacard.ICON_OFFSET_HOR + (PlayerPlacard.ICON_WIDTH / 2), TOP_BUFFER + (PlayerDeathReport.ICON_HEIGHT / 2), (BasicGame) game);
             game.addGameObject(key, obj);
+
+            java.util.List<DamageTakenEntry> entries = LogManager.getInstance().getHighlightedEncounter().queryDamageTakenEntries(events.get(x).getUnitName());
+            for (int i = entries.size() - 1; i > entries.size() - 11; i--) {
+                DamageTakenEntry entry = entries.get(i);
+                game.addGameObject(events.get(x).getUnitName() + " ID: " + i, new SpellIcon(entry.getSpellId(), 30, 30, ((WIDTH - (SIDE_BUFFERS * 2)) / deathsCount) * x + SIDE_BUFFERS - PlayerPlacard.ICON_OFFSET_HOR + (PlayerPlacard.ICON_WIDTH / 2), 440 + (35) * (entries.size() - i)));
+                SpellDetails details = SpellDatabase.getInstance().getDetails(entry.getSpellId());
+                if (details != null)
+                    GameEngine.getLogger().log(details.spellName());
+            }
         }
 
-        java.util.List<DamageTakenEntry> entries = LogManager.getInstance().getHighlightedEncounter().queryDamageTakenEntries("\"Nillath-Stormrage-US\"");
-        for (int i = entries.size() - 1; i > entries.size() - 11; i--) {
-            DamageTakenEntry entry = entries.get(i);
-            game.addGameObject("ID: " + i, new SpellIcon(entry.getSpellId(), 30, 30, 960, 440 + (35) * (entries.size() - i)));
-            SpellDetails details = SpellDatabase.getInstance().getDetails(entry.getSpellId());
-            if (details != null)
-                GameEngine.getLogger().log(details.spellName());
-        }
 
         game.addGameObject("Encounter Indicator", new EncounterIndicator());
         return super.load(game);

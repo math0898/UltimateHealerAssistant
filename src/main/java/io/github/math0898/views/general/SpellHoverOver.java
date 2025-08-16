@@ -1,7 +1,10 @@
 package io.github.math0898.views.general;
 
 import io.github.math0898.game.UltimateHealerAssistantGame;
-import io.github.math0898.utils.*;
+import io.github.math0898.utils.BlizzardResourcesCache;
+import io.github.math0898.utils.ResourceTypes;
+import io.github.math0898.utils.SpellDatabase;
+import io.github.math0898.utils.SpellDetails;
 import suga.engine.GameEngine;
 import suga.engine.game.objects.BasicGameObject;
 import suga.engine.graphics.DrawListener;
@@ -13,12 +16,7 @@ import suga.engine.physics.Vector;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-/**
- * A simple icon for a spell. Supports mousing over to display spell details.
- *
- * @author Sugaku
- */
-public class SpellIcon extends BasicGameObject implements DrawListener {
+public class SpellHoverOver extends BasicGameObject implements DrawListener {
 
     /**
      * The height of the hover over box.
@@ -79,57 +77,11 @@ public class SpellIcon extends BasicGameObject implements DrawListener {
      * @param x The x coordinate of this SpellIcon. This is the center point.
      * @param y The y coordinate of this SpellIcon. This is the center point.
      */
-    public SpellIcon (long spellId, int width, int height, int x, int y) {
+    public SpellHoverOver (long spellId, int width, int height, int x, int y) {
         this.width = width;
         this.height = height;
         this.spellId = spellId;
         this.pos = new Vector(x, y, 0);
-    }
-
-    /**
-     * Checks whether the mouse is hovering over this spell icon or not.
-     *
-     * @param cursor The position of the mouse.
-     */
-    public boolean checkHovered (Point cursor) {
-        GameEngine.getLogger().log("" + pos.getY(), Level.INFO);
-        if (cursor.x > (int) pos.getX() + (this.width / 2)) return false;
-        if (cursor.x < (int) pos.getX() - (this.width / 2)) return false;
-        if (cursor.y > (int) pos.getY() + (this.height / 2)) return false;
-        if (cursor.y < (int) pos.getY() - (this.height / 2)) return false;
-        return true;
-    }
-
-    /**
-     * Gets an updated mouse position.
-     */
-    public void updateMousePos () {
-        GameMouseListener mouseListener = UltimateHealerAssistantGame.getInstance().getMouseListener();
-        Point cursor = mouseListener.getMousePos();
-        if (cursor == null) return;
-        Point translated = new Point(cursor.x, cursor.y - 35); // This might be related to the X-Border, but I have no clue.
-        hovered = checkHovered(translated);
-        lastPos = translated;
-    }
-
-    /**
-     * Called every logic frame to run the logic on this GameObject.
-     */
-    @Override
-    public void runLogic () {
-        super.runLogic();
-        updateMousePos();
-        if (icon == null) {
-            BufferedImage buffered = BlizzardResourcesCache.getInstance().loadResource(spellId + "", ResourceTypes.SPELL_ICONS);
-            if (buffered == null) return;
-            Image img = buffered.getScaledInstance(width, height, Image.SCALE_DEFAULT);
-            icon = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-            Graphics2D tmp = icon.createGraphics();
-            tmp.drawImage(img, 0, 0, null);
-            tmp.dispose();
-        }
-        if (details == null)
-            details = SpellDatabase.getInstance().getDetails(spellId);
     }
 
     /**
@@ -151,10 +103,9 @@ public class SpellIcon extends BasicGameObject implements DrawListener {
      */
     @Override
     public void applyChanges (int width, int height, GraphicsPanel panel) {
-        if (icon == null) return;
-        panel.addImage((int) pos.getX() - this.width / 2, (int) pos.getY() - (this.height / 2), this.width, this.height, icon);
         if (hovered) {
             panel.setRectangle(lastPos.x, lastPos.y, HOVER_OVER_WIDTH, HOVER_OVER_HEIGHT, new Color(20, 20, 20));
+            GameEngine.getLogger().log("Mouseover! " + spellId, Level.DEBUG);
         }
     }
 }

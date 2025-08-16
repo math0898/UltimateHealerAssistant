@@ -15,15 +15,32 @@ import java.awt.event.MouseEvent;
 import java.util.Stack;
 
 /**
+ * The game handles the whole graphics, ui, and input portions of the program.
  *
+ * @author Sugaku
  */
 public class UltimateHealerAssistantGame extends BasicGame {
+
+    /**
+     * The active UltimateHealerAssistantGame instance that is running.
+     */
+    private static UltimateHealerAssistantGame instance;
 
     public UltimateHealerAssistantGame (GraphicsPanel panel, GameKeyListener listener, BasicMouseListener mouseListener) {
         super(panel, listener, mouseListener);
         scenes.put("main", new MainGraphScene());
         scenes.put("prog", new ProgOffencesScene());
         scenes.put("encounter", new EncounterSummaryScene());
+        instance = this;
+    }
+
+    /**
+     * Accessor method for the active game instance.
+     *
+     * @return The active game instance.
+     */
+    public static UltimateHealerAssistantGame getInstance () {
+        return  instance;
     }
 
     /**
@@ -46,9 +63,5 @@ public class UltimateHealerAssistantGame extends BasicGame {
         keys = keyListener.getKeyReleases();
         while (!keys.isEmpty())
             loadedScene.keyboardInput(keys.pop(), false);
-    }
-
-    public UltimateHealerAssistantGame () {
-        scenes.put("main", new MainGraphScene());
     }
 }
