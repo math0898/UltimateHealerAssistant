@@ -3,7 +3,9 @@ package io.github.math0898.utils;
 import suga.engine.GameEngine;
 import suga.engine.logger.Level;
 
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -48,8 +50,12 @@ public class WoWHeadScrapper {
      * @return The buffered image version of the SpellIcon.
      */
     public BufferedImage requestSpellIcon (long id) {
-        // todo: Images do not load without JavaScript making scrapping significantly harder.
-        return null;
+        try {
+            return ImageIO.read(new File("./icons/placeholder.png"));
+        } catch (Exception exception) {
+            GameEngine.getLogger().log(exception);
+            return null;
+        }
     }
 
     /**

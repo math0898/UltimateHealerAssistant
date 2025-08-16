@@ -30,6 +30,11 @@ public class SpellDatabase {
     private final Map<Long, SpellDetails> spells = new HashMap<>();
 
     /**
+     * A list of spell names from log files. Utilized as a last resort when attempting to get spell details.
+     */
+    private final Map<Long, String> spellNames = new HashMap<>();
+
+    /**
      * Creates a new SpellDatabase.
      */
     private SpellDatabase () {
@@ -84,6 +89,30 @@ public class SpellDatabase {
     }
 
     /**
+     * Creates a SpellDetails instance with the very bare details we have on the given spell id. This will at best
+     * contain the spell name.
+     *
+     * @param id The id of the spell to make a last resort SpellDetails for.
+     */
+    public SpellDetails createFallback (long id) {
+        String spellName = spellNames.get(id);
+        if (spellName == null) spellName = "Unknown Spell";
+        return new SpellDetails(id, spellName, "", System.currentTimeMillis());
+    }
+
+    /**
+     * Reports the name of the given spell to the SpellDatabase. This is not saved to the database as some data is
+     * missing.
+     *
+     * @param id The id of the spell.
+     * @param name The name of the spell.
+     */
+    public void reportSpellName (long id, String name) {
+        if (spells.containsKey(id)) return;
+        spellNames.put(id, name);
+    }
+
+    /**
      * Gets the details about a spell from the database. This will ping Blizzard's API if a spell's data is stale or not
      * present.
      *
@@ -99,7 +128,7 @@ public class SpellDatabase {
         if (details == null || expired) {
             details = BlizzardAPIHelper.getInstance().requestSpellDetails(id);
             if (details == null) details = WoWHeadScrapper.getInstance().requestSpellDetails(id);
-            if (details == null) return null;
+            if (details == null) details = createFallback(id);
             spells.put(id, details);
             updateDatabase();
         }

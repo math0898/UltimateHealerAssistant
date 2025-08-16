@@ -1,5 +1,7 @@
 package io.github.math0898.processing.logentries;
 
+import io.github.math0898.utils.SpellDatabase;
+
 /**
  * Heal Absorb events are a type of heal event but require different processing.
  *
@@ -27,7 +29,9 @@ public class HealAbsorbEntry extends HealEntry {
     protected void init () {
         String[] lines = data.split(",");
         caster = lines[13].replace("\"", "");
+        long spellId = Long.parseLong(lines[16]);
         spellName = lines[17].replace("\"", "");
+        SpellDatabase.getInstance().reportSpellName(spellId, spellName);
         absorbed = Integer.parseInt(lines[19]);
         int total_heal = Integer.parseInt(lines[20]);
         overheal = 0;// Integer.parseInt(lines[21]);

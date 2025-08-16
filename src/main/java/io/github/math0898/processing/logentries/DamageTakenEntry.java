@@ -1,5 +1,7 @@
 package io.github.math0898.processing.logentries;
 
+import io.github.math0898.utils.SpellDatabase;
+
 public class DamageTakenEntry extends LogEntry {
 
     /**
@@ -78,6 +80,8 @@ public class DamageTakenEntry extends LogEntry {
         if (!target.contains("Player-")) return;
         targetName = lines[6];
         spellId = Long.parseLong(lines[9]);
+        String spellName = lines[10];
+        SpellDatabase.getInstance().reportSpellName(spellId, spellName.replace("\"", ""));
         damageTaken = Long.parseLong(lines[31]);
         long overkill = Math.max(Long.parseLong(lines[33]), 0); // > 0 Is overkill
         damageTaken = damageTaken - overkill;

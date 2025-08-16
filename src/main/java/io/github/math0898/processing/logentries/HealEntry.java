@@ -1,5 +1,7 @@
 package io.github.math0898.processing.logentries;
 
+import io.github.math0898.utils.SpellDatabase;
+
 /**
  * A HealEntry encapsulates the SPELL_HEAL event in raw log files.
  */
@@ -42,7 +44,9 @@ public class HealEntry extends LogEntry {
     protected void init () {
         String[] lines = data.split(",");
         caster = lines[2].replace("\"", "");
+        long spellId = Long.parseLong(lines[9]);
         spellName = lines[10].replace("\"", "");
+        SpellDatabase.getInstance().reportSpellName(spellId, spellName);
         int total_heal = Integer.parseInt(lines[31]);
         overheal = Integer.parseInt(lines[33]); // todo: So far everything has been RAW_HEAL_AMOUNT, RAW_HEAL_AMOUNT. Is there heal absorb in here?
         heal = total_heal - overheal;
