@@ -98,6 +98,7 @@ public class SpellDatabase {
                 expired = true;
         if (details == null || expired) {
             details = BlizzardAPIHelper.getInstance().requestSpellDetails(id);
+            if (details == null) details = WoWHeadScrapper.getInstance().requestSpellDetails(id);
             if (details == null) return null;
             spells.put(id, details);
             updateDatabase();
