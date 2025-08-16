@@ -1,11 +1,15 @@
 package io.github.math0898.views.encountersummary;
 
 import io.github.math0898.processing.LogManager;
+import io.github.math0898.processing.logentries.DamageTakenEntry;
 import io.github.math0898.processing.logentries.UnitDeathEntry;
 import io.github.math0898.processing.logentries.UnitTypes;
+import io.github.math0898.utils.SpellDatabase;
+import io.github.math0898.utils.SpellDetails;
 import io.github.math0898.views.general.SpellIcon;
 import io.github.math0898.views.healgraph.EncounterIndicator;
 import io.github.math0898.views.nightsummary.PlayerPlacard;
+import suga.engine.GameEngine;
 import suga.engine.game.BasicGame;
 import suga.engine.game.BasicScene;
 import suga.engine.game.Game;
@@ -59,7 +63,14 @@ public class EncounterSummaryScene extends BasicScene {
             game.addGameObject(key, obj);
         }
 
-        game.addGameObject("Test Spell", new SpellIcon(360995, 125, 125, 960, 540));
+        java.util.List<DamageTakenEntry> entries = LogManager.getInstance().getHighlightedEncounter().queryDamageTakenEntries("\"Nillath-Stormrage-US\"");
+        for (int i = entries.size() - 1; i > entries.size() - 11; i--) {
+            DamageTakenEntry entry = entries.get(i);
+            game.addGameObject("ID: " + i, new SpellIcon(entry.getSpellId(), 30, 30, 960, 440 + (35) * (entries.size() - i)));
+            SpellDetails details = SpellDatabase.getInstance().getDetails(entry.getSpellId());
+            if (details != null)
+                GameEngine.getLogger().log(details.spellName());
+        }
 
         game.addGameObject("Encounter Indicator", new EncounterIndicator());
         return super.load(game);

@@ -340,6 +340,20 @@ public class Encounter { // todo: Might be worthwhile during processing to creat
     }
 
     /**
+     * Queries DamageTakenEntries for the given target.
+     *
+     * @param targetName The name of the target to query for.
+     */
+    public List<DamageTakenEntry> queryDamageTakenEntries (String targetName) {
+        List<DamageTakenEntry> list = new ArrayList<>();
+        for (LogEntry log : entries)
+            if (log instanceof DamageTakenEntry entry)
+                if (entry.getTargetName().equalsIgnoreCase(targetName))
+                    list.add(entry);
+        return list;
+    }
+
+    /**
      * The amount of time this encounter takes in milliseconds.
      *
      * @return The number of milliseconds that transpire in this encounter.

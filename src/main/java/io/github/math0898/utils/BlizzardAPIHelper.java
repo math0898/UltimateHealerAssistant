@@ -130,7 +130,7 @@ public class BlizzardAPIHelper {
             GameEngine.getLogger().log("Spell Icon Request: " + id, Level.DEBUG);
             GameEngine.getLogger().log("Spell Icon Request: " + response.statusCode(), Level.DEBUG);
             GameEngine.getLogger().log("Spell Icon Request: " + response.body(), Level.DEBUG);
-
+            if (response.statusCode() == 404) return null;
             ObjectMapper mapper = new ObjectMapper();
             JsonNode node = mapper.readTree(response.body());
             String iconUrl = node.get("assets").get(0).get("value").asText();

@@ -109,6 +109,7 @@ public class BlizzardResourcesCache {
      */
     public BufferedImage requestSpellResource (String resourceName) {
         BufferedImage image = BlizzardAPIHelper.getInstance().requestSpellIcon(Long.parseLong(resourceName));
+        if (image == null) return null;
         resourcesMap.put(resourceName, new Resource(resourceName, "./cache/" + resourceName + ".png", System.currentTimeMillis(), ResourceTypes.SPELL_ICONS));
         saveImage(image, "./cache/" + resourceName + ".png");
         updateRegistry();

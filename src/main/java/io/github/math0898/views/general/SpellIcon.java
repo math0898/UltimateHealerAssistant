@@ -19,7 +19,7 @@ public class SpellIcon extends BasicGameObject implements DrawListener {
     /**
      * A saved version of the spell icon in memory so we don't need to bother blizzard all the time.
      */
-    private final BufferedImage icon;
+    private BufferedImage icon;
 
     /**
      * The height of this SpellIcon.
@@ -45,6 +45,7 @@ public class SpellIcon extends BasicGameObject implements DrawListener {
         this.height = height;
         this.pos = new Vector(x, y, 0);
         BufferedImage buffered = BlizzardResourcesCache.getInstance().loadResource(spellId + "", ResourceTypes.SPELL_ICONS);
+        if (buffered == null) return;
         Image img = buffered.getScaledInstance(width, height, Image.SCALE_DEFAULT);
         icon = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D tmp = icon.createGraphics();
@@ -71,6 +72,7 @@ public class SpellIcon extends BasicGameObject implements DrawListener {
      */
     @Override
     public void applyChanges (int width, int height, GraphicsPanel panel) {
+        if (icon == null) return;
         panel.addImage((int) pos.getX() - this.width / 2, (int) pos.getY() - this.height / 2, this.width, this.height, icon);
     }
 }
