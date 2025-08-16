@@ -23,7 +23,7 @@ public class Main {
     public final static String TEST_FILE = "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/testfiles/Archive-WoWCombatLog-081425_185246.txt";
 
     public static void main(String[] args) {
-        GameEngine.getLogger().setLevel(Level.VERBOSE);
+        GameEngine.getLogger().setLevel(Level.DEBUG);
         long startTime = System.currentTimeMillis();
         LogManager logManager = LogManager.getInstance();
         logManager.processFile(TEST_FILE);

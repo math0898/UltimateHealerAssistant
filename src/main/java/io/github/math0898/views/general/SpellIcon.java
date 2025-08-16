@@ -2,12 +2,10 @@ package io.github.math0898.views.general;
 
 import io.github.math0898.game.UltimateHealerAssistantGame;
 import io.github.math0898.utils.*;
-import suga.engine.GameEngine;
 import suga.engine.game.objects.BasicGameObject;
 import suga.engine.graphics.DrawListener;
 import suga.engine.graphics.GraphicsPanel;
 import suga.engine.input.mouse.GameMouseListener;
-import suga.engine.logger.Level;
 import suga.engine.physics.Vector;
 
 import java.awt.*;
@@ -28,12 +26,37 @@ public class SpellIcon extends BasicGameObject implements DrawListener {
     /**
      * The maximum width of the hover over box.
      */
-    private static final int HOVER_OVER_WIDTH = 300;
+    private static final int HOVER_OVER_WIDTH = 400;
+
+    /**
+     * The x position of the hover over box.
+     */
+    private static final int HOVER_OVER_X = 1920 - HOVER_OVER_WIDTH - 10;
+
+    /**
+     * The y position of the hover over box.
+     */
+    private static final int HOVER_OVER_Y = 1080 - 35 - HOVER_OVER_HEIGHT - 10;
+
+    /**
+     * The horizontal name padding.
+     */
+    private static final int NAME_PADDING_HOR = 10;
+
+    /**
+     * The vertical name padding.
+     */
+    private static final int NAME_OFFSET_VERT = -20;
 
     /**
      * The buffer to place around the large spell icon shown in the hover over.
      */
     private static final int LARGE_ICON_PADDING = 10;
+
+    /**
+     * Vertical padding added to the spell description bellow the spell name.
+     */
+    private static final int DESCRIPTION_PADDING_VERT = 32;
 
     /**
      * A saved version of the spell icon in memory so we don't need to bother blizzard all the time.
@@ -59,11 +82,6 @@ public class SpellIcon extends BasicGameObject implements DrawListener {
      * The width of this SpellIcon.
      */
     private final int width;
-
-    /**
-     * The position of the mouse last time it was read.
-     */
-    private Point lastPos = new Point(0, 0);
 
     /**
      * A simple boolean to determine whether this object is being hovered over or not.
@@ -92,7 +110,6 @@ public class SpellIcon extends BasicGameObject implements DrawListener {
      * @param cursor The position of the mouse.
      */
     public boolean checkHovered (Point cursor) {
-        GameEngine.getLogger().log("" + pos.getY(), Level.INFO);
         if (cursor.x > (int) pos.getX() + (this.width / 2)) return false;
         if (cursor.x < (int) pos.getX() - (this.width / 2)) return false;
         if (cursor.y > (int) pos.getY() + (this.height / 2)) return false;
@@ -109,7 +126,6 @@ public class SpellIcon extends BasicGameObject implements DrawListener {
         if (cursor == null) return;
         Point translated = new Point(cursor.x, cursor.y - 35); // This might be related to the X-Border, but I have no clue.
         hovered = checkHovered(translated);
-        lastPos = translated;
     }
 
     /**
@@ -154,7 +170,13 @@ public class SpellIcon extends BasicGameObject implements DrawListener {
         if (icon == null) return;
         panel.addImage((int) pos.getX() - this.width / 2, (int) pos.getY() - (this.height / 2), this.width, this.height, icon);
         if (hovered) {
-            panel.setRectangle(lastPos.x, lastPos.y, HOVER_OVER_WIDTH, HOVER_OVER_HEIGHT, new Color(20, 20, 20));
-        }
+            panel.setRectangle(HOVER_OVER_X, HOVER_OVER_Y, HOVER_OVER_WIDTH, HOVER_OVER_HEIGHT, new Color(20, 20, 20));
+            int iconSize = Math.min(HOVER_OVER_HEIGHT, HOVER_OVER_WIDTH) - (LARGE_ICON_PADDING * 2);
+            panel.addImage(HOVER_OVER_X + LARGE_ICON_PADDING, HOVER_OVER_Y + LARGE_ICON_PADDING, iconSize, iconSize, icon);
+            BufferedImage spellName = Utils.imageFromText(new Font("Comic Sans", Font.BOLD, 32), Color.WHITE, details.spellName());
+            panel.addImage(HOVER_OVER_X + LARGE_ICON_PADDING + iconSize + NAME_PADDING_HOR, HOVER_OVER_Y + LARGE_ICON_PADDING + NAME_OFFSET_VERT, spellName.getWidth(), spellName.getHeight(), spellName);
+            BufferedImage spellDescription = Utils.imageFromText(new Font("Comic Sans", Font.ITALIC, 18), Color.WHITE, details.description());
+            panel.addImage(HOVER_OVER_X + LARGE_ICON_PADDING + iconSize + NAME_PADDING_HOR, HOVER_OVER_Y + LARGE_ICON_PADDING + NAME_OFFSET_VERT + DESCRIPTION_PADDING_VERT, spellName.getWidth(), spellName.getHeight(), spellDescription);
+        } // todo: Add line breaks to spell hover over.
     }
 }
