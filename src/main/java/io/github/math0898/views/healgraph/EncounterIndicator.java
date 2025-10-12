@@ -27,10 +27,12 @@ public class EncounterIndicator extends BasicGameObject implements DrawListener 
     @Override
     public void applyChanges(int width, int height, GraphicsPanel panel) {
         BufferedImage buffer = new BufferedImage((width * 14) / 16, 48, BufferedImage.TYPE_INT_ARGB);
-        Graphics graphics = buffer.createGraphics();
+        Graphics2D graphics = buffer.createGraphics();
         graphics.setFont(new Font("Comic Sans", Font.BOLD, 32));
         graphics.setColor(new Color(200,200,200));
 
+        // todo: {@link Utils#imageFromText()}
+        graphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         graphics.drawString("Pull: " + (LogManager.getInstance().getHighlightedEncounterIndex() + 1), 0, 32);
 
         FontMetrics metrics = graphics.getFontMetrics();

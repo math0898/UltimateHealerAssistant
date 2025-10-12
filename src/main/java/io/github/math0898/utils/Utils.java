@@ -87,6 +87,7 @@ public class Utils {
     public static BufferedImage imageFromText (Font font, Color color, String text, int canvasWidth, int canvasHeight) {
         BufferedImage buffer = new BufferedImage(canvasWidth, canvasHeight, BufferedImage.TYPE_INT_ARGB);
         Graphics graphics = buffer.createGraphics();
+        if (graphics instanceof Graphics2D d2) d2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         graphics.setFont(font);
         graphics.setColor(color);
         graphics.drawString(text, 0, canvasHeight);

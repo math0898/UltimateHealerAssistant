@@ -31,7 +31,7 @@ public class GraphGameObject extends BasicGameObject implements  DrawListener {
     /**
      * The vertical scale component of the healing graph.
      */
-    private static final int SCALE = 1000000; // todo: Figure out a way to dynamically calculate.
+    private static final int SCALE = 2000000; // todo: Figure out a way to dynamically calculate.
 
     /**
      * Whether to stack ascent bars or not.

@@ -170,6 +170,7 @@ public class SpellIcon extends BasicGameObject implements DrawListener {
         if (icon == null) return;
         panel.addImage((int) pos.getX() - this.width / 2, (int) pos.getY() - (this.height / 2), this.width, this.height, icon);
         if (hovered) {
+            final int HOVER_OVER_Y = height - HOVER_OVER_HEIGHT - 10;
             panel.setRectangle(HOVER_OVER_X, HOVER_OVER_Y, HOVER_OVER_WIDTH, HOVER_OVER_HEIGHT, new Color(20, 20, 20));
             int iconSize = Math.min(HOVER_OVER_HEIGHT, HOVER_OVER_WIDTH) - (LARGE_ICON_PADDING * 2);
             panel.addImage(HOVER_OVER_X + LARGE_ICON_PADDING, HOVER_OVER_Y + LARGE_ICON_PADDING, iconSize, iconSize, icon);

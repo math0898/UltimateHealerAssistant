@@ -63,9 +63,10 @@ public class EncounterSummaryScene extends BasicScene {
             game.addGameObject(key, obj);
 
             java.util.List<DamageTakenEntry> entries = LogManager.getInstance().getHighlightedEncounter().queryDamageTakenEntries(events.get(x).getUnitName());
-            for (int i = entries.size() - 1; i > entries.size() - 11; i--) {
+            for (int i = entries.size() - 1; i > entries.size() - 11; i--) { // todo: This should probably be extracted and placed into it's own sub object.
+                if (i < 0 || i > entries.size()) continue;
                 DamageTakenEntry entry = entries.get(i);
-                game.addGameObject(events.get(x).getUnitName() + " ID: " + i, new SpellIcon(entry.getSpellId(), 30, 30, ((WIDTH - (SIDE_BUFFERS * 2)) / deathsCount) * x + SIDE_BUFFERS - PlayerPlacard.ICON_OFFSET_HOR + (PlayerPlacard.ICON_WIDTH / 2), 440 + (35) * (entries.size() - i)));
+                game.addGameObject(events.get(x).getUnitName() + " ID: " + i, new SpellIcon(entry.getSpellId(), 30, 30, ((WIDTH - (SIDE_BUFFERS * 2)) / deathsCount) * x + SIDE_BUFFERS - PlayerPlacard.ICON_OFFSET_HOR - (PlayerPlacard.ICON_WIDTH / 2), 440 + (35) * (entries.size() - i)));
                 SpellDetails details = SpellDatabase.getInstance().getDetails(entry.getSpellId());
                 if (details != null)
                     GameEngine.getLogger().log(details.spellName());
