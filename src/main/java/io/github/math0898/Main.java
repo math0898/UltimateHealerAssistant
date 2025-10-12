@@ -4,9 +4,9 @@ import io.github.math0898.game.UltimateHealerAssistantGame;
 import io.github.math0898.game.UltimateHealerAssistantGameKeyListener;
 import io.github.math0898.game.UltimateMouseListener;
 import io.github.math0898.processing.LogManager;
-import io.github.math0898.views.healgraph.GraphicsPanel;
 import suga.engine.GameEngine;
 import suga.engine.game.BasicGame;
+import suga.engine.graphics.Graphics2d;
 import suga.engine.input.keyboard.GameKeyListener;
 import suga.engine.input.mouse.BasicMouseListener;
 import suga.engine.logger.Level;
@@ -41,7 +41,7 @@ public class Main {
      * Opens the graphical interface.
      */
     public static void gui () {
-        GraphicsPanel graphicsPanel = new GraphicsPanel();
+        Graphics2d graphicsPanel = new Graphics2d();
         GameKeyListener gameKeyListener = new UltimateHealerAssistantGameKeyListener();
         BasicMouseListener gameMouseListener = new UltimateMouseListener();
         BasicGame game = new UltimateHealerAssistantGame(graphicsPanel, gameKeyListener, gameMouseListener);
