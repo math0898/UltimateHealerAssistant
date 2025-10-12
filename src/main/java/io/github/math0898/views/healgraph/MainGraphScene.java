@@ -72,6 +72,7 @@ public class MainGraphScene extends BasicScene {
                 }
                 case NUM_2 -> game.loadScene("prog");
                 case NUM_3 -> game.loadScene("encounter");
+                case NUM_4 -> game.loadScene("file");
             }
         }
     }
