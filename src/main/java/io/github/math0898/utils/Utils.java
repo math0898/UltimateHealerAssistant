@@ -71,7 +71,8 @@ public class Utils {
      * @param text The text to draw.
      */
     public static BufferedImage imageFromText (Font font, Color color, String text) {
-        return imageFromText(font, color, text, 300, 48);
+        FontMetrics metrics = Toolkit.getDefaultToolkit().getFontMetrics(font);
+        return imageFromText(font, color, text, metrics.stringWidth(text) + 10, 48);
     }
 
     /**

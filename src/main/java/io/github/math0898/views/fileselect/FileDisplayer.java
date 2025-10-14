@@ -4,11 +4,28 @@ import io.github.math0898.Main;
 import io.github.math0898.utils.Utils;
 import suga.engine.game.objects.BasicGameObject;
 import suga.engine.graphics.GraphicsPanel;
+import suga.engine.physics.Vector;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
 
+/**
+ * The FileDisplayer is used to represent a specific file in the filesystem that can be loaded to analyze.
+ *
+ * @author Sugaku
+ */
 public class FileDisplayer extends BasicGameObject {
+
+    /**
+     * The font size of the FileDisplayer.
+     */
+    private static final int FONT_SIZE = 36;
+
+    /**
+     * The font to use for FileDisplayers.
+     */
+    private static final Font FONT = new Font("Comic Sans", Font.PLAIN, FONT_SIZE);
 
     /**
      * The name of the file to represent.
@@ -16,19 +33,26 @@ public class FileDisplayer extends BasicGameObject {
     private final String fileName;
 
     /**
+     * The path of the file this represents.
+     */
+    private final String filePath;
+
+    /**
      * Creates a new FileDisplayer that points to the given file name.
      *
-     * @param name The name of the file to load.
+     * @param file The file to display with this object.
      */
-    public FileDisplayer (String name) {
-        fileName = name;
+    public FileDisplayer (File file, Vector pos) {
+        this.fileName = file.getName();
+        this.filePath = file.getAbsolutePath();
+        this.pos = pos.clone();
     }
 
     /**
      * Loads this file into the program.
      */
     public void loadFile () {
-        Main.setLogfile(fileName);
+        Main.setLogfile(filePath);
         Main.analyzeFile();
     }
 
@@ -41,8 +65,8 @@ public class FileDisplayer extends BasicGameObject {
      */
     @Override
     public void applyChanges (int width, int height, GraphicsPanel panel) {
-        BufferedImage img = Utils.imageFromText(new Font("Comic Sans", Font.PLAIN, 36), new Color(200, 200, 200), fileName);
-        panel.addImage(960, 540, img.getWidth(), img.getHeight(), img);
-//        panel.setBigPixel(960, 540, 50, Color.RED);
+        FontMetrics metrics = panel.getFontMetrics(FONT);
+        BufferedImage img = Utils.imageFromText(FONT, new Color(200, 200, 200), fileName, metrics.stringWidth(fileName), (int) (FONT_SIZE * 1.5));
+        panel.addImage((int) pos.getX(), (int) pos.getY(), img.getWidth(), img.getHeight(), img);
     }
 }
