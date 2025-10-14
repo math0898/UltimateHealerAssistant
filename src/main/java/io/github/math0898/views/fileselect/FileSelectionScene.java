@@ -25,7 +25,7 @@ public class FileSelectionScene extends BasicScene {
     @Override
     public boolean load (Game game) {
         game.clear();
-        game.addGameObject("File-1", new FileDisplayer());
+        game.addGameObject("File-1", new FileDisplayer("Archive-WoWCombatLog-100925_185651.txt"));
         return super.load(game);
     }
 
