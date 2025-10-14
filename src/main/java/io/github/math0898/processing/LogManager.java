@@ -112,6 +112,7 @@ public class LogManager {
      * @param logFile The log file to process.
      */
     public void processFile (String logFile) { // todo: Simplify.
+        encounters.clear();
         try (InputStream inputStream = new FileInputStream(logFile)) {
             StringBuilder builder = new StringBuilder();
             boolean encounter_start = false;

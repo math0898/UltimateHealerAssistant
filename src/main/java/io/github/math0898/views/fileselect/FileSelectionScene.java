@@ -1,12 +1,12 @@
 package io.github.math0898.views.fileselect;
 
+import io.github.math0898.game.UltimateHealerAssistantGame;
 import suga.engine.game.BasicScene;
 import suga.engine.game.Game;
-import suga.engine.game.objects.GameObject;
 import suga.engine.input.keyboard.KeyValue;
 import suga.engine.physics.Vector;
 
-import java.awt.Point;
+import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,6 +24,11 @@ public class FileSelectionScene extends BasicScene {
      * The starting file path.
      */
     private static final String STARTING_FILE_PATH = "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/testfiles/";
+
+    /**
+     * The index of the selected FileDisplayer.
+     */
+    private int selectedDisplayer = 0;
 
     /**
      * A list of FileDisplayer objects to more easily access after creation.
@@ -48,6 +53,9 @@ public class FileSelectionScene extends BasicScene {
             game.addGameObject("File-" + i, displayer);
             displayers.add(displayer);
         }
+        game.addDrawingListener((width, height, panel) -> {
+            panel.setRectangle(960, 62 + 36 + 20, 200, 2, Color.RED);
+        });
         return super.load(game);
     }
 
@@ -64,10 +72,18 @@ public class FileSelectionScene extends BasicScene {
             case ARROW_DOWN -> {
                 for (FileDisplayer dis : displayers)
                     dis.getPos().add(new Vector(0, -42, 0));
+                selectedDisplayer++;
             }
             case ARROW_UP -> {
                 for (FileDisplayer dis : displayers)
                     dis.getPos().add(new Vector(0, 42, 0));
+                selectedDisplayer--;
+            }
+            case ENTER -> {
+                if (selectedDisplayer < 0 || selectedDisplayer >= displayers.size()) return;
+                FileDisplayer displayer = displayers.get(selectedDisplayer);
+                displayer.loadFile();
+                UltimateHealerAssistantGame.getInstance().loadScene("main");
             }
         }
     }

@@ -56,6 +56,7 @@ public class Main {
      * Computes data about the selected log file. This will freeze whatever thread it is run on.
      */
     public static void analyzeFile () {
+        GameEngine.getLogger().log("Loading: " + loadFile);
         long startTime = System.currentTimeMillis();
         LogManager logManager = LogManager.getInstance();
         logManager.processFile(loadFile);
