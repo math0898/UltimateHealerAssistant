@@ -6,7 +6,7 @@ import suga.engine.graphics.GraphicsPanel;
 
 import java.awt.*;
 
-import static io.github.math0898.views.nightsummary.PlayerPlacard.*;
+import static io.github.math0898.views.general.PlayerPlacard.*;
 
 /**
  * The SelectionRectangle is a rectangle around player placards to help indicate which one is selected.

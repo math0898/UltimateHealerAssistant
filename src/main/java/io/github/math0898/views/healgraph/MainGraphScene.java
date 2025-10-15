@@ -1,6 +1,7 @@
 package io.github.math0898.views.healgraph;
 
 import io.github.math0898.processing.LogManager;
+import io.github.math0898.views.general.PlayerPlacard;
 import suga.engine.GameEngine;
 import suga.engine.game.BasicScene;
 import suga.engine.game.Game;
@@ -46,6 +47,7 @@ public class MainGraphScene extends BasicScene {
         game.addGameObject("Resto Spirit Link", new CastIndicator(SpellQueries.SPIRIT_LINK, 30));
         game.addGameObject("Druid Regrowth", new CastIndicator(SpellQueries.REGROWTH, 0));
         game.addGameObject("Druid Tranquility", new CastIndicator(SpellQueries.TRANQUILITY, 0));
+//        game.addGameObject("Nillath Placard", new PlayerPlacard("Nillath-Stormrage-US", 960, 540));
         return true;
     }
 

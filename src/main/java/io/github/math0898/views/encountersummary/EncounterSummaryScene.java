@@ -8,7 +8,7 @@ import io.github.math0898.utils.SpellDatabase;
 import io.github.math0898.utils.SpellDetails;
 import io.github.math0898.views.general.SpellIcon;
 import io.github.math0898.views.healgraph.EncounterIndicator;
-import io.github.math0898.views.nightsummary.PlayerPlacard;
+import io.github.math0898.views.general.PlayerPlacard;
 import suga.engine.GameEngine;
 import suga.engine.game.BasicGame;
 import suga.engine.game.BasicScene;

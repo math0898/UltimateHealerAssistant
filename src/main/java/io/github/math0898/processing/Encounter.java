@@ -50,6 +50,11 @@ public class Encounter { // todo: Might be worthwhile during processing to creat
     private String enemyName;
 
     /**
+     * An exhaustive list of actors that were involved throughout this encounter.
+     */
+    private List<String> actorNames = new ArrayList<>();
+
+    /**
      * Creates a new Encounter with the given data.
      *
      * @param data This encounter as written in a log file.
@@ -83,6 +88,14 @@ public class Encounter { // todo: Might be worthwhile during processing to creat
             else if (val == 0) return 0;
             else return -1;
         });
+        // ----
+        // This block is very expensive. We should do additional processing during it or refactor for another solution.
+        for (LogEntry e : entries) {
+            if (e instanceof HealEntry heal)
+                if (!actorNames.contains(heal.getCaster()))
+                    actorNames.add(heal.getCaster());
+        }
+        // ----
     }
 
     /**
@@ -160,6 +173,10 @@ public class Encounter { // todo: Might be worthwhile during processing to creat
         System.out.println("Total Healing: " + NumberFormat.getInstance().format(total));
         System.out.println("Damage Taken: " + NumberFormat.getInstance().format(damageTaken));
         System.out.println("Duration: " + (entries.getLast().getTime() - entries.getFirst().getTime()) / 1000 + "s");
+        System.out.print("Actors: ");
+        for (String s : actorNames)
+            System.out.print(s + " ");
+        System.out.println();
         System.out.println(" ==== End Summary ==== ");
     }
 

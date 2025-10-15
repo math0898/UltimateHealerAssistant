@@ -4,6 +4,7 @@ import io.github.math0898.processing.Encounter;
 import io.github.math0898.processing.LogManager;
 import io.github.math0898.processing.logentries.UnitDeathEntry;
 import io.github.math0898.processing.logentries.UnitTypes;
+import io.github.math0898.views.general.PlayerPlacard;
 import suga.engine.GameEngine;
 import suga.engine.game.BasicScene;
 import suga.engine.game.Game;
