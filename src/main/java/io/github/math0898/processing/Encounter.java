@@ -52,7 +52,7 @@ public class Encounter { // todo: Might be worthwhile during processing to creat
     /**
      * An exhaustive list of actors that were involved throughout this encounter.
      */
-    private List<String> actorNames = new ArrayList<>();
+    private final List<String> actorNames = new ArrayList<>();
 
     /**
      * Creates a new Encounter with the given data.
@@ -116,6 +116,16 @@ public class Encounter { // todo: Might be worthwhile during processing to creat
      */
     private void processEncounterEnd (String line) {
         encounterEndMillis = Utils.millisFromLogTime(line.split(",")[0]);
+    }
+
+    /**
+     * Accessor for all the actors in this file. This only considers healing done and so may miss some. Players are of
+     * the format: PLAYERNAME-REALMSLUG-REGION. Variants are likely not players.
+     *
+     * @return A list of actors.
+     */
+    public List<String> getActors () {
+        return actorNames;
     }
 
     /**
@@ -226,6 +236,16 @@ public class Encounter { // todo: Might be worthwhile during processing to creat
             toReturn.addColumn(windowTotalHealing / scale, windowHealing / scale, windowDamage / scale);
         }
         return toReturn;
+    }
+
+    /**
+     * Calculates the healing from a specific caster over the entire encounter.
+     *
+     * @param casterName The name of the caster to query for.
+     * @return The amount of healing done by this caster.
+     */
+    public long queryHealingByCaster (String casterName) {
+        return queryHealingByCaster(casterName, 0, encounterLengthMillis());
     }
 
     /**

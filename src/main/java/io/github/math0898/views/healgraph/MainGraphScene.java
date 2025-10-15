@@ -1,5 +1,6 @@
 package io.github.math0898.views.healgraph;
 
+import io.github.math0898.processing.Encounter;
 import io.github.math0898.processing.LogManager;
 import io.github.math0898.views.general.PlayerPlacard;
 import suga.engine.GameEngine;
@@ -9,7 +10,9 @@ import suga.engine.input.keyboard.KeyValue;
 import suga.engine.logger.Level;
 import suga.engine.logger.Logger;
 
-import java.awt.*;
+import java.awt.Point;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainGraphScene extends BasicScene {
 
@@ -29,25 +32,8 @@ public class MainGraphScene extends BasicScene {
         this.game = game;
         game.clear();
         graphGameObject = new GraphGameObject();
-        game.addGameObject("Main Graph", graphGameObject);
-        game.addGameObject("Encounter Indicator", new EncounterIndicator());
-        game.addGameObject("Pres Icon", new SpecIcon(0, "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/icons/classicon_evoker_preservation.jpg"));
-        game.addGameObject("Holy Icon", new SpecIcon(70, "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/icons/spell_holy_guardianspirit.jpg"));
-        game.addGameObject("Disc Icon", new SpecIcon(140, "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/icons/spell_holy_powerwordshield.jpg"));
-        game.addGameObject("Resto Icon", new SpecIcon(210, "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/icons/inv_1115_shaman_chainheal.jpg"));
-        game.addGameObject("Resto Druid Icon", new SpecIcon(280, "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/icons/talentspec_druid_restoration.jpg"));
-        game.addGameObject("Pres Engulf", new CastIndicator(SpellQueries.CONSUME_FLAME, 0));
-        game.addGameObject("Pres Rewind", new CastIndicator(SpellQueries.REWIND, 30));
-        game.addGameObject("Pres Emerald Communion", new CastIndicator(SpellQueries.EMERALD_COMMUNION, 60));
-        game.addGameObject("Holy Divine Hymn", new CastIndicator(SpellQueries.DIVINE_HYMN, 0));
-        game.addGameObject("Disc Evangelism", new CastIndicator(SpellQueries.EVANGELISM, 0));
-        game.addGameObject("Disc Piety", new CastIndicator(SpellQueries.PIETY, 30)); // todo: Consider triple buff.
-//        game.addGameObject("Disc Atonement", new CastIndicator(SpellQueries.ATONEMENT, 60)); // todo: This is causing a lot of lag because it's technically drawing each cooldown every cast, not once per block.
-        game.addGameObject("Resto Healing Tide", new CastIndicator(SpellQueries.HEALING_TIDE, 0));
-        game.addGameObject("Resto Spirit Link", new CastIndicator(SpellQueries.SPIRIT_LINK, 30));
-        game.addGameObject("Druid Regrowth", new CastIndicator(SpellQueries.REGROWTH, 0));
-        game.addGameObject("Druid Tranquility", new CastIndicator(SpellQueries.TRANQUILITY, 0));
-//        game.addGameObject("Nillath Placard", new PlayerPlacard("Nillath-Stormrage-US", 960, 540));
+        addGameObjects(game);
+        updateGraph();
         return true;
     }
 
@@ -80,10 +66,61 @@ public class MainGraphScene extends BasicScene {
     }
 
     /**
+     * A delegated method for adding all the game objects used in the construction of the graph scene.
+     *
+     * @param game The game to add the objects to.
+     */
+    private void addGameObjects (Game game) {
+        game.addGameObject("Main Graph", graphGameObject);
+        game.addGameObject("Encounter Indicator", new EncounterIndicator());
+        game.addGameObject("Pres Icon", new SpecIcon(0, "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/icons/classicon_evoker_preservation.jpg"));
+        game.addGameObject("Holy Icon", new SpecIcon(70, "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/icons/spell_holy_guardianspirit.jpg"));
+        game.addGameObject("Disc Icon", new SpecIcon(140, "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/icons/spell_holy_powerwordshield.jpg"));
+        game.addGameObject("Resto Icon", new SpecIcon(210, "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/icons/inv_1115_shaman_chainheal.jpg"));
+        game.addGameObject("Resto Druid Icon", new SpecIcon(280, "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/icons/talentspec_druid_restoration.jpg"));
+        game.addGameObject("Pres Engulf", new CastIndicator(SpellQueries.CONSUME_FLAME, 0));
+        game.addGameObject("Pres Rewind", new CastIndicator(SpellQueries.REWIND, 30));
+        game.addGameObject("Pres Emerald Communion", new CastIndicator(SpellQueries.EMERALD_COMMUNION, 60));
+        game.addGameObject("Holy Divine Hymn", new CastIndicator(SpellQueries.DIVINE_HYMN, 0));
+        game.addGameObject("Disc Evangelism", new CastIndicator(SpellQueries.EVANGELISM, 0));
+        game.addGameObject("Disc Piety", new CastIndicator(SpellQueries.PIETY, 30)); // todo: Consider triple buff.
+//        game.addGameObject("Disc Atonement", new CastIndicator(SpellQueries.ATONEMENT, 60)); // todo: This is causing a lot of lag because it's technically drawing each cooldown every cast, not once per block.
+        game.addGameObject("Resto Healing Tide", new CastIndicator(SpellQueries.HEALING_TIDE, 0));
+        game.addGameObject("Resto Spirit Link", new CastIndicator(SpellQueries.SPIRIT_LINK, 30));
+        game.addGameObject("Druid Regrowth", new CastIndicator(SpellQueries.REGROWTH, 0));
+        game.addGameObject("Druid Tranquility", new CastIndicator(SpellQueries.TRANQUILITY, 0));
+    }
+
+    private static record HealingResult (String actorName, long result) { }
+
+    /**
      * Forces the graph to update.
      */
     private void updateGraph () {
-        graphGameObject.setEncounter(LogManager.getInstance().getHighlightedEncounter());
+        Encounter encounter = LogManager.getInstance().getHighlightedEncounter();
+        // ----
+        // This is a workaround for the fact that SugaEngine 2.5.2 still hasn't implemented removing game objects.
+        game.clear();
+        addGameObjects(game);
+        // ----
+        int positionOffset = 180;
+        List<HealingResult> results = new ArrayList<>();
+        for (String actor : encounter.getActors()) {
+            if (!actor.contains("-")) continue; // Likely not a player.
+            long output = encounter.queryHealingByCaster(actor.split("-")[0]);
+            results.add(new HealingResult(actor, output));
+        }
+        results.sort((r1, r2) -> {
+            long comp = r2.result - r1.result;
+            if (comp > 0) return 1;
+            if (comp == 0) return 0;
+            else return -1;
+        });
+        for (int i = 0; i < 5; i++) {
+            game.addGameObject("Placard - " + results.get(i).actorName, new PlayerPlacard(results.get(i).actorName, 1920 / 16 + 100, positionOffset));
+            positionOffset += 160;
+        }
+        graphGameObject.setEncounter(encounter);
     }
 
     /**

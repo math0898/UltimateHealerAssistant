@@ -39,6 +39,11 @@ public class GraphGameObject extends BasicGameObject implements  DrawListener {
     private static final boolean STACKED = false;
 
     /**
+     * A horizontal offset applied to all elements.
+     */
+    private static final int HORIZONTAL_OFFSET = 170;
+
+    /**
      * This is the width at which the graph should be calculated at. It may lag behind a cycle or two since it needs
      * assigning from graphics thread {@link #applyChanges(int, int, GraphicsPanel)} and computed in {@link #runLogic()}
      * to make the change.
@@ -69,14 +74,14 @@ public class GraphGameObject extends BasicGameObject implements  DrawListener {
      */
     @Override
     public void applyChanges (int width, int height, GraphicsPanel panel) {
-        if (targetWidth != width) {
-            targetWidth = width;
+        if (targetWidth != width - HORIZONTAL_OFFSET) {
+            targetWidth = width - HORIZONTAL_OFFSET;
             recompute = true;
             graph = null;
             return;
         }
         if (graph == null) return;
-        final int startX = panel.getWidth() / 8;
+        final int startX = panel.getWidth() / 8 + HORIZONTAL_OFFSET;
         final int startY = (panel.getHeight() * 7) / 8;
         for (long i = graph.max; i >= 0; i--)
             for (int j = 0; j < graph.overheal.size(); j++) {
