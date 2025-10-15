@@ -147,6 +147,35 @@ public class PlayerPlacard extends BasicGameObject implements DrawListener {
     }
 
     /**
+     * Sets the size and spacing of the given bar.
+     *
+     * @param bar The bar to modify.
+     * @param width The new width for the bars.
+     * @param height The new height for the bars.
+     * @param padding The new padding for the bars.
+     */
+    public void modifyBar (String bar, int width, int height, int padding) {
+        RectangleBar recBar = (RectangleBar) subObjects.get(bar);
+        if (recBar == null) return;
+        recBar.setWidth(width);
+        recBar.setHeight(height);
+        recBar.setPadding(padding);
+    }
+
+    /**
+     * Sets the label of the given bar. Note that this will override showing numbers.
+     *
+     * @param bar The bar to modify.
+     * @param label The label to force onto this bar.
+     */
+    public void modifyBar (String bar, String label) {
+        RectangleBar recBar = (RectangleBar) subObjects.get(bar);
+        if (recBar == null) return;
+        recBar.setShowNumber(false);
+        recBar.setLabel(label);
+    }
+
+    /**
      * Sets the role icon of this player placard. Reflected by a small icon on the player's icon.
      *
      * @param role The role to assign this placard.

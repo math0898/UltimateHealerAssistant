@@ -11,6 +11,7 @@ import suga.engine.logger.Level;
 import suga.engine.logger.Logger;
 
 import java.awt.Point;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -116,16 +117,35 @@ public class MainGraphScene extends BasicScene {
             if (comp == 0) return 0;
             else return -1;
         });
+        final long maxHealing = results.getFirst().result();
         for (int i = 0; i < 5; i++) { // todo: Hotkeys to change number of healers.
-            PlayerPlacard placard = new PlayerPlacard(results.get(i).actorName, 1920 / 16 + 100, positionOffset);
+            HealingResult result = results.get(i);
+            PlayerPlacard placard = new PlayerPlacard(result.actorName, 1920 / 16 + 100, positionOffset);
             placard.setRole("Healer");
-            long maxHealing = results.getFirst().result();
             // todo: Make color dynamic depending on a couple of thresholds.
-            placard.modifyBar("Red Bar", (int) Math.round((results.get(i).result() * 10.0) / maxHealing));
-            placard.modifyBar("Red Bar", SpellQueries.EMERALD_COMMUNION.color);
-            placard.modifyBar("Green Bar", (int) (10 * encounter.percentageAlive(results.get(i).actorName)));
-            placard.modifyBar("Green Bar", SpellQueries.CONSUME_FLAME.color);
-            game.addGameObject("Placard - " + results.get(i).actorName, placard);
+
+            double healThreshold = result.result() * 1.0 / maxHealing;
+            placard.modifyBar("Red Bar", (int) Math.round(healThreshold * 10));
+
+            if (healThreshold >= 0.85) placard.modifyBar("Red Bar", SpellQueries.EMERALD_COMMUNION.color);
+            else if (healThreshold >= 0.65) placard.modifyBar("Red Bar", SpellQueries.PIETY.color);
+            else placard.modifyBar("Red Bar", SpellQueries.CONSUME_FLAME.color);
+
+            String healAmount = NumberFormat.getInstance().format(result.result).substring(0, 3);
+            if (result.result >= 1000000000000L) healAmount += "t";
+            else if (result.result >= 1000000000L) healAmount += "b";
+            else if (result.result >= 1000000L) healAmount += "m";
+            else if (result.result >= 1000L) healAmount += "k";
+            placard.modifyBar("Red Bar", healAmount);
+
+            double percentageAlive = encounter.percentageAlive(result.actorName);
+            placard.modifyBar("Green Bar", (int) (10 * percentageAlive));
+            if (percentageAlive >= 0.85) placard.modifyBar("Green Bar", SpellQueries.EMERALD_COMMUNION.color);
+            else if (percentageAlive >= 0.75) placard.modifyBar("Green Bar", SpellQueries.PIETY.color);
+            else placard.modifyBar("Green Bar", SpellQueries.CONSUME_FLAME.color);
+            placard.modifyBar("Green Bar", encounter.getFormattedSurvivalTime(result.actorName));
+
+            game.addGameObject("Placard - " + result.actorName, placard);
             positionOffset += 160;
         }
         graphGameObject.setEncounter(encounter);

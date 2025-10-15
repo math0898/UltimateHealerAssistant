@@ -2,6 +2,7 @@ package io.github.math0898.processing;
 
 import io.github.math0898.processing.logentries.*;
 import io.github.math0898.utils.Utils;
+import lombok.Getter;
 
 import java.text.NumberFormat;
 import java.util.*;
@@ -27,6 +28,7 @@ public class Encounter { // todo: Might be worthwhile during processing to creat
     /**
      * A list of deaths that happened during this encounter.
      */
+    @Getter
     private final List<UnitDeathEntry> unitDeaths = new ArrayList<>();
 
     /**
@@ -37,6 +39,7 @@ public class Encounter { // todo: Might be worthwhile during processing to creat
     /**
      * The start time of this Encounter in millis since epoch.
      */
+    @Getter
     private long encounterStartMillis;
 
     /**
@@ -47,6 +50,7 @@ public class Encounter { // todo: Might be worthwhile during processing to creat
     /**
      * The name of the mob that this Encounter is with.
      */
+    @Getter
     private String enemyName;
 
     /**
@@ -135,24 +139,6 @@ public class Encounter { // todo: Might be worthwhile during processing to creat
      */
     public int eventCount () {
         return entries.size();
-    }
-
-    /**
-     * Accessor method for the name of the enemy in this encounter.
-     *
-     * @return The enemy in this encounter.
-     */
-    public String getEnemyName () {
-        return enemyName;
-    }
-
-    /**
-     * Accessor method for the time that this encounter occurred.
-     *
-     * @return The date/time of this encounter in millis since epoch.
-     */
-    public long getEncounterStartMillis () {
-        return encounterStartMillis;
     }
 
     /**
@@ -353,15 +339,6 @@ public class Encounter { // todo: Might be worthwhile during processing to creat
     }
 
     /**
-     * Accessor method to a list of all the deaths that occurred during this event.
-     *
-     * @return The encounter death list.
-     */
-    public List<UnitDeathEntry> getUnitDeaths () {
-        return unitDeaths;
-    }
-
-    /**
      * Computes the amount of time that a given player was alive into the fight as a percentage.
      *
      * @param actorName The name of the actor to consider.
@@ -377,6 +354,24 @@ public class Encounter { // todo: Might be worthwhile during processing to creat
             }
         }
         return 1.0; // Were not found in death list. Likely survived whole fight.
+    }
+
+    /**
+     * Computes the amount of time that a given player was alive into the fight and returns it as a nicely formatted
+     * number.
+     *
+     * @param actorName The name of the actor to consider.
+     * @return The nicely formatted string version of their survival duration.
+     */
+    public String getFormattedSurvivalTime (String actorName) {
+        if (!actorNames.contains(actorName)) return "";
+        for (UnitDeathEntry ude : unitDeaths) {
+            if (ude.getUnitName().contains(actorName)) {
+                final long timeAlive = ude.getTime() - encounterStartMillis;
+                return timeAlive / (1000L * 60) + "m " + (timeAlive % (1000L * 60)) / 1000L + "s";
+            }
+        }
+        return encounterLengthMillis() / (1000L * 60) + "m " + (encounterLengthMillis() % (1000L * 60)) / 1000L + "s";
     }
 
     /**

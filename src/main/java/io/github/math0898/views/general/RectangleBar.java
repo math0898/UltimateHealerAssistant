@@ -1,6 +1,7 @@
 package io.github.math0898.views.general;
 
 import io.github.math0898.utils.Utils;
+import lombok.Setter;
 import suga.engine.game.objects.BasicGameObject;
 import suga.engine.graphics.DrawListener;
 import suga.engine.graphics.GraphicsPanel;
@@ -19,22 +20,26 @@ public class RectangleBar extends BasicGameObject implements DrawListener {
     /**
      * The color of this RectangleBar.
      */
+    @Setter
     private Color color;
 
     /**
      * The width of the rectangles.
      */
-    private final int width;
+    @Setter
+    private int width;
 
     /**
      * The height of the rectangles.
      */
-    private final int height;
+    @Setter
+    private int height;
 
     /**
      * Any horizontal padding between rectangles.
      */
-    private final int padding;
+    @Setter
+    private int padding;
 
     /**
      * The number of rectangles to draw.
@@ -54,7 +59,14 @@ public class RectangleBar extends BasicGameObject implements DrawListener {
     /**
      * Whether we should show a summarizing number at the end of the bar.
      */
-    private final boolean showNumber;
+    @Setter
+    private boolean showNumber;
+
+    /**
+     * A label to show instead of the number at the end of the bar. Will only appear if 'showNumber' is false.
+     */
+    @Setter
+    private String label = null;
 
     /**
      * Creates a new RectangleBar with the given display values and actual value.
@@ -104,15 +116,6 @@ public class RectangleBar extends BasicGameObject implements DrawListener {
     }
 
     /**
-     * Sets the color of this bar.
-     *
-     * @param color The new color for this bar.
-     */
-    public void setColor (Color color) {
-        this.color = color;
-    }
-
-    /**
      * If present, returns the DrawListener associated with this GameObject. May be null.
      *
      * @return Either the DrawListener attached to this GameObject or null.
@@ -132,12 +135,14 @@ public class RectangleBar extends BasicGameObject implements DrawListener {
     @Override
     public void applyChanges (int width, int height, GraphicsPanel panel) {
         final int PER_STEP_OFFSET = this.width + padding;
-        final int CANVAS_WIDTH = 40;
+        final int CANVAS_WIDTH = 100;
         for (int i = 0; i < count; i++)
             panel.setRectangle(xPos + (PER_STEP_OFFSET * i) , yPos - this.height, this.width, this.height, color);
-        if (showNumber) {
-            BufferedImage buffer = Utils.imageFromText(new Font("Comic Sans", Font.BOLD, (int) (this.height * 0.8)), new Color(200, 200, 200), "(" + count + ")", CANVAS_WIDTH, this.height);
-            panel.addImage(xPos + (PER_STEP_OFFSET * count), yPos - (int) (this.height * 0.2) - this.height, CANVAS_WIDTH, this.height, buffer);
-        }
+        String text = null;
+        if (showNumber) text = "(" + count + ")";
+        if (label != null) text = label;
+        if (text == null) return;
+        BufferedImage buffer = Utils.imageFromText(new Font("Comic Sans", Font.BOLD, (int) (this.height * 0.8)), new Color(200, 200, 200), text, CANVAS_WIDTH, this.height);
+        panel.addImage(xPos + (PER_STEP_OFFSET * count), yPos - (int) (this.height * 0.2) - this.height, buffer.getWidth(), this.height, buffer);
     }
 }
