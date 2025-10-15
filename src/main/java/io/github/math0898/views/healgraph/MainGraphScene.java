@@ -116,11 +116,15 @@ public class MainGraphScene extends BasicScene {
             if (comp == 0) return 0;
             else return -1;
         });
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 5; i++) { // todo: Hotkeys to change number of healers.
             PlayerPlacard placard = new PlayerPlacard(results.get(i).actorName, 1920 / 16 + 100, positionOffset);
             placard.setRole("Healer");
             long maxHealing = results.getFirst().result();
+            // todo: Make color dynamic depending on a couple of thresholds.
             placard.modifyBar("Red Bar", (int) Math.round((results.get(i).result() * 10.0) / maxHealing));
+            placard.modifyBar("Red Bar", SpellQueries.EMERALD_COMMUNION.color);
+            placard.modifyBar("Green Bar", (int) (10 * encounter.percentageAlive(results.get(i).actorName)));
+            placard.modifyBar("Green Bar", SpellQueries.CONSUME_FLAME.color);
             game.addGameObject("Placard - " + results.get(i).actorName, placard);
             positionOffset += 160;
         }

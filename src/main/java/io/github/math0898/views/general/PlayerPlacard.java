@@ -116,6 +116,7 @@ public class PlayerPlacard extends BasicGameObject implements DrawListener {
         this.character = Utils.parseCharName(actorName);
         this.pos = new Vector(x, y, 0);
         subObjects.put("Player Icon", new PlayerIcon(actorName, ICON_WIDTH, ICON_HEIGHT, x + ICON_OFFSET_HOR, y + ICON_OFFSET_VERT));
+        // todo: Refactor to top/middle/bottom bars. Class needs to be generalized overall as well.
         subObjects.put("Red Bar", new RectangleBar(SpellQueries.CONSUME_FLAME.color, BARS_WIDTHS, BARS_HEIGHT, HOR_PADDING_BARS, grievousOffenses, x + ICON_OFFSET_HOR + (ICON_WIDTH / 2) + HOR_PADDING_BARS, y + VERT_OFFSET_BARS));
         subObjects.put("Yellow Bar", new RectangleBar(SpellQueries.PIETY.color, BARS_WIDTHS, BARS_HEIGHT, HOR_PADDING_BARS, moderateOffenses, x + ICON_OFFSET_HOR + (ICON_WIDTH / 2) + HOR_PADDING_BARS, y + VERT_OFFSET_BARS + BARS_HEIGHT + VERT_PADDING_BARS));
         subObjects.put("Green Bar", new RectangleBar(SpellQueries.EMERALD_COMMUNION.color, BARS_WIDTHS, BARS_HEIGHT, HOR_PADDING_BARS, notReallyOffenses, x + ICON_OFFSET_HOR + (ICON_WIDTH / 2) + HOR_PADDING_BARS, y + VERT_OFFSET_BARS + (BARS_HEIGHT + VERT_PADDING_BARS) * 2));
@@ -131,6 +132,18 @@ public class PlayerPlacard extends BasicGameObject implements DrawListener {
         RectangleBar recBar = (RectangleBar) subObjects.get(bar);
         if (recBar == null) return;
         recBar.add(amount);
+    }
+
+    /**
+     * Sets the color of the given bar.
+     *
+     * @param bar The bar to modify.
+     * @param color The color to change it to.
+     */
+    public void modifyBar (String bar, Color color) {
+        RectangleBar recBar = (RectangleBar) subObjects.get(bar);
+        if (recBar == null) return;
+        recBar.setColor(color);
     }
 
     /**

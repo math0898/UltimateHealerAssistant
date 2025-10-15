@@ -362,6 +362,24 @@ public class Encounter { // todo: Might be worthwhile during processing to creat
     }
 
     /**
+     * Computes the amount of time that a given player was alive into the fight as a percentage.
+     *
+     * @param actorName The name of the actor to consider.
+     * @return The percentage of time that they were alive into the pull.
+     */
+    public double percentageAlive (String actorName) {
+        if (!actorNames.contains(actorName)) return 0.0;
+        for (UnitDeathEntry ude : unitDeaths) {
+            if (ude.getUnitName().contains(actorName)) {
+                final long timeAlive = ude.getTime() - encounterStartMillis;
+                final long endTime = unitDeaths.getLast().getTime();
+                return timeAlive / (1.0f * (endTime - encounterStartMillis));
+            }
+        }
+        return 1.0; // Were not found in death list. Likely survived whole fight.
+    }
+
+    /**
      * Queries the timeline for when this specific spell appears. Returns a list of values that may be empty.
      *
      * @param spellName The name of the spell to query for.
