@@ -1,6 +1,5 @@
 package io.github.math0898.views.healgraph;
 
-import io.github.math0898.Main;
 import io.github.math0898.processing.Encounter;
 import io.github.math0898.processing.Graph;
 import io.github.math0898.processing.LogManager;

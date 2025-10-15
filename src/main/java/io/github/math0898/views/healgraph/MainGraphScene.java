@@ -117,7 +117,11 @@ public class MainGraphScene extends BasicScene {
             else return -1;
         });
         for (int i = 0; i < 5; i++) {
-            game.addGameObject("Placard - " + results.get(i).actorName, new PlayerPlacard(results.get(i).actorName, 1920 / 16 + 100, positionOffset));
+            PlayerPlacard placard = new PlayerPlacard(results.get(i).actorName, 1920 / 16 + 100, positionOffset);
+            placard.setRole("Healer");
+            long maxHealing = results.getFirst().result();
+            placard.modifyBar("Red Bar", (int) Math.round((results.get(i).result() * 10.0) / maxHealing));
+            game.addGameObject("Placard - " + results.get(i).actorName, placard);
             positionOffset += 160;
         }
         graphGameObject.setEncounter(encounter);
