@@ -1,10 +1,12 @@
 package io.github.math0898.processing.logentries;
 
 import io.github.math0898.utils.SpellDatabase;
+import lombok.Getter;
 
 /**
  * A HealEntry encapsulates the SPELL_HEAL event in raw log files.
  */
+@Getter
 public class HealEntry extends LogEntry {
 
     /**
@@ -42,6 +44,43 @@ public class HealEntry extends LogEntry {
      * Initializes the data contained within this entry.
      */
     protected void init () {
+//        0: 10/9/2025 19:16:43.664-5  SPELL_PERIODIC_HEAL
+//        1: Player-60-0F938807
+//        2: "Nillath-Stormrage-US"
+//        3: 0x511
+//        4: 0x80000000
+//        5: Player-3675-087A89DF
+//        6: "Heiderich-MoonGuard-US"
+//        7: 0x514
+//        8: 0x80000000
+//        9: 363534
+//        10: "Rewind"
+//        11: 0x40
+//        12: Player-3675-087A89DF
+//        13: 0000000000000000
+//        14: 18438480
+//        15: 18438480
+//        16: 168045
+//        17: 12359
+//        18: 107790
+//        19: 2454
+//        20: 165
+//        21: 0
+//        22: 1
+//        23: 727
+//        24: 1300
+//        25: 0
+//        26: 1875.78
+//        27: 4476.94
+//        28: 2465
+//        29: 0.7173
+//        30: 720
+//        31: 781595 // Total heal?
+//        32: 781595
+//        33: 61494 // Overheal.
+//        34: 0
+//        35: nil
+        // https://www.warcraftlogs.com/reports/JQx7ZRHC6GmYfhPN?fight=1&view=events&pins=2%24Off%24%23244F4B%24healing%24-1%24261326855.0.0.Evoker%240.0.0.Any%24true%24142248415.0.0.Warrior%24true%240
         String[] lines = data.split(",");
         caster = lines[2].replace("\"", "");
         long spellId = Long.parseLong(lines[9]);
@@ -54,46 +93,10 @@ public class HealEntry extends LogEntry {
     }
 
     /**
-     * Returns the spell name responsible for this heal event.
-     *
-     * @return The spell name for this heal event.
-     */
-    public String getSpellName () {
-        return spellName;
-    }
-
-    /**
-     * Returns the caster responsible for this heal event.
-     *
-     * @return The caster that created this heal event.
-     */
-    public String getCaster () {
-        return caster;
-    }
-
-    /**
      * Prints a summary of this entry to System.out.
      */
     public void summarize () {
         System.out.println("Heal: " + heal + ". Overheal " + overheal);
-    }
-
-    /**
-     * Accessor method to the amount of healing contained in this entry.
-     *
-     * @return The amount of healing.
-     */
-    public long getHeal () {
-        return heal;
-    }
-
-    /**
-     * Accessor method to the amount of overhealing contained in this entry.
-     *
-     * @return The amount of overhealing.
-     */
-    public long getOverheal () {
-        return overheal;
     }
 
     /**

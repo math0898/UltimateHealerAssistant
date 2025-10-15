@@ -249,7 +249,67 @@ public class Encounter { // todo: Might be worthwhile during processing to creat
             if (log.getTime() < (startTime + entries.getFirst().getTime())) continue;
             if (log instanceof HealEntry heal)
                 if (heal.getCaster().contains(casterName))
-                    total += heal.getHeal() + heal.getOverheal();
+                    total += heal.getHeal();
+        }
+        return total;
+    }
+
+    /**
+     * Calculates the total healing from a specific caster over the entire encounter.
+     *
+     * @param casterName The name of the caster to query for.
+     * @return The amount of healing done by this caster.
+     */
+    public long queryTotalHealingByCaster (String casterName) {
+        return queryTotalHealingByCaster(casterName, 0, encounterLengthMillis());
+    }
+
+    /**
+     * Calculates the total healing from a specific caster within the given time window.
+     *
+     * @param casterName The name of the caster to query for.
+     * @param startTime  The time to start at.
+     * @param length     The amount of time to look after the start time.
+     */
+    public long queryTotalHealingByCaster (String casterName, long startTime, long length) {
+        long total = 0;
+        for (LogEntry log : entries) {
+            // Logs are sorted by time by construction. So we can safely stop searching once we break past the search bounds.
+            if (log.getTime() > (startTime + encounterStartMillis) + length) break;
+            if (log.getTime() < (startTime + entries.getFirst().getTime())) continue;
+            if (log instanceof HealEntry heal)
+                if (heal.getCaster().contains(casterName))
+                    total += heal.getTotalHeal();
+        }
+        return total;
+    }
+
+    /**
+     * Calculates the overhealing from a specific caster over the entire encounter.
+     *
+     * @param casterName The name of the caster to query for.
+     * @return The amount of healing done by this caster.
+     */
+    public long queryOverhealingByCaster (String casterName) {
+        return queryOverhealingByCaster(casterName, 0, encounterLengthMillis());
+    }
+
+    /**
+     * Calculates the total healing from a specific caster within the given time window.
+     *
+     * @param casterName The name of the caster to query for.
+     * @param startTime  The time to start at.
+     * @param length     The amount of time to look after the start time.
+     */
+    public long queryOverhealingByCaster (String casterName, long startTime, long length) {
+        long total = 0;
+        for (LogEntry log : entries) {
+            // Logs are sorted by time by construction. So we can safely stop searching once we break past the search bounds.
+            if (log.getTime() > (startTime + encounterStartMillis) + length) break;
+            if (log.getTime() < (startTime + entries.getFirst().getTime())) continue;
+            if (log instanceof HealEntry heal)
+                if (heal.getCaster().contains(casterName))
+                    total += heal.getOverheal();
         }
         return total;
     }

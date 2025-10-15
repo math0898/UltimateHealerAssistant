@@ -56,6 +56,26 @@ public class HealAbsorbEntry extends HealEntry {
     }
 
     /**
+     * Accessor method to get the actual healing contained in this entry.
+     *
+     * @return The real healing contained in this entry.
+     */
+    @Override
+    public long getHeal () {
+        return absorbed + heal;
+    }
+
+    /**
+     * Accessor method to get the real overhealing contained in this entry.
+     *
+     * @return The overhealing contained in this entry.
+     */
+    @Override
+    public long getOverheal () {
+        return overheal;
+    }
+
+    /**
      * Accessor method to the total amount of healing contained in this entry.
      *
      * @return The total amount of healing.

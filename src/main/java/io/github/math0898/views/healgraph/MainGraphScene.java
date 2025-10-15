@@ -74,11 +74,11 @@ public class MainGraphScene extends BasicScene {
     private void addGameObjects (Game game) {
         game.addGameObject("Main Graph", graphGameObject);
         game.addGameObject("Encounter Indicator", new EncounterIndicator());
-        game.addGameObject("Pres Icon", new SpecIcon(0, "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/icons/classicon_evoker_preservation.jpg"));
-        game.addGameObject("Holy Icon", new SpecIcon(70, "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/icons/spell_holy_guardianspirit.jpg"));
-        game.addGameObject("Disc Icon", new SpecIcon(140, "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/icons/spell_holy_powerwordshield.jpg"));
-        game.addGameObject("Resto Icon", new SpecIcon(210, "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/icons/inv_1115_shaman_chainheal.jpg"));
-        game.addGameObject("Resto Druid Icon", new SpecIcon(280, "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/icons/talentspec_druid_restoration.jpg"));
+//        game.addGameObject("Pres Icon", new SpecIcon(0, "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/icons/classicon_evoker_preservation.jpg"));
+//        game.addGameObject("Holy Icon", new SpecIcon(70, "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/icons/spell_holy_guardianspirit.jpg"));
+//        game.addGameObject("Disc Icon", new SpecIcon(140, "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/icons/spell_holy_powerwordshield.jpg"));
+//        game.addGameObject("Resto Icon", new SpecIcon(210, "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/icons/inv_1115_shaman_chainheal.jpg"));
+//        game.addGameObject("Resto Druid Icon", new SpecIcon(280, "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/icons/talentspec_druid_restoration.jpg"));
         game.addGameObject("Pres Engulf", new CastIndicator(SpellQueries.CONSUME_FLAME, 0));
         game.addGameObject("Pres Rewind", new CastIndicator(SpellQueries.REWIND, 30));
         game.addGameObject("Pres Emerald Communion", new CastIndicator(SpellQueries.EMERALD_COMMUNION, 60));
@@ -92,7 +92,7 @@ public class MainGraphScene extends BasicScene {
         game.addGameObject("Druid Tranquility", new CastIndicator(SpellQueries.TRANQUILITY, 0));
     }
 
-    private static record HealingResult (String actorName, long result) { }
+    private record HealingResult (String actorName, long healing, long overhealing) { }
 
     /**
      * Forces the graph to update.
@@ -108,35 +108,52 @@ public class MainGraphScene extends BasicScene {
         List<HealingResult> results = new ArrayList<>();
         for (String actor : encounter.getActors()) {
             if (!actor.contains("-")) continue; // Likely not a player.
-            long output = encounter.queryHealingByCaster(actor.split("-")[0]);
-            results.add(new HealingResult(actor, output));
+            long healing = encounter.queryHealingByCaster(actor.split("-")[0]);
+            long overhealing = encounter.queryOverhealingByCaster(actor.split("-")[0]);
+            results.add(new HealingResult(actor, healing, overhealing));
         }
         results.sort((r1, r2) -> {
-            long comp = r2.result - r1.result;
+            long comp = r2.healing - r1.healing;
             if (comp > 0) return 1;
             if (comp == 0) return 0;
             else return -1;
         });
-        final long maxHealing = results.getFirst().result();
-        for (int i = 0; i < 5; i++) { // todo: Hotkeys to change number of healers.
+        final long maxHealing = results.getFirst().healing;
+        for (int i = 0; i < 5 && i < results.size(); i++) { // todo: Hotkeys to change number of healers.
             HealingResult result = results.get(i);
             PlayerPlacard placard = new PlayerPlacard(result.actorName, 1920 / 16 + 100, positionOffset);
             placard.setRole("Healer");
             // todo: Make color dynamic depending on a couple of thresholds.
 
-            double healThreshold = result.result() * 1.0 / maxHealing;
+            double healThreshold = result.healing * 1.0 / maxHealing;
             placard.modifyBar("Red Bar", (int) Math.round(healThreshold * 10));
 
             if (healThreshold >= 0.85) placard.modifyBar("Red Bar", SpellQueries.EMERALD_COMMUNION.color);
             else if (healThreshold >= 0.65) placard.modifyBar("Red Bar", SpellQueries.PIETY.color);
             else placard.modifyBar("Red Bar", SpellQueries.CONSUME_FLAME.color);
 
-            String healAmount = NumberFormat.getInstance().format(result.result).substring(0, 3);
-            if (result.result >= 1000000000000L) healAmount += "t";
-            else if (result.result >= 1000000000L) healAmount += "b";
-            else if (result.result >= 1000000L) healAmount += "m";
-            else if (result.result >= 1000L) healAmount += "k";
+            String healAmount = NumberFormat.getInstance().format(result.healing);
+            healAmount = healAmount.substring(0, Math.min(3, healAmount.length()));
+            if (result.healing >= 1000000000000L) healAmount += "t";
+            else if (result.healing >= 1000000000L) healAmount += "b";
+            else if (result.healing >= 1000000L) healAmount += "m";
+            else if (result.healing >= 1000L) healAmount += "k";
             placard.modifyBar("Red Bar", healAmount);
+
+            double overhealingPercentage = result.overhealing * 1.0 / result.healing;
+            placard.modifyBar("Yellow Bar", (int) (Math.round(healThreshold * 10) * overhealingPercentage));
+
+            if (overhealingPercentage >= 0.5) placard.modifyBar("Yellow Bar", SpellQueries.CONSUME_FLAME.color);
+            else if (overhealingPercentage >= 0.3) placard.modifyBar("Yellow Bar", SpellQueries.PIETY.color);
+            else placard.modifyBar("Yellow Bar", SpellQueries.EMERALD_COMMUNION.color);
+
+            String overhealAmount = NumberFormat.getInstance().format(result.overhealing);
+            overhealAmount = overhealAmount.substring(0, Math.min(3, overhealAmount.length()));
+            if (result.overhealing >= 1000000000000L) overhealAmount += "t";
+            else if (result.overhealing >= 1000000000L) overhealAmount += "b";
+            else if (result.overhealing >= 1000000L) overhealAmount += "m";
+            else if (result.overhealing >= 1000L) overhealAmount += "k";
+            placard.modifyBar("Yellow Bar", overhealAmount);
 
             double percentageAlive = encounter.percentageAlive(result.actorName);
             placard.modifyBar("Green Bar", (int) (10 * percentageAlive));
@@ -163,34 +180,34 @@ public class MainGraphScene extends BasicScene {
         if (pressed) logger.log("Clicked at " + pos + "!", Level.VERBOSE);
         else logger.log("Click released at " + pos + "!", Level.VERBOSE);
         if (pressed) {
-            if (pos.x < (1920 / 16) + 56 && pos.x > (1920 / 16)) {
-                if (pos.y > 1080 / 8 + 30 && pos.y < 1080 / 8 + 30 + 56) {
-                    graphGameObject.toggleSpec("pres");
-                    ((CastIndicator) game.getGameObject("Pres Engulf")).toggle();
-                    ((CastIndicator) game.getGameObject("Pres Rewind")).toggle();
-                    ((CastIndicator) game.getGameObject("Pres Emerald Communion")).toggle();
-                }
-                if (pos.y > 1080 / 8 + 30 + 70 && pos.y < 1080 / 8 + 30 + 70 + 56) {
-                    graphGameObject.toggleSpec("holy");
-                    ((CastIndicator) game.getGameObject("Holy Divine Hymn")).toggle();
-                }
-                if (pos.y > 1080 / 8 + 30 + 140 && pos.y < 1080 / 8 + 30 + 140 + 56) {
-                    graphGameObject.toggleSpec("disc");
-                    ((CastIndicator) game.getGameObject("Disc Evangelism")).toggle();
-                    ((CastIndicator) game.getGameObject("Disc Piety")).toggle();
-//                    ((CastIndicator) game.getGameObject("Disc Atonement")).toggle();
-                }
-                if (pos.y > 1080 / 8 + 30 + 210 && pos.y < 1080 / 8 + 30 + 210 + 56) {
-                    graphGameObject.toggleSpec("resto");
-                    ((CastIndicator) game.getGameObject("Resto Healing Tide")).toggle();
-                    ((CastIndicator) game.getGameObject("Resto Spirit Link")).toggle();
-                }
-                if (pos.y > 1080 / 8 + 30 + 280 && pos.y < 1080 / 8 + 30 + 280 + 56) {
-                    graphGameObject.toggleSpec("druid");
-//                    ((CastIndicator) game.getGameObject("Druid Regrowth")).toggle();
-                    ((CastIndicator) game.getGameObject("Druid Tranquility")).toggle();
-                }
-            }
+//            if (pos.x < (1920 / 16) + 56 && pos.x > (1920 / 16)) {
+//                if (pos.y > 1080 / 8 + 30 && pos.y < 1080 / 8 + 30 + 56) {
+//                    graphGameObject.toggleSpec("pres");
+//                    ((CastIndicator) game.getGameObject("Pres Engulf")).toggle();
+//                    ((CastIndicator) game.getGameObject("Pres Rewind")).toggle();
+//                    ((CastIndicator) game.getGameObject("Pres Emerald Communion")).toggle();
+//                }
+//                if (pos.y > 1080 / 8 + 30 + 70 && pos.y < 1080 / 8 + 30 + 70 + 56) {
+//                    graphGameObject.toggleSpec("holy");
+//                    ((CastIndicator) game.getGameObject("Holy Divine Hymn")).toggle();
+//                }
+//                if (pos.y > 1080 / 8 + 30 + 140 && pos.y < 1080 / 8 + 30 + 140 + 56) {
+//                    graphGameObject.toggleSpec("disc");
+//                    ((CastIndicator) game.getGameObject("Disc Evangelism")).toggle();
+//                    ((CastIndicator) game.getGameObject("Disc Piety")).toggle();
+////                    ((CastIndicator) game.getGameObject("Disc Atonement")).toggle();
+//                }
+//                if (pos.y > 1080 / 8 + 30 + 210 && pos.y < 1080 / 8 + 30 + 210 + 56) {
+//                    graphGameObject.toggleSpec("resto");
+//                    ((CastIndicator) game.getGameObject("Resto Healing Tide")).toggle();
+//                    ((CastIndicator) game.getGameObject("Resto Spirit Link")).toggle();
+//                }
+//                if (pos.y > 1080 / 8 + 30 + 280 && pos.y < 1080 / 8 + 30 + 280 + 56) {
+//                    graphGameObject.toggleSpec("druid");
+////                    ((CastIndicator) game.getGameObject("Druid Regrowth")).toggle();
+//                    ((CastIndicator) game.getGameObject("Druid Tranquility")).toggle();
+//                }
+//            }
         }
     }
 }
