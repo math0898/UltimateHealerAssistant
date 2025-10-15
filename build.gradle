@@ -10,6 +10,7 @@ file("secrets.properties").withInputStream { secrets.load(it) }
 
 repositories {
     mavenCentral()
+    mavenLocal()
     maven {
         name = "GitHubPackages"
         url = uri("https://maven.pkg.github.com/math0898/SugaEngine")

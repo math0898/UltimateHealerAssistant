@@ -61,6 +61,7 @@ public class Main {
         LogManager logManager = LogManager.getInstance();
         logManager.processFile(loadFile);
         long endTime = System.currentTimeMillis(); // todo: Mouseover Abilities, names.
-        GameEngine.getLogger().log("Found " + logManager.getEncounterCount() + " encounters. Took: " + NumberFormat.getInstance().format((endTime - startTime)) + "ms");
+        final String formattedTime = NumberFormat.getInstance().format(endTime - startTime);
+        GameEngine.getLogger().log("Found " + logManager.getEncounterCount() + " encounters. Took: " + formattedTime + "ms");
     }
 }

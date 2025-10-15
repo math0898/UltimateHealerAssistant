@@ -60,10 +60,16 @@ public class UltimateHealerAssistantGame extends BasicGame {
             loadedScene.mouseInput(e.getPoint(), e.paramString().startsWith("MOUSE_PRESSED"));
         }
         Stack<KeyValue> keys = keyListener.getKeyPresses();
-        while (!keys.isEmpty())
-            loadedScene.keyboardInput(keys.pop(), true);
+        while (!keys.isEmpty()) {
+            KeyValue val = keys.pop();
+            if (val == null) return;
+            loadedScene.keyboardInput(val, true);
+        }
         keys = keyListener.getKeyReleases();
-        while (!keys.isEmpty())
-            loadedScene.keyboardInput(keys.pop(), false);
+        while (!keys.isEmpty()) {
+            KeyValue val = keys.pop();
+            if (val == null) return;
+            loadedScene.keyboardInput(val, false);
+        }
     }
 }
