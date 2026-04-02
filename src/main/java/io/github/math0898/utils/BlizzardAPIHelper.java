@@ -106,7 +106,7 @@ public class BlizzardAPIHelper {
             JsonNode node = mapper.readTree(response.body());
             String avatarUrl = node.get("assets").get(0).get("value").asText();
             return ImageIO.read(URI.create(avatarUrl).toURL());
-        } catch (InterruptedException | IOException exception) {
+        } catch (Exception exception) {
             GameEngine.getLogger().log(exception);
             return null;
         }

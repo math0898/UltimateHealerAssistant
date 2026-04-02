@@ -124,7 +124,7 @@ public class GraphGameObject extends BasicGameObject implements  DrawListener {
             if (encounter == null) return;
             Graph graph = encounter.graph(encounter.encounterLengthMillis() / timeStepCount, SCALE);
             Color[] colors = {new Color(51, 147, 127), new Color(255, 255, 255), new Color(255, 244, 104), new Color(0, 112, 221), new Color(255, 125, 10)};
-            Boolean pres = specs.get("pres");
+            Boolean pres = true; // specs.get("pres");
             Boolean holy = specs.get("holy");
             Boolean disc = specs.get("disc");
             Boolean resto = specs.get("resto");

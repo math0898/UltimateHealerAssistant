@@ -16,8 +16,8 @@ import java.text.NumberFormat;
 
 public class Main {
 
-    public final static String TEST_FILE = "/home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/testfiles/Archive-WoWCombatLog-100925_185651.txt";
-
+//    public final static String TEST_FILE = "/backupdisk/RootFeb2025/home/sugaku/.var/app/com.usebottles.bottles/data/bottles/bottles/Battle.net/drive_c/Program Files (x86)/World of Warcraft/_retail_/Logs/warcraftlogsarchive/Archive-WoWCombatLog-011426_185536.txt";
+    public final static String TEST_FILE = "/home/sugaku/BlizzardGames/World of Warcraft/_retail_/Logs/warcraftlogsarchive/Archive-WoWCombatLog-031826_192547.txt";
     /**
      * The active file to load.
      */
@@ -26,7 +26,8 @@ public class Main {
     public static void main(String[] args) {
         GameEngine.getLogger().setLevel(Level.DEBUG);
         if (loadFile != null) analyzeFile();
-        gui();
+        gui(); // /home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/testfiles/Archive-WoWCombatLog-101525_185918.txt
+        // /home/sugaku/.var/app/com.usebottles.bottles/data/bottles/bottles/Battle.net/drive_c/Program Files (x86)/World of Warcraft/_retail_/Logs
     }
 
     /**
