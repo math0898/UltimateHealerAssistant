@@ -1,7 +1,11 @@
 package io.github.math0898.utils;
 
+import suga.engine.GameEngine;
+import suga.engine.logger.Level;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
@@ -24,15 +28,20 @@ public class Utils {
      * @return The time in millis since epoch.
      */
     public static long millisFromLogTime (String data) {
-        String date = data.replaceAll("  .+", "");
-        String offset;
-        if (date.contains("-")) offset = "-";
-        else offset = "\\+";
-        String zone = offset + "0" + date.replaceAll(".+" + offset, "");
-        date = date.replaceAll("-\\d", "");
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yyyy HH:mm:ss.SSS").withZone(ZoneId.of(zone)); // todo: 2 digit dates?
-        LocalDateTime dateTime = LocalDateTime.parse(date, formatter);
-        return dateTime.toInstant(ZoneOffset.of(zone)).toEpochMilli();
+        try {
+            String date = data.replaceAll("  .+", "");
+            String offset;
+            if (date.contains("-")) offset = "-";
+            else offset = "\\+";
+            String zone = offset + "0" + date.replaceAll(".+" + offset, "");
+            date = date.replaceAll("-\\d", "");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yyyy HH:mm:ss.SSS").withZone(ZoneId.of(zone)); // todo: 2 digit dates?
+            LocalDateTime dateTime = LocalDateTime.parse(date, formatter);
+            return dateTime.toInstant(ZoneOffset.of(zone)).toEpochMilli();
+        } catch (DateTimeException exception) {
+            GameEngine.getLogger().log(exception.getMessage(), Level.EXCEPTION);
+            return 0;
+        }
     }
 
     /**

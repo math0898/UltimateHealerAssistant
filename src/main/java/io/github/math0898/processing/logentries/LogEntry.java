@@ -1,13 +1,14 @@
 package io.github.math0898.processing.logentries;
 
 import io.github.math0898.utils.Utils;
+import lombok.Getter;
 
 /**
  * Represents a single activity in an Encounter.
  *
  * @author Sugaku
  */
-public abstract class LogEntry {
+public class LogEntry {
 
     /**
      * The data contained in this LogEntry.
@@ -16,7 +17,12 @@ public abstract class LogEntry {
 
     /**
      * The time at which this log occurs.
+     * -- GETTER --
+     *  Accessor method for the time this log entry occurred at.
+     *
+     * @return The time in millis since epoch this event occurred.
      */
+    @Getter
     protected final long time;
 
     /**
@@ -30,11 +36,14 @@ public abstract class LogEntry {
     }
 
     /**
-     * Accessor method for the time this log entry occurred at.
+     * Turns this LogEntry into it's string version.
      *
-     * @return The time in millis since epoch this event occurred.
+     * @return A string version of this LogEntry.
      */
-    public long getTime () {
-        return time;
+    @Override
+    public String toString () {
+        return "LogEntry{" +
+                "data='" + data + '\'' +
+                '}';
     }
 }

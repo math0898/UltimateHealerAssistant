@@ -59,6 +59,12 @@ public class Encounter { // todo: Might be worthwhile during processing to creat
     private final List<String> actorNames = new ArrayList<>();
 
     /**
+     * A List of raw encounter with no specific type.
+     */
+    @Getter
+    private final List<LogEntry> rawEntries = new ArrayList<>();
+
+    /**
      * Creates a new Encounter with the given data.
      *
      * @param data This encounter as written in a log file.
@@ -84,6 +90,7 @@ public class Encounter { // todo: Might be worthwhile during processing to creat
             else if (line.contains(" ENCOUNTER_START")) processEncounterStart(line);
             else if (line.contains(" ENCOUNTER_END")) processEncounterEnd(line);
             else if (line.contains(" UNIT_DIED")) unitDeaths.add(new UnitDeathEntry(line));
+            rawEntries.add(new LogEntry(line));
         }
         data = null;
         unitDeaths.sort((u1, u2) -> {
