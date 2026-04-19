@@ -75,7 +75,7 @@ public class Scripting {
                 if (logTime > currentGroupStartMillis + GROUP_EPSILON_MILLIS) {
                     group++;
                     currentGroupStartMillis = logTime;
-                    if (currentGroup.isEmpty()) GameEngine.getLogger().log("All players soaked!", Level.INFO, false);
+                    if (currentGroup.isEmpty()) GameEngine.getLogger().log("Set " + group + ": All players soaked!", Level.INFO, false);
                     else {
                         StringBuilder builder = new StringBuilder();
                         for (String s : currentGroup)
@@ -87,7 +87,7 @@ public class Scripting {
 
                 // This current event happened during this group. Note the frame has already shifted if it needs to have been.
                 if (!currentGroup.removeIf((s -> entry.toString().contains(s))))
-                    GameEngine.getLogger().log("Did " + entry + " soak out of turn?", Level.WARNING);
+                    GameEngine.getLogger().log("Set " + group + ": Did " + entry + " soak out of turn?", Level.WARNING);
             }
         }
     }
