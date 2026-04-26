@@ -4,6 +4,7 @@ import io.github.math0898.game.UltimateHealerAssistantGame;
 import io.github.math0898.game.UltimateHealerAssistantGameKeyListener;
 import io.github.math0898.game.UltimateMouseListener;
 import io.github.math0898.processing.LogManager;
+import io.github.math0898.utils.ColorPalette;
 import suga.engine.GameEngine;
 import suga.engine.game.BasicGame;
 import suga.engine.graphics.Graphics2d;
@@ -49,7 +50,7 @@ public class Main {
         BasicGame game = new UltimateHealerAssistantGame(graphicsPanel, gameKeyListener, gameMouseListener);
         game.setPanel(graphicsPanel);
         GameEngine.launchGameWindow(1920, 1000, "Ultimate Healer Assistant", true, graphicsPanel,
-                Color.getHSBColor(0, 0, 0.05f), 30, 30, gameKeyListener, gameMouseListener, game);
+                ColorPalette.BACKGROUND.getColor(), 30, 30, gameKeyListener, gameMouseListener, game);
         game.loadScene("main");
     }
 

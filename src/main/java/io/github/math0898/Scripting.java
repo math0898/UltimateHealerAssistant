@@ -44,6 +44,7 @@ public class Scripting {
                 Arrays.asList("") // Overflow protection
         );
 
+        String FILE_PATH = "/home/sugaku/BlizzardGames/World of Warcraft/_retail_/Logs/warcraftlogsarchive/Archive-WoWCombatLog-041626_185655.txt";
         LogManager.getInstance().processFile(FILE_PATH);
         int i = 0;
         for (Encounter e : LogManager.getInstance().getAllEncounters()) {
