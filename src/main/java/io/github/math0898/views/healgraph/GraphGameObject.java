@@ -22,7 +22,7 @@ import static io.github.math0898.utils.ColorPalette.*;
  *
  * @author Sugaku
  */
-public class GraphGameObject extends BasicGameObject implements  DrawListener {
+public class GraphGameObject extends BasicGameObject implements DrawListener {
 
     /**
      * The encounter to graph.
@@ -120,32 +120,30 @@ public class GraphGameObject extends BasicGameObject implements  DrawListener {
     @Override
     public void runLogic () {
         if (recompute) {
-            final int timeStepCount = ((targetWidth * 3) / 4) / 10;
-            if (timeStepCount == 0) return;
-            final long timeStepSize = encounter.encounterLengthMillis() / timeStepCount;
-            if (encounter == null) return;
-            Graph graph = encounter.graph(encounter.encounterLengthMillis() / timeStepCount, SCALE);
+            final long timeStepSize = computeTimeStepSize();
+            if (timeStepSize == -1) return;
+            Graph graph = encounter.graph(timeStepSize, SCALE);
             Boolean pres = specs.get("pres");
             Boolean holy = specs.get("holy");
             Boolean disc = specs.get("disc");
-            Boolean resto = true; // specs.get("resto");
+            Boolean resto = specs.get("resto");
             Boolean druid = specs.get("druid");
             Boolean pally = specs.get("pally");
             if (pres != null && pres) {
                 for (SpellQueries spell : new SpellQueries[]{SpellQueries.CONSUME_FLAME, SpellQueries.EMERALD_COMMUNION, SpellQueries.REWIND})
                     graph.addStackedAscent(new AscentBar(Utils.scaleList(encounter.queryHealingInstantsBySpell(spell.spellName, timeStepSize), SCALE), spell.color));
-                graph.addAscent(new AscentBar(Utils.scaleList(encounter.queryHealingInstantsByCaster("Nillath", timeStepSize), SCALE), CLASS_EVOKER.getColor()));
+                addCasterAscent(graph, "Nillath", CLASS_EVOKER.getColor());
             }
             if (holy != null && holy){
                 for (SpellQueries spell : new SpellQueries[]{SpellQueries.DIVINE_HYMN, SpellQueries.PIETY})
                     graph.addStackedAscent(new AscentBar(Utils.scaleList(encounter.queryHealingInstantsBySpell(spell.spellName, timeStepSize), SCALE), spell.color));
-                graph.addAscent(new AscentBar(Utils.scaleList(encounter.queryHealingInstantsByCaster("Seranite", timeStepSize), SCALE), CLASS_PRIEST.getColor()));
+                addCasterAscent(graph, "Seranite", CLASS_PRIEST.getColor());
             }
             if (disc != null && disc) {
                 // todo: disc priest is special with their cooldowns.
                 for (SpellQueries spell : new SpellQueries[]{SpellQueries.PIETY, SpellQueries.ATONEMENT, SpellQueries.EVANGELISM})
                     graph.addStackedAscent(new AscentBar(Utils.scaleList(encounter.queryHealingInstantsBySpell(spell.spellName, timeStepSize), SCALE), spell.color));
-                graph.addAscent(new AscentBar(Utils.scaleList(encounter.queryHealingInstantsByCaster("Skullz", timeStepSize), SCALE), CLASS_PRIEST.getColor()));
+                addCasterAscent(graph, "Skullz", CLASS_PRIEST.getColor());
             }
             if (resto != null && resto) {
                 graph.addStackedAscent(new AscentBar(Utils.scaleList(encounter.queryHealingInstantsBySpell(SpellQueries.SPIRIT_LINK.spellName, timeStepSize), SCALE), SpellQueries.SPIRIT_LINK.color));
@@ -156,16 +154,39 @@ public class GraphGameObject extends BasicGameObject implements  DrawListener {
             }
             if (druid != null && druid) {
                 graph.addStackedAscent(new AscentBar(Utils.scaleList(encounter.queryHealingInstantsBySpell(SpellQueries.TRANQUILITY.spellName, timeStepSize), SCALE), SpellQueries.TRANQUILITY.color));
-                graph.addAscent(new AscentBar(Utils.scaleList(encounter.queryHealingInstantsByCaster("Skullz", timeStepSize), SCALE), CLASS_DRUID.getColor()));
+                addCasterAscent(graph, "Skullz", CLASS_DRUID.getColor());
             }
-            if (pally != null && pally) {
-//                graph.addStackedAscent(new AscentBar(Utils.scaleList(encounter.queryHealingInstantsBySpell(SpellQueries.TRANQUILITY.spellName, timeStepSize), SCALE), SpellQueries.TRANQUILITY.color));
-                graph.addAscent(new AscentBar(Utils.scaleList(encounter.queryHealingInstantsByCaster("Skullz", timeStepSize), SCALE), CLASS_PALADIN.getColor()));
-            }
+            if (pally != null && pally)
+                addCasterAscent(graph,  "Skullz", CLASS_PALADIN.getColor());
             graph.smooth(1);
             recompute = false;
             this.graph = graph;
         }
+    }
+
+    /**
+     * A quick method to calculate how large, in millis, each square is in the time dimension.
+     */
+    private long computeTimeStepSize () {
+        final int timeStepCount = ((targetWidth * 3) / 4) / 10;
+        if (timeStepCount == 0 || encounter == null) return -1;
+        return encounter.encounterLengthMillis() / timeStepCount;
+    }
+
+    /**
+     * Adds a caster of the given name as an ascent bar.
+     *
+     * @param graph The graph object to modify.
+     * @param casterName The name of the caster. Note this is used by the {@link Encounter#queryHealingInstantsByCaster};
+     *                   in its current implementation it considers a casterName to match when it's contained within the
+     *                   actor name listed in logs.
+     * @param color The color of the ascent.
+     */ // todo: This feels kinda strange design wise. It feels like it should go in Graph but Graph has no relation to Encounter.
+    public void addCasterAscent (Graph graph, String casterName, Color color) {
+        final List<Long> healingInstants = encounter.queryHealingInstantsByCaster(casterName, computeTimeStepSize());
+        final List<Long> scaledHealingInstants = Utils.scaleList(healingInstants, SCALE);
+        final AscentBar bar = new AscentBar(scaledHealingInstants, color);
+        graph.addAscent(bar);
     }
 
     /**

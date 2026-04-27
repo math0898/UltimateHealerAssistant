@@ -2,6 +2,7 @@ package io.github.math0898.processing;
 
 import io.github.math0898.views.healgraph.AscentBar;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
