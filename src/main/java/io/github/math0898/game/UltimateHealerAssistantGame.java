@@ -28,14 +28,13 @@ public class UltimateHealerAssistantGame extends BasicGame {
     /**
      * Whether debugging is enabled for the game currently.
      */
+    @Getter
     private boolean debugging = false;
 
     /**
      * The active UltimateHealerAssistantGame instance that is running.
      * -- GETTER --
      *  Accessor method for the active game instance.
-     *
-     * @return The active game instance.
      */
     @Getter
     private static UltimateHealerAssistantGame instance;

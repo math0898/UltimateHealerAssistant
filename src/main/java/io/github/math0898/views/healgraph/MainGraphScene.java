@@ -1,5 +1,6 @@
 package io.github.math0898.views.healgraph;
 
+import io.github.math0898.game.Button;
 import io.github.math0898.processing.Encounter;
 import io.github.math0898.processing.LogManager;
 import io.github.math0898.views.general.PlayerPlacard;
@@ -21,6 +22,11 @@ public class MainGraphScene extends BasicScene {
      * The GraphGameObject that actually draws the graph.
      */
     private GraphGameObject graphGameObject;
+
+    /**
+     * A list of buttons that are involved in this MainGraphScene.
+     */
+    private final List<Button> buttons = new ArrayList<>();
 
     /**
      * Loads this scene into the given game.
@@ -162,7 +168,7 @@ public class MainGraphScene extends BasicScene {
             else placard.modifyBar("Green Bar", SpellQueries.CONSUME_FLAME.color);
             placard.modifyBar("Green Bar", encounter.getFormattedSurvivalTime(result.actorName));
 
-            game.addGameObject("Placard - " + result.actorName, placard);
+            game.addGameObject("Placard - " + result.actorName, placard); // todo: Register button and callback.
             positionOffset += 160;
         }
         graphGameObject.setEncounter(encounter);
@@ -179,7 +185,7 @@ public class MainGraphScene extends BasicScene {
         Logger logger = GameEngine.getLogger();
         if (pressed) logger.log("Clicked at " + pos + "!", Level.VERBOSE);
         else logger.log("Click released at " + pos + "!", Level.VERBOSE);
-        if (pressed) {
+        if (pressed) { // todo: Check buttons.
 //            if (pos.x < (1920 / 16) + 56 && pos.x > (1920 / 16)) {
 //                if (pos.y > 1080 / 8 + 30 && pos.y < 1080 / 8 + 30 + 56) {
 //                    graphGameObject.toggleSpec("pres");

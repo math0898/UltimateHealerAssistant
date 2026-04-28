@@ -1,5 +1,7 @@
 package io.github.math0898.views.general;
 
+import io.github.math0898.game.Button;
+import io.github.math0898.game.UltimateHealerAssistantGame;
 import io.github.math0898.utils.Utils;
 import io.github.math0898.views.healgraph.SpellQueries;
 import suga.engine.game.objects.BasicGameObject;
@@ -92,6 +94,11 @@ public class PlayerPlacard extends BasicGameObject implements DrawListener {
     private final Map<String, GameObject> subObjects = new HashMap<>();
 
     /**
+     * A button which should line up with this PlayerPlacard.
+     */
+    private final Button button;
+
+    /**
      * Creates a new PlayerIcon with the given realm slug and character name.
      *
      * @param actorName This is the name of the character as it appears in log files.
@@ -120,6 +127,8 @@ public class PlayerPlacard extends BasicGameObject implements DrawListener {
         subObjects.put("Red Bar", new RectangleBar(SpellQueries.CONSUME_FLAME.color, BARS_WIDTHS, BARS_HEIGHT, HOR_PADDING_BARS, grievousOffenses, x + ICON_OFFSET_HOR + (ICON_WIDTH / 2) + HOR_PADDING_BARS, y + VERT_OFFSET_BARS));
         subObjects.put("Yellow Bar", new RectangleBar(SpellQueries.PIETY.color, BARS_WIDTHS, BARS_HEIGHT, HOR_PADDING_BARS, moderateOffenses, x + ICON_OFFSET_HOR + (ICON_WIDTH / 2) + HOR_PADDING_BARS, y + VERT_OFFSET_BARS + BARS_HEIGHT + VERT_PADDING_BARS));
         subObjects.put("Green Bar", new RectangleBar(SpellQueries.EMERALD_COMMUNION.color, BARS_WIDTHS, BARS_HEIGHT, HOR_PADDING_BARS, notReallyOffenses, x + ICON_OFFSET_HOR + (ICON_WIDTH / 2) + HOR_PADDING_BARS, y + VERT_OFFSET_BARS + (BARS_HEIGHT + VERT_PADDING_BARS) * 2));
+        button = new Button(x, y, ICON_WIDTH + MAX_NAME_WIDTH, ICON_HEIGHT, null);
+        // todo: This doesn't fully sync with actual placard positioning.
     }
 
     /**
@@ -211,5 +220,9 @@ public class PlayerPlacard extends BasicGameObject implements DrawListener {
         BufferedImage buffer = Utils.imageFromText(font, new Color(200, 200, 200), character.toUpperCase(), Math.max(textWidth, MAX_NAME_WIDTH), 48);
         panel.addImage((int) pos.getX() + ICON_OFFSET_HOR + (ICON_WIDTH / 2) + HOR_PADDING_NAME,
                 (int) pos.getY() + VERT_OFFSET_NAME - 17, MAX_NAME_WIDTH, 48, buffer); // todo: These numbers need to be cleaned up.
+
+        if (UltimateHealerAssistantGame.getInstance().isDebugging()) {
+            panel.setRectangle(button.getPosX(), button.getPosY(), button.getWidth(), button.getHeight(), Color.CYAN);
+        }
     }
 }
