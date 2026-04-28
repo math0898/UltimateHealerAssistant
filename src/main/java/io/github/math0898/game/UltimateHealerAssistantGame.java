@@ -4,6 +4,7 @@ import io.github.math0898.views.encountersummary.EncounterSummaryScene;
 import io.github.math0898.views.fileselect.FileSelectionScene;
 import io.github.math0898.views.healgraph.MainGraphScene;
 import io.github.math0898.views.nightsummary.ProgOffencesScene;
+import lombok.Getter;
 import suga.engine.GameEngine;
 import suga.engine.game.BasicGame;
 import suga.engine.graphics.GraphicsPanel;
@@ -11,6 +12,7 @@ import suga.engine.input.keyboard.GameKeyListener;
 import suga.engine.input.keyboard.KeyValue;
 import suga.engine.input.mouse.BasicMouseListener;
 import suga.engine.logger.Level;
+import suga.engine.logger.Logger;
 
 import java.awt.event.MouseEvent;
 import java.util.Stack;
@@ -23,8 +25,18 @@ import java.util.Stack;
 public class UltimateHealerAssistantGame extends BasicGame {
 
     /**
-     * The active UltimateHealerAssistantGame instance that is running.
+     * Whether debugging is enabled for the game currently.
      */
+    private boolean debugging = false;
+
+    /**
+     * The active UltimateHealerAssistantGame instance that is running.
+     * -- GETTER --
+     *  Accessor method for the active game instance.
+     *
+     * @return The active game instance.
+     */
+    @Getter
     private static UltimateHealerAssistantGame instance;
 
     public UltimateHealerAssistantGame (GraphicsPanel panel, GameKeyListener listener, BasicMouseListener mouseListener) {
@@ -37,12 +49,19 @@ public class UltimateHealerAssistantGame extends BasicGame {
     }
 
     /**
-     * Accessor method for the active game instance.
-     *
-     * @return The active game instance.
+     * Toggles debugging mode for UltimateHealerAssistant.
      */
-    public static UltimateHealerAssistantGame getInstance () {
-        return  instance;
+    public void toggleDebug () {
+        Logger logger = GameEngine.getLogger();
+        if (debugging) { // Then disable
+            logger.setLevel(Level.INFO);
+            logger.log(this.getClass().getSimpleName() + ": Disabled debugging.", Level.INFO);
+            debugging = false;
+        } else { // Then enable.
+            logger.setLevel(Level.DEBUG);
+            logger.log(this.getClass().getSimpleName() + ": Enabled debugging.", Level.INFO);
+            debugging = true;
+        }
     }
 
     /**
@@ -51,7 +70,7 @@ public class UltimateHealerAssistantGame extends BasicGame {
     @Override
     public void processInput () {
         if (loadedScene == null) {
-            GameEngine.getLogger().log("BasicGame: No loaded scene. Cannot process inputs.", Level.WARNING);
+            GameEngine.getLogger().log("BasicGame: No loaded scene. Will not process inputs.", Level.WARNING);
             return;
         }
         Stack<MouseEvent> mice = mouseListener.getEvents();
@@ -63,7 +82,10 @@ public class UltimateHealerAssistantGame extends BasicGame {
         while (!keys.isEmpty()) {
             KeyValue val = keys.pop();
             if (val == null) return;
-            loadedScene.keyboardInput(val, true);
+            switch (val) {
+                case L -> UltimateHealerAssistantGame.getInstance().toggleDebug();
+                default -> loadedScene.keyboardInput(val, true);
+            }
         }
         keys = keyListener.getKeyReleases();
         while (!keys.isEmpty()) {

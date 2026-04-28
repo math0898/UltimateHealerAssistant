@@ -10,7 +10,6 @@ import suga.engine.game.BasicGame;
 import suga.engine.graphics.Graphics2d;
 import suga.engine.input.keyboard.GameKeyListener;
 import suga.engine.input.mouse.BasicMouseListener;
-import suga.engine.logger.Level;
 
 import java.awt.*;
 import java.text.NumberFormat;
@@ -25,7 +24,6 @@ public class Main {
     private static String loadFile = TEST_FILE;
 
     public static void main(String[] args) {
-        GameEngine.getLogger().setLevel(Level.DEBUG);
         if (loadFile != null) analyzeFile();
         gui(); // /home/sugaku/Development/Standalone/Java/UltimateHealerAssistant/testfiles/Archive-WoWCombatLog-101525_185918.txt
         // /home/sugaku/.var/app/com.usebottles.bottles/data/bottles/bottles/Battle.net/drive_c/Program Files (x86)/World of Warcraft/_retail_/Logs
