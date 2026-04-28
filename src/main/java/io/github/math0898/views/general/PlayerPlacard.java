@@ -39,7 +39,7 @@ public class PlayerPlacard extends BasicGameObject implements DrawListener {
     public static final int ICON_HEIGHT = 150;
 
     /**
-     * The horizontal width for the icon in the PLayer's placard.
+     * The horizontal width for the icon in the Player's placard.
      */
     public static final int ICON_WIDTH = 150;
 
@@ -54,7 +54,7 @@ public class PlayerPlacard extends BasicGameObject implements DrawListener {
     private static final int VERT_OFFSET_NAME = -75;
 
     /**
-     * The horizontal padding for the starting point of the offences bars. This is anchored horizontally to the icon.
+     * The horizontal padding for the starting point of the offenses bars. This is anchored horizontally to the icon.
      */
     private static final int HOR_PADDING_BARS = 3;
 
@@ -127,8 +127,7 @@ public class PlayerPlacard extends BasicGameObject implements DrawListener {
         subObjects.put("Red Bar", new RectangleBar(SpellQueries.CONSUME_FLAME.color, BARS_WIDTHS, BARS_HEIGHT, HOR_PADDING_BARS, grievousOffenses, x + ICON_OFFSET_HOR + (ICON_WIDTH / 2) + HOR_PADDING_BARS, y + VERT_OFFSET_BARS));
         subObjects.put("Yellow Bar", new RectangleBar(SpellQueries.PIETY.color, BARS_WIDTHS, BARS_HEIGHT, HOR_PADDING_BARS, moderateOffenses, x + ICON_OFFSET_HOR + (ICON_WIDTH / 2) + HOR_PADDING_BARS, y + VERT_OFFSET_BARS + BARS_HEIGHT + VERT_PADDING_BARS));
         subObjects.put("Green Bar", new RectangleBar(SpellQueries.EMERALD_COMMUNION.color, BARS_WIDTHS, BARS_HEIGHT, HOR_PADDING_BARS, notReallyOffenses, x + ICON_OFFSET_HOR + (ICON_WIDTH / 2) + HOR_PADDING_BARS, y + VERT_OFFSET_BARS + (BARS_HEIGHT + VERT_PADDING_BARS) * 2));
-        button = new Button(x, y, ICON_WIDTH + MAX_NAME_WIDTH, ICON_HEIGHT, null);
-        // todo: This doesn't fully sync with actual placard positioning.
+        button = new Button(x + ICON_OFFSET_HOR - (ICON_WIDTH / 2), y + VERT_OFFSET_NAME, ICON_WIDTH + MAX_NAME_WIDTH, ICON_HEIGHT, null);
     }
 
     /**
