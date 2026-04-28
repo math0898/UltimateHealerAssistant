@@ -2,6 +2,7 @@ package io.github.math0898.game;
 
 import io.github.math0898.views.encountersummary.EncounterSummaryScene;
 import io.github.math0898.views.fileselect.FileSelectionScene;
+import io.github.math0898.views.general.MouseIndicator;
 import io.github.math0898.views.healgraph.MainGraphScene;
 import io.github.math0898.views.nightsummary.ProgOffencesScene;
 import lombok.Getter;
@@ -56,10 +57,14 @@ public class UltimateHealerAssistantGame extends BasicGame {
         if (debugging) { // Then disable
             logger.setLevel(Level.INFO);
             logger.log(this.getClass().getSimpleName() + ": Disabled debugging.", Level.INFO);
+            MouseIndicator indicator = (MouseIndicator) objects.get("Mouse Indicator"); // Unsafe but should still work.
+            if (indicator != null) indicator.degenerate();
+            objects.remove("Mouse Indicator");
             debugging = false;
         } else { // Then enable.
             logger.setLevel(Level.DEBUG);
             logger.log(this.getClass().getSimpleName() + ": Enabled debugging.", Level.INFO);
+            addGameObject("Mouse Indicator", new MouseIndicator());
             debugging = true;
         }
     }
