@@ -108,6 +108,7 @@ public class MainGraphScene extends BasicScene {
         // ----
         // This is a workaround for the fact that SugaEngine 2.5.2 still hasn't implemented removing game objects.
         game.clear();
+        buttons.clear();
         addGameObjects(game);
         // ----
         int positionOffset = 180;
@@ -168,7 +169,13 @@ public class MainGraphScene extends BasicScene {
             else placard.modifyBar("Green Bar", SpellQueries.CONSUME_FLAME.color);
             placard.modifyBar("Green Bar", encounter.getFormattedSurvivalTime(result.actorName));
 
-            game.addGameObject("Placard - " + result.actorName, placard); // todo: Register button and callback.
+            game.addGameObject("Placard - " + result.actorName, placard);
+            final String actorName = result.actorName();
+            buttons.add(placard.getButton());
+            placard.getButton().replaceCallback(() -> {
+                graphGameObject.toggleCasterAscent(actorName);
+                return null;
+            });
             positionOffset += 160;
         }
         graphGameObject.setEncounter(encounter);
@@ -186,6 +193,8 @@ public class MainGraphScene extends BasicScene {
         if (pressed) logger.log("Clicked at " + pos + "!", Level.VERBOSE);
         else logger.log("Click released at " + pos + "!", Level.VERBOSE);
         if (pressed) { // todo: Check buttons.
+            for (Button b : buttons)
+                b.checkClick(pos.x, pos.y);
 //            if (pos.x < (1920 / 16) + 56 && pos.x > (1920 / 16)) {
 //                if (pos.y > 1080 / 8 + 30 && pos.y < 1080 / 8 + 30 + 56) {
 //                    graphGameObject.toggleSpec("pres");

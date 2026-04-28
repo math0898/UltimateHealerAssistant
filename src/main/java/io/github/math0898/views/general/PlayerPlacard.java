@@ -4,6 +4,7 @@ import io.github.math0898.game.Button;
 import io.github.math0898.game.UltimateHealerAssistantGame;
 import io.github.math0898.utils.Utils;
 import io.github.math0898.views.healgraph.SpellQueries;
+import lombok.Getter;
 import suga.engine.game.objects.BasicGameObject;
 import suga.engine.game.objects.GameObject;
 import suga.engine.graphics.DrawListener;
@@ -96,6 +97,7 @@ public class PlayerPlacard extends BasicGameObject implements DrawListener {
     /**
      * A button which should line up with this PlayerPlacard.
      */
+    @Getter
     private final Button button;
 
     /**

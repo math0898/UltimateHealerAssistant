@@ -76,6 +76,7 @@ public class Button {
      */
     public void checkClick (int x, int y) {
         if (x >= posX && x <= posX + width && y >= posY && y <= posY + height) {
+            GameEngine.getLogger().log("Button clicked!", Level.DEBUG);
             try {
                 callback.call();
             } catch (Exception e) {

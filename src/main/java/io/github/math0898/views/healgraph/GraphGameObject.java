@@ -4,11 +4,14 @@ import io.github.math0898.processing.Encounter;
 import io.github.math0898.processing.Graph;
 import io.github.math0898.processing.LogManager;
 import io.github.math0898.utils.Utils;
+import suga.engine.GameEngine;
 import suga.engine.game.objects.BasicGameObject;
 import suga.engine.graphics.DrawListener;
 import suga.engine.graphics.GraphicsPanel;
+import suga.engine.logger.Level;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,6 +70,11 @@ public class GraphGameObject extends BasicGameObject implements DrawListener {
     private Map<String, Boolean> specs = new HashMap<>();
 
     /**
+     * A list of casters which are being displayed on this GraphGameObject.
+     */
+    private final List<String> casters = new ArrayList<>();
+
+    /**
      * Called every drawing frame so programs have a chance to make their voices heard on what gets drawn.
      *
      * @param width  The width of the pixel map.
@@ -123,6 +131,12 @@ public class GraphGameObject extends BasicGameObject implements DrawListener {
             final long timeStepSize = computeTimeStepSize();
             if (timeStepSize == -1) return;
             Graph graph = encounter.graph(timeStepSize, SCALE);
+
+            for (String s : casters) {
+                GameEngine.getLogger().log("Caster -> " + s, Level.DEBUG);
+                addCasterAscent(graph, s, CLASS_EVOKER.getColor());
+            } // todo: Use some logic to determine color.
+
             Boolean pres = specs.get("pres");
             Boolean holy = specs.get("holy");
             Boolean disc = specs.get("disc");
@@ -173,6 +187,20 @@ public class GraphGameObject extends BasicGameObject implements DrawListener {
         final int timeStepCount = ((targetWidth * 3) / 4) / 10;
         if (timeStepCount == 0 || encounter == null) return -1;
         return encounter.encounterLengthMillis() / timeStepCount;
+    }
+
+    /**
+     * Adds a caster to the GraphGameObject to display as an ascent bar.
+     *
+     * @param casterName The name of the caster. Note this is used by the {@link Encounter#queryHealingInstantsByCaster};
+     *                   in its current implementation it considers a casterName to match when it's contained within the
+     *                   actor name listed in logs.
+     */
+    public void toggleCasterAscent (String casterName) {
+        if (casters.contains(casterName))
+            casters.remove(casterName);
+        else casters.add(casterName);
+        recompute = true;
     }
 
     /**
